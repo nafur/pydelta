@@ -23,7 +23,7 @@ class OptionParser:
         self.argp.add_argument('-v', '--verbose', action='store_true', help = 'be more verbose')
         self.argp.add_argument('--version', action = 'version', version = __version__)
         self.argp.add_argument('--outputfile', default = 'delta.out.smt2', help = 'filename for the output file')
-        self.argp.add_argument('--max-threads', type = int, metavar = 'n', default = '0', help = 'number of threads to use; #processors-n if n<=0')
+        self.argp.add_argument('--max-threads', type = int, metavar = 'n', default = '-1', help = 'number of threads to use; #processors+n if n<=0')
 
         self.argp_comparator = self.argp.add_argument_group('comparator arguments')
         self.argp_comparator.add_argument('--ignore-output', action = 'store_true', help = 'ignore stdout and stderr when comparing results')

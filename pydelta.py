@@ -35,6 +35,11 @@ if not os.path.isfile(args.cmd[0]):
 if not os.access(args.cmd[0], os.X_OK):
     raise Exception('Command "{}" is not executable'.format(args.cmd[0]))
 
+if args.max_threads != 1:
+    if args.max_threads <= 0:
+        args.max_threads = os.cpu_count() + args.max_threads
+    logging.info('Using up to {} threads.'.format(args.max_threads))
+
 mutator.collect_mutators(args)
 
 checker.compute_golden(args.cmd, args.inputfile)

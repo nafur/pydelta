@@ -64,7 +64,7 @@ class Manager:
                 threading.Thread(target = self.producer, name = 'producer', args = (input, skip))
             ] + [
                 threading.Thread(target = self.consumer, name = 'consumer-{}'.format(i + 1))
-                for i in range(1)
+                for i in range(options.args().max_threads)
             ]
 
             for t in threads:
