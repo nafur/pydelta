@@ -60,7 +60,7 @@ while True:
             skip = 0
             logging.info('Starting over')
         else:
-            logging.info('Final: {}'.format(parser.render_smtlib(exprs)))
+            logging.info('Final input (written to {}):\n{}'.format(args.outputfile, parser.render_smtlib(exprs)))
             break
     else:
         logging.info('Simplified: {}'.format(simp.simplification))
