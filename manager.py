@@ -38,7 +38,7 @@ class Manager:
         while not self.stop_operation:
             try:
                 candidate = self.q.get(timeout = 0.25)
-                tmp = tempfile.NamedTemporaryFile('w', suffix = '.smt2', delete = True)
+                tmp = tempfile.NamedTemporaryFile('w', suffix = '.smt2')
                 tmp.write(parser.render_smtlib(candidate.exprs))
                 tmp.flush()
                 res = checker.execute(options.args().cmd, tmp.name)
