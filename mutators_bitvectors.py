@@ -63,9 +63,14 @@ class PassBVConstants:
 
 class PassBVExtractConstants:
     def filter(self, node):
-        return not is_bitvector_constant(node) and is_bitvector(node)
+        return is_bitvector_extract(node) and is_bitvector_constant(node[1])
     def mutations(self, node):
-        return []
+        upper = int(node[0][2])
+        lower = int(node[0][3])
+        constant = int(node[1][1][2:])
+        constant = constant % (2**(upper+1))
+        constant -= constant % (2**lower)
+        return [['_', 'bv{}'.format(constant), str(upper - lower + 1)]]
     def __str__(self):
         return 'evaluate bitvector extract on constant'
 
