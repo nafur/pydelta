@@ -1,6 +1,8 @@
 import collections
 import re
 
+import options
+
 Token = collections.namedtuple('Token', ['kind', 'value'])
 
 def lexer(text):
@@ -78,13 +80,29 @@ def parse_smtlib(text):
 
 def render_expression(expr):
     if isinstance(expr, list):
-        return "(" + " ".join(map(render_expression, expr)) + ")"
+        return '(' + ' '.join(map(render_expression, expr)) + ')'
+    else:
+        return expr
+
+def render_pretty_expression(expr, indent = ''):
+    if isinstance(expr, list):
+        if expr != [] and expr[0] in ['declare-fun']:
+            return render_expression(expr)
+        if all(map(lambda e: not isinstance(e, list), expr)):
+            return '(' + ' '.join(expr) + ')'
+        res = '(' + render_pretty_expression(expr[0]) + '\n'
+        for e in expr[1:]:
+            res += indent + '\t' + render_pretty_expression(e, indent + '\t') + '\n'
+        res += indent + ')'
+        return res
     else:
         return expr
 
 def render_smtlib(exprs):
-    return "\n".join(map(render_expression, exprs))
+    if options.args().pretty_print:
+        return "\n".join(map(render_pretty_expression, exprs))
+    else:
+        return "\n".join(map(render_expression, exprs))
 
 def write_smtlib_to_file(exprs, filename):
     open(filename, 'w').write(render_smtlib(exprs))
-

@@ -62,6 +62,7 @@ while True:
             skip = 0
             logging.info('Starting over')
         else:
+            parser.write_smtlib_to_file(exprs, args.outputfile)
             logging.info('Final input (written to {}):\n{}'.format(args.outputfile, parser.render_smtlib(exprs)))
             break
     else:
