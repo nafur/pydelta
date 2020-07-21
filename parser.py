@@ -1,5 +1,6 @@
 import collections
 import re
+import textwrap
 
 import options
 
@@ -100,9 +101,11 @@ def render_pretty_expression(expr, indent = ''):
 
 def render_smtlib(exprs):
     if options.args().pretty_print:
-        return "\n".join(map(render_pretty_expression, exprs))
-    else:
-        return "\n".join(map(render_expression, exprs))
+        return '\n'.join(map(render_pretty_expression, exprs))
+    res = map(render_expression, exprs)
+    if options.args().wrap_lines:
+        res = [line for r in res for line in textwrap.wrap(r, width = 78, subsequent_indent = '  ')]
+    return '\n'.join(res)
 
 def write_smtlib_to_file(exprs, filename):
     open(filename, 'w').write(render_smtlib(exprs))

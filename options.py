@@ -30,6 +30,7 @@ class OptionParser:
         self.argp.add_argument('--version', action = 'version', version = __version__)
         self.argp.add_argument('--outputfile', metavar = 'filename', default = 'delta.out.smt2', help = 'filename for the output file')
         self.argp.add_argument('--pretty-print', action = 'store_true', help = 'pretty-print to output file')
+        self.argp.add_argument('--wrap-lines', action = 'store_true', help = 'wrap lines in output file')
 
         self.argp_comparator = self.argp.add_argument_group('comparator arguments')
         self.argp_comparator.add_argument('--ignore-output', action = 'store_true', help = 'ignore stdout and stderr when comparing results')
