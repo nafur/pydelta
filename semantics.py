@@ -90,6 +90,23 @@ def is_bitvector_constant(node):
     if not has_name(node) or get_name(node) != '_': return False
     return node[1].startswith('bv')
 
+def possible_bitvector_widths_imp(definition):
+    if is_bitvector_type(definition):
+        return [definition[2]]
+    if not is_leaf(definition):
+        return [w for arg in definition for w in possible_bitvector_widths_imp(arg)]
+    return []
+
+def possible_bitvector_widths(node):
+    if has_type(node):
+        assert is_bitvector_type(get_type(node))
+        return [get_type(node)[2]]
+    widths = set()
+    for t in get_type_info().values():
+        for w in possible_bitvector_widths_imp(t):
+            widths.add(w)
+    return list(widths)
+
 def node_count(exprs):
     if not is_leaf(exprs):
         return 1 + sum(map(node_count, exprs))

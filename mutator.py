@@ -72,7 +72,7 @@ class PassBVConstants:
     def filter(self, node):
         return not is_bitvector_constant(node) and is_bitvector(node)
     def mutations(self, node):
-        return [['_', self.__constant, t[2]] for t in get_type_info().values() if is_bitvector_type(t)]
+        return [['_', self.__constant, t] for t in possible_bitvector_widths(node)]
     def __str__(self):
         return 'substitute by bitvector constant \"{}\"'.format(self.__constant)
 
