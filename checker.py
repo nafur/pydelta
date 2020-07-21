@@ -8,9 +8,10 @@ import options
 
 ExecResult = collections.namedtuple('ExecResult', ['exitcode', 'stdout', 'stderr', 'runtime'])
 
-def execute(cmd, inputfile, timeout = None):
+def execute(cmd, inputfile):
     try:
         start = time.time()
+        timeout = None if options.args().timeout == 0 else options.args().timeout
         res = subprocess.run(cmd + [inputfile], capture_output = True, timeout = timeout)
         duration = time.time() - start
         return ExecResult(res.returncode, res.stdout.decode('utf8').strip(), res.stderr.decode('utf8').strip(), duration)
@@ -34,6 +35,9 @@ def compute_golden(cmd, inputfile):
             if not re.search(options.args().match_err, golden.stderr):
                 logging.error('The pattern for stderr does not match the reference output')
                 return False
+    if options.args().timeout == 0:
+        options.args().timeout = max(int(golden.runtime + 1) * 2, 1)
+        logging.info('Using automatic timeout of {} seconds (reference run took {:.2f} seconds)'.format(options.args().timeout, golden.runtime))
     return True
 
 def matches_golden(result):

@@ -18,6 +18,7 @@ class OptionParser:
 
         self.argp.add_argument('inputfile', help = 'input file (in SMT-LIB v2 format)')
         self.argp.add_argument('cmd', nargs = argparse.REMAINDER, help = 'the command (with optional arguments)')
+        self.argp.add_argument('--timeout', type = int, metavar = 'seconds', default = 0, help = 'timeout for individual checks')
 
         self.argp.add_argument('--parse-only', action = 'store_true', help = 'only parse the input file')
         self.argp.add_argument('-v', '--verbose', action='store_true', help = 'be more verbose')
