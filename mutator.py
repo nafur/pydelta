@@ -7,7 +7,7 @@ from semantics import *
 
 class PassEraseChildren:
     def filter(self, node):
-        return isinstance(node, list)
+        return not is_leaf(node)
     def mutations(self, node):
         res = []
         for i in range(len(node)):
@@ -20,7 +20,7 @@ class PassEraseChildren:
 
 class PassSubstituteChildren:
     def filter(self, node):
-        return isinstance(node, list)
+        return not is_leaf(node)
     def mutations(self, node):
         return node
     def __str__(self):
@@ -44,8 +44,9 @@ class PassLetSubstitution:
         res = []
         for varid in range(len(node[1])):
             var = node[1][varid]
-            subs = substitute(node[2], {var[0]: var[1]})
-            res.append([node[0], node[1][:varid] + node[1][varid + 1:], subs])
+            if contains(node[2], var[0]):
+                subs = substitute(node[2], {var[0]: var[1]})
+                res.append([node[0], node[1], subs])
         return res
     def __str__(self):
         return 'substitute variable into let body'

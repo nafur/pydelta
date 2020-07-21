@@ -118,6 +118,13 @@ def iterate_nodes(expr):
         for e in expr:
             yield from iterate_nodes(e)
 
+def contains(node, sub):
+    if node == sub:
+        return True
+    if is_leaf(node):
+        return False
+    return any(map(lambda n: contains(n, sub), node))
+
 def substitute(node, repl):
     if is_leaf(node):
         return repl.get(node, node)
