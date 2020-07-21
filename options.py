@@ -9,6 +9,10 @@ __author__  = "Gereon Kremer <gereon.kremer@gmail.com>"
 class CustomFormatter(argparse.ArgumentDefaultsHelpFormatter, argparse.HelpFormatter):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs, max_help_position = 35)
+    def _get_help_string(self, action):
+        if action.dest.startswith('mutator_'):
+            return action.help
+        return super()._get_help_string(action)
 
 class OptionParser:
     def __init__(self):
