@@ -66,6 +66,16 @@ class PassInlineDefinedFuns:
     def __str__(self):
         return 'inline defined functions'
 
+class PassBVConstants:
+    def __init__(self, constant):
+        self.__constant = 'bv{}'.format(constant)
+    def filter(self, node):
+        return not is_bitvector_constant(node) and is_bitvector(node)
+    def mutations(self, node):
+        return [['_', self.__constant, t[2]] for t in get_type_info().values() if is_bitvector_type(t)]
+    def __str__(self):
+        return 'substitute by bitvector constant \"{}\"'.format(self.__constant)
+
 def add_mutator_argument(argparser, option, name, action, help):
     dest = 'mutator_{}'.format(name.replace('-', '_'))
     argparser.add_argument(option, dest = dest, action = action, help = help)
@@ -103,8 +113,10 @@ def collect_mutators(args):
         enabled_mutators.append(PassConstant(lambda n: not is_boolean_constant(n) and is_boolean(n), 'true'))
     if args.mutator_constant_zero:
         enabled_mutators.append(PassConstant(lambda n: not is_arithmetic_constant(n) and is_arithmetic(n), '0'))
+        enabled_mutators.append(PassBVConstants('0'))
     if args.mutator_constant_one:
         enabled_mutators.append(PassConstant(lambda n: not is_arithmetic_constant(n) and is_arithmetic(n), '1'))
+        enabled_mutators.append(PassBVConstants('1'))
 
 def mutate_node(node):
     res = []
