@@ -110,6 +110,8 @@ def disable_mutator_argument(argparser, name, help):
 def collect_mutator_options(argparser):
     disable_mutator_argument(argparser, 'erase-children', 'erase individual children of nodes')
     disable_mutator_argument(argparser, 'substitute-children', 'substitute nodes with their children')
+    disable_mutator_argument(argparser, 'sort-children', 'sort children of nodes')
+    disable_mutator_argument(argparser, 'merge-children', 'merge children into nodes')
     disable_mutator_argument(argparser, 'inline-functions', 'inline defined functions')
     disable_mutator_argument(argparser, 'eliminate-lets', 'eliminate let bindings')
     disable_mutator_argument(argparser, 'constant-false', 'replace nodes by false')
@@ -125,6 +127,10 @@ def collect_mutators(args):
         enabled_mutators.append(PassEraseChildren())
     if args.mutator_substitute_children:
         enabled_mutators.append(PassSubstituteChildren())
+    if args.mutator_sort_children:
+        enabled_mutators.append(PassSortChildren())
+    if args.mutator_merge_children:
+        enabled_mutators.append(PassMergeWithChildren())
     if args.mutator_inline_functions:
         enabled_mutators.append(PassInlineDefinedFuns())
     if args.mutator_eliminate_lets:
