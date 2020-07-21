@@ -15,7 +15,7 @@ def execute(cmd, inputfile):
         res = subprocess.run(cmd + [inputfile], capture_output = True, timeout = timeout)
         duration = time.time() - start
         return ExecResult(res.returncode, res.stdout.decode('utf8').strip(), res.stderr.decode('utf8').strip(), duration)
-    except TimeoutError:
+    except subprocess.TimeoutExpired:
         return ExecResult(-1, '', '', 0)
 
 def compute_reference(cmd, inputfile):
