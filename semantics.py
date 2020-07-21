@@ -100,7 +100,6 @@ def collect_information(exprs):
         if get_name(node) == 'declare-fun':
             assert len(node) == 4
             assert is_leaf(node[1])
-            assert is_leaf(node[3])
             type_lookup[node[1]] = node[3]
         if get_name(node) == 'define-fun':
             assert len(node) == 5
