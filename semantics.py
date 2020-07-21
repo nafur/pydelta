@@ -38,6 +38,9 @@ def is_empty_let(node):
     return is_let(node) and is_empty(node[1])
 
 ##### Type information about nodes
+def get_type_info():
+    return type_lookup
+
 def is_arithmetic(node):
     if has_type(node):
         return get_type(node) in ['Real', 'Int']
@@ -62,15 +65,35 @@ def is_boolean(node):
             '<', '<=', '>', '>=', 
         ]
     return False
-
 def is_boolean_constant(node):
     return is_leaf(node) and node in ['false', 'true']
+
+def is_bitvector_type(node):
+    if is_leaf(node) or len(node) != 3: return False
+    if not has_name(node) or get_name(node) != '_': return False
+    return node[1] == 'BitVec'
+
+def is_bitvector(node):
+    if has_type(node):
+        return is_bitvector_type(get_type(node))
+    if is_ite(node):
+        return is_bitvector(node[1])
+    if has_name(node):
+        return get_name(node) in [
+            # bv theory
+            'bvnot', 'bvand', 'bvor',
+            'bvneg', 'bvadd', 'bvmul', 'bvudiv', 'bvurem', 'bvshl', 'bvshr', 'bvult'
+        ]
+
+def is_bitvector_constant(node):
+    if is_leaf(node) or len(node) != 3: return False
+    if not has_name(node) or get_name(node) != '_': return False
+    return node[1].startswith('bv')
 
 def node_count(exprs):
     if not is_leaf(exprs):
         return 1 + sum(map(node_count, exprs))
     return 1
-
 
 def iterate_nodes(expr):
     yield expr
