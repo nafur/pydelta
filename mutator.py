@@ -65,8 +65,7 @@ class PassLetSubstitution:
         return is_let(node) and not is_empty_let(node)
     def mutations(self, node):
         res = []
-        for varid in range(len(node[1])):
-            var = node[1][varid]
+        for var in node[1]:
             if contains(node[2], var[0]):
                 subs = substitute(node[2], {var[0]: var[1]})
                 res.append([node[0], node[1], subs])
