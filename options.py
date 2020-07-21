@@ -35,8 +35,7 @@ class OptionParser:
         self.argp_comparator.add_argument('--match-out', metavar = 'regex', help = 'regex that should match stdout')
         self.argp_comparator.add_argument('--match-err', metavar = 'regex', help = 'regex that should match stderr')
 
-        self.argp_mutators = self.argp.add_argument_group('mutator arguments')
-        mutator.collect_mutator_options(self.argp_mutators)
+        mutator.collect_mutator_options(self.argp)
 
     def parse_args(self):
         return self.argp.parse_args()
@@ -48,3 +47,11 @@ def args():
     if parsed_args == None:
         parsed_args = OptionParser().parse_args()
     return parsed_args
+
+def add_mutator_argument(argparser, option, name, action, help):
+    dest = 'mutator_{}'.format(name.replace('-', '_'))
+    argparser.add_argument(option, dest = dest, action = action, help = help)
+def enable_mutator_argument(argparser, name, help):
+    add_mutator_argument(argparser, '--with-{}'.format(name), name, 'store_true', help)
+def disable_mutator_argument(argparser, name, help):
+    add_mutator_argument(argparser, '--without-{}'.format(name), name, 'store_false', help)

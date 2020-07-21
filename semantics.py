@@ -31,6 +31,9 @@ def get_defined_function(node):
     assert is_defined_function(node)
     return defined_functions[get_name(node)]
 
+def get_variables_with_type(type):
+    return [v for v in type_lookup if type_lookup[v] == type]
+
 ##### Generic constructs
 def is_let(node):
     return has_name(node) and get_name(node) == 'let'
@@ -67,45 +70,6 @@ def is_boolean(node):
     return False
 def is_boolean_constant(node):
     return is_leaf(node) and node in ['false', 'true']
-
-def is_bitvector_type(node):
-    if is_leaf(node) or len(node) != 3: return False
-    if not has_name(node) or get_name(node) != '_': return False
-    return node[1] == 'BitVec'
-
-def is_bitvector(node):
-    if has_type(node):
-        return is_bitvector_type(get_type(node))
-    if is_ite(node):
-        return is_bitvector(node[1])
-    if has_name(node):
-        return get_name(node) in [
-            # bv theory
-            'bvnot', 'bvand', 'bvor',
-            'bvneg', 'bvadd', 'bvmul', 'bvudiv', 'bvurem', 'bvshl', 'bvshr', 'bvult'
-        ]
-
-def is_bitvector_constant(node):
-    if is_leaf(node) or len(node) != 3: return False
-    if not has_name(node) or get_name(node) != '_': return False
-    return node[1].startswith('bv')
-
-def possible_bitvector_widths_imp(definition):
-    if is_bitvector_type(definition):
-        return [definition[2]]
-    if not is_leaf(definition):
-        return [w for arg in definition for w in possible_bitvector_widths_imp(arg)]
-    return []
-
-def possible_bitvector_widths(node):
-    if has_type(node):
-        assert is_bitvector_type(get_type(node))
-        return [get_type(node)[2]]
-    widths = set()
-    for t in get_type_info().values():
-        for w in possible_bitvector_widths_imp(t):
-            widths.add(w)
-    return list(widths)
 
 def is_nary(node):
     if is_leaf(node) or not has_name(node):

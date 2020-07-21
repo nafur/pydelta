@@ -1,151 +1,26 @@
 import copy
 import logging
-import parser
 import progressbar
 
+import mutators_arithmetic
+import mutators_bitvectors
+import mutators_boolean
+import mutators_core
 from semantics import *
 
-class PassEraseChildren:
-    def filter(self, node):
-        return not is_leaf(node)
-    def mutations(self, node):
-        res = []
-        for i in range(len(node)):
-            tmp = node.copy()
-            del tmp[i]
-            res.append(tmp)
-        return res
-    def __str__(self):
-        return 'erase child'
-
-class PassSubstituteChildren:
-    def filter(self, node):
-        return not is_leaf(node)
-    def mutations(self, node):
-        return node
-    def __str__(self):
-        return 'substitute with child'
-
-class PassSortChildren:
-    def filter(self, node):
-        return not is_leaf(node)
-    def mutations(self, node):
-        s = sorted(node, key = lambda n: node_count(n))
-        if s != node:
-            return [s]
-        return []
-    def __str__(self):
-        return 'sort children'
-
-class PassMergeWithChildren:
-    def filter(self, node):
-        return is_nary(node)
-    def mutations(self, node):
-        res = []
-        for cid in range(len(node)):
-            if has_name(node[cid]) and get_name(node) == get_name(node[cid]):
-                res.append(node[:cid] + node[cid][1:] + node[cid+1:])
-        return res
-    def __str__(self):
-        return 'merge with child'
-
-class PassConstant:
-    def __init__(self, f, constant):
-        self.__filter = f
-        self.__constant = constant
-    def filter(self, node):
-        return self.__filter(node)
-    def mutations(self, node):
-        return [self.__constant]
-    def __str__(self):
-        return 'substitute by constant \"{}\"'.format(self.__constant)
-
-class PassLetSubstitution:
-    def filter(self, node):
-        return is_let(node) and not is_empty_let(node)
-    def mutations(self, node):
-        res = []
-        for var in node[1]:
-            if contains(node[2], var[0]):
-                subs = substitute(node[2], {var[0]: var[1]})
-                res.append([node[0], node[1], subs])
-        return res
-    def __str__(self):
-        return 'substitute variable into let body'
-
-class PassLetElimination:
-    def filter(self, node):
-        return is_empty_let(node)
-    def mutations(self, node):
-        return [node[2]]
-    def __str__(self):
-        return 'substitute let with body'
-
-class PassInlineDefinedFuns:
-    def filter(self, node):
-        return is_defined_function(node)
-    def mutations(self, node):
-        return [ get_defined_function(node)(node[1:]) ]
-    def __str__(self):
-        return 'inline defined functions'
-
-class PassBVConstants:
-    def __init__(self, constant):
-        self.__constant = 'bv{}'.format(constant)
-    def filter(self, node):
-        return not is_bitvector_constant(node) and is_bitvector(node)
-    def mutations(self, node):
-        return [['_', self.__constant, t] for t in possible_bitvector_widths(node)]
-    def __str__(self):
-        return 'substitute by bitvector constant \"{}\"'.format(self.__constant)
-
-def add_mutator_argument(argparser, option, name, action, help):
-    dest = 'mutator_{}'.format(name.replace('-', '_'))
-    argparser.add_argument(option, dest = dest, action = action, help = help)
-def enable_mutator_argument(argparser, name, help):
-    add_mutator_argument(argparser, '--with-{}'.format(name), name, 'store_true', help)
-def disable_mutator_argument(argparser, name, help):
-    add_mutator_argument(argparser, '--without-{}'.format(name), name, 'store_false', help)
-    
 def collect_mutator_options(argparser):
-    disable_mutator_argument(argparser, 'erase-children', 'erase individual children of nodes')
-    disable_mutator_argument(argparser, 'substitute-children', 'substitute nodes with their children')
-    disable_mutator_argument(argparser, 'sort-children', 'sort children of nodes')
-    disable_mutator_argument(argparser, 'merge-children', 'merge children into nodes')
-    disable_mutator_argument(argparser, 'inline-functions', 'inline defined functions')
-    disable_mutator_argument(argparser, 'eliminate-lets', 'eliminate let bindings')
-    disable_mutator_argument(argparser, 'constant-false', 'replace nodes by false')
-    disable_mutator_argument(argparser, 'constant-true', 'replace nodes by true')
-    disable_mutator_argument(argparser, 'constant-zero', 'replace nodes by zero')
-    disable_mutator_argument(argparser, 'constant-one', 'replace nodes by one')
+    mutators_core.collect_mutator_options(argparser.add_argument_group('core mutator arguments'))
+    mutators_boolean.collect_mutator_options(argparser.add_argument_group('boolean mutator arguments'))
+    mutators_arithmetic.collect_mutator_options(argparser.add_argument_group('arithmetic mutator arguments'))
+    mutators_bitvectors.collect_mutator_options(argparser.add_argument_group('bitvector mutator arguments'))
 
 enabled_mutators = []
 def collect_mutators(args):
     global enabled_mutators
-    enabled_mutators.append(PassInlineDefinedFuns())
-    if args.mutator_erase_children:
-        enabled_mutators.append(PassEraseChildren())
-    if args.mutator_substitute_children:
-        enabled_mutators.append(PassSubstituteChildren())
-    if args.mutator_sort_children:
-        enabled_mutators.append(PassSortChildren())
-    if args.mutator_merge_children:
-        enabled_mutators.append(PassMergeWithChildren())
-    if args.mutator_inline_functions:
-        enabled_mutators.append(PassInlineDefinedFuns())
-    if args.mutator_eliminate_lets:
-        enabled_mutators.append(PassLetSubstitution())
-        enabled_mutators.append(PassLetElimination())
-    if args.mutator_constant_false:
-        enabled_mutators.append(PassConstant(lambda n: not is_boolean_constant(n) and is_boolean(n), 'false'))
-    if args.mutator_constant_true:
-        enabled_mutators.append(PassConstant(lambda n: not is_boolean_constant(n) and is_boolean(n), 'true'))
-    if args.mutator_constant_zero:
-        enabled_mutators.append(PassConstant(lambda n: not is_arithmetic_constant(n) and is_arithmetic(n), '0'))
-        enabled_mutators.append(PassBVConstants('0'))
-    if args.mutator_constant_one:
-        enabled_mutators.append(PassConstant(lambda n: not is_arithmetic_constant(n) and is_arithmetic(n), '1'))
-        enabled_mutators.append(PassBVConstants('1'))
+    enabled_mutators += mutators_core.collect_mutators(args)
+    enabled_mutators += mutators_boolean.collect_mutators(args)
+    enabled_mutators += mutators_arithmetic.collect_mutators(args)
+    enabled_mutators += mutators_bitvectors.collect_mutators(args)
 
 def mutate_node(node):
     res = []
