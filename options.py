@@ -23,13 +23,13 @@ class OptionParser:
         self.argp.add_argument('--parse-only', action = 'store_true', help = 'only parse the input file')
         self.argp.add_argument('-v', '--verbose', action='store_true', help = 'be more verbose')
         self.argp.add_argument('--version', action = 'version', version = __version__)
-        self.argp.add_argument('--outputfile', default = 'delta.out.smt2', help = 'filename for the output file')
+        self.argp.add_argument('--outputfile', metavar = 'filename', default = 'delta.out.smt2', help = 'filename for the output file')
         self.argp.add_argument('--max-threads', type = int, metavar = 'n', default = '-1', help = 'number of threads to use; #processors+n if n<=0')
 
         self.argp_comparator = self.argp.add_argument_group('comparator arguments')
         self.argp_comparator.add_argument('--ignore-output', action = 'store_true', help = 'ignore stdout and stderr when comparing results')
-        self.argp_comparator.add_argument('--match-out', help = 'regex that should match stdout')
-        self.argp_comparator.add_argument('--match-err', help = 'regex that should match stderr')
+        self.argp_comparator.add_argument('--match-out', metavar = 'regex', help = 'regex that should match stdout')
+        self.argp_comparator.add_argument('--match-err', metavar = 'regex', help = 'regex that should match stderr')
 
         self.argp_mutators = self.argp.add_argument_group('mutator arguments')
         mutator.collect_mutator_options(self.argp_mutators)
