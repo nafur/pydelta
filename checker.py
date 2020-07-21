@@ -1,5 +1,6 @@
 import collections
 import logging
+import re
 import subprocess
 import time
 
@@ -20,15 +21,35 @@ def compute_golden(cmd, inputfile):
     global golden
     golden = execute(cmd, inputfile)
     logging.info('Reference result: exit code {} after {} seconds'.format(golden.exitcode, golden.runtime))
-    logging.info('Reference stdout: \"{}\"'.format(golden.stdout))
-    logging.info('Reference stderr: \"{}\"'.format(golden.stderr))
+    if options.args().ignore_output:
+        logging.info('Reference output is being ignored')
+    else:
+        logging.info('Reference stdout: \"{}\"'.format(golden.stdout))
+        logging.info('Reference stderr: \"{}\"'.format(golden.stderr))
+        if options.args().match_out is not None:
+            if not re.search(options.args().match_out, golden.stdout):
+                logging.error('The pattern for stdout does not match the reference output')
+                return False
+        if options.args().match_err is not None:
+            if not re.search(options.args().match_err, golden.stderr):
+                logging.error('The pattern for stderr does not match the reference output')
+                return False
+    return True
 
 def matches_golden(result):
     if golden.exitcode != result.exitcode:
         return False
     if not options.args().ignore_output:
-        if golden.stdout != result.stdout:
-            return False
-        if golden.stderr != result.stderr:
-            return False
+        if options.args().match_out is None:
+            if golden.stdout != result.stdout:
+                return False
+        else:
+            if not re.search(options.args().match_out, golden.stdout):
+                return False
+        if options.args().match_err is None:
+            if golden.stderr != result.stderr:
+                return False
+        else:
+            if not re.search(options.args().match_err, golden.stderr):
+                return False
     return True

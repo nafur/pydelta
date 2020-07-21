@@ -42,7 +42,9 @@ if args.max_threads != 1:
 
 mutator.collect_mutators(args)
 
-checker.compute_golden(args.cmd, args.inputfile)
+if not checker.compute_golden(args.cmd, args.inputfile):
+    logging.error('Computing the reference output failed.')
+    sys.exit(1)
 
 exprs = parser.parse_smtlib(open(args.inputfile).read())
 

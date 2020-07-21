@@ -27,6 +27,8 @@ class OptionParser:
 
         self.argp_comparator = self.argp.add_argument_group('comparator arguments')
         self.argp_comparator.add_argument('--ignore-output', action = 'store_true', help = 'ignore stdout and stderr when comparing results')
+        self.argp_comparator.add_argument('--match-out', help = 'regex that should match stdout')
+        self.argp_comparator.add_argument('--match-err', help = 'regex that should match stderr')
 
         self.argp_mutators = self.argp.add_argument_group('mutator arguments')
         mutator.collect_mutator_options(self.argp_mutators)
