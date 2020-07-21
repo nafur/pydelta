@@ -18,42 +18,42 @@ def execute(cmd, inputfile):
     except TimeoutError:
         return ExecResult(-1, '', '', 0)
 
-def compute_golden(cmd, inputfile):
-    global golden
-    golden = execute(cmd, inputfile)
-    logging.info('Reference result: exit code {} after {} seconds'.format(golden.exitcode, golden.runtime))
+def compute_reference(cmd, inputfile):
+    global reference
+    reference = execute(cmd, inputfile)
+    logging.info('Reference result: exit code {} after {} seconds'.format(reference.exitcode, reference.runtime))
     if options.args().ignore_output:
         logging.info('Reference output is being ignored')
     else:
-        logging.info('Reference stdout: \"{}\"'.format(golden.stdout))
-        logging.info('Reference stderr: \"{}\"'.format(golden.stderr))
+        logging.info('Reference stdout: \"{}\"'.format(reference.stdout))
+        logging.info('Reference stderr: \"{}\"'.format(reference.stderr))
         if options.args().match_out is not None:
-            if not re.search(options.args().match_out, golden.stdout):
+            if not re.search(options.args().match_out, reference.stdout):
                 logging.error('The pattern for stdout does not match the reference output')
                 return False
         if options.args().match_err is not None:
-            if not re.search(options.args().match_err, golden.stderr):
+            if not re.search(options.args().match_err, reference.stderr):
                 logging.error('The pattern for stderr does not match the reference output')
                 return False
     if options.args().timeout == 0:
-        options.args().timeout = max(int(golden.runtime + 1) * 2, 1)
-        logging.info('Using automatic timeout of {} seconds (reference run took {:.2f} seconds)'.format(options.args().timeout, golden.runtime))
+        options.args().timeout = max(int(reference.runtime + 1) * 2, 1)
+        logging.info('Using automatic timeout of {} seconds (reference run took {:.2f} seconds)'.format(options.args().timeout, reference.runtime))
     return True
 
-def matches_golden(result):
-    if golden.exitcode != result.exitcode:
+def matches_reference(result):
+    if reference.exitcode != result.exitcode:
         return False
     if not options.args().ignore_output:
         if options.args().match_out is None:
-            if golden.stdout != result.stdout:
+            if reference.stdout != result.stdout:
                 return False
         else:
-            if not re.search(options.args().match_out, golden.stdout):
+            if not re.search(options.args().match_out, reference.stdout):
                 return False
         if options.args().match_err is None:
-            if golden.stderr != result.stderr:
+            if reference.stderr != result.stderr:
                 return False
         else:
-            if not re.search(options.args().match_err, golden.stderr):
+            if not re.search(options.args().match_err, reference.stderr):
                 return False
     return True

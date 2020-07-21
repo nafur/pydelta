@@ -42,7 +42,7 @@ if args.max_threads != 1:
 
 mutator.collect_mutators(args)
 
-if not checker.compute_golden(args.cmd, args.inputfile):
+if not checker.compute_reference(args.cmd, args.inputfile):
     logging.error('Computing the reference output failed.')
     sys.exit(1)
 

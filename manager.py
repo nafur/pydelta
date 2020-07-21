@@ -42,7 +42,7 @@ class Manager:
                 tmp.write(parser.render_smtlib(candidate.exprs))
                 tmp.flush()
                 res = checker.execute(options.args().cmd, tmp.name)
-                if checker.matches_golden(res):
+                if checker.matches_reference(res):
                     with self.result_lock:
                         if self.result == None:
                             self.stop_operation = True
