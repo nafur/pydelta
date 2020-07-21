@@ -70,3 +70,5 @@ while True:
         skip = simp.counter
         exprs = simp.exprs
         parser.write_smtlib_to_file(exprs, args.outputfile)
+
+logging.info('Performed {} checks'.format(checker.checks))

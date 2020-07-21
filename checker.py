@@ -7,9 +7,12 @@ import time
 import options
 
 ExecResult = collections.namedtuple('ExecResult', ['exitcode', 'stdout', 'stderr', 'runtime'])
+checks = 0
 
 def execute(cmd, inputfile):
     try:
+        global checks
+        checks += 1
         start = time.time()
         timeout = None if options.args().timeout == 0 else options.args().timeout
         res = subprocess.run(cmd + [inputfile], capture_output = True, timeout = timeout)
