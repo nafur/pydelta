@@ -9,6 +9,7 @@ import mutators_core
 import semantics
 
 def collect_mutator_options(argparser):
+    """Adds all options related to mutators to the given argument parser."""
     mutators_core.collect_mutator_options(argparser.add_argument_group('core mutator arguments'))
     mutators_boolean.collect_mutator_options(argparser.add_argument_group('boolean mutator arguments'))
     mutators_arithmetic.collect_mutator_options(argparser.add_argument_group('arithmetic mutator arguments'))
@@ -16,13 +17,15 @@ def collect_mutator_options(argparser):
 
 enabled_mutators = []
 def collect_mutators(args):
+    """Initializes the list of all active mutators."""
     global enabled_mutators
     enabled_mutators += mutators_core.collect_mutators(args)
     enabled_mutators += mutators_boolean.collect_mutators(args)
     enabled_mutators += mutators_arithmetic.collect_mutators(args)
     enabled_mutators += mutators_bitvectors.collect_mutators(args)
 
-def mutate_node(node):
+def __mutate_node(node):
+    """Apply all active mutators to the given node. Returns a list of all possible mutations."""
     res = []
     for m in enabled_mutators:
         if hasattr(m, 'filter') and not m.filter(node):
@@ -32,8 +35,9 @@ def mutate_node(node):
 
 
 def __generate_mutations(input, prg):
+    """Generate mutations from the given input, updating the progress bar."""
     prg.update(prg.currval + 1)
-    yield from mutate_node(input)
+    yield from __mutate_node(input)
     if isinstance(input, list):
         for i in range(len(input)):
             cand = copy.copy(input)
@@ -42,6 +46,7 @@ def __generate_mutations(input, prg):
                 yield (mutated[0], cand)
 
 def generate_mutations(input):
+    """A generator that produces all possible mutations from the given input."""
     semantics.collect_information(input)
     s = semantics.node_count(input)
     widgets = [progressbar.Bar(), ' ', progressbar.Counter(), ' / ', str(s)]

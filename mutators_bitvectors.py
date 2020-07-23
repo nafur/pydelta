@@ -51,7 +51,8 @@ def possible_bitvector_widths(node):
             widths.add(w)
     return list(widths)
 
-class PassBVConstants:
+class PassBVConstant:
+    """Replaces a node by a constant. Only applies to nodes of bitvector types. Is used with constants :code:`'bv0'` and :code:`'bv1'`, trying to guess the correct bit width."""
     def __init__(self, constant):
         self.__constant = 'bv{}'.format(constant)
     def filter(self, node):
@@ -62,6 +63,7 @@ class PassBVConstants:
         return 'substitute by bitvector constant \"{}\"'.format(self.__constant)
 
 class PassBVExtractConstants:
+    """Evaluates a bitvector :code:`extract` if it is applied to a constant."""
     def filter(self, node):
         return is_bitvector_extract(node) and is_bitvector_constant(node[1])
     def mutations(self, node):
@@ -84,9 +86,9 @@ def collect_mutators(args):
     res = []
     if args.mutator_bitvector:
         if args.mutator_bv_constant_one:
-            res.append(PassBVConstants('1'))
+            res.append(PassBVConstant('1'))
         if args.mutator_bv_constant_zero:
-            res.append(PassBVConstants('0'))
+            res.append(PassBVConstant('0'))
         if args.mutator_bv_eval_extract:
             res.append(PassBVExtractConstants())
     return res

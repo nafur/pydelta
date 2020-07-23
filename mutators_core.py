@@ -2,6 +2,7 @@ import options
 from semantics import *
 
 class PassEraseChildren:
+    """Erases a single child of the given node."""
     def filter(self, node):
         return not is_leaf(node)
     def mutations(self, node):
@@ -15,6 +16,7 @@ class PassEraseChildren:
         return 'erase child'
 
 class PassSubstituteChildren:
+    """Substitutes a node with one of its children."""
     def filter(self, node):
         return not is_leaf(node)
     def mutations(self, node):
@@ -23,6 +25,7 @@ class PassSubstituteChildren:
         return 'substitute with child'
 
 class PassSortChildren:
+    """Sorts the children of a node."""
     def filter(self, node):
         return not is_leaf(node)
     def mutations(self, node):
@@ -34,6 +37,7 @@ class PassSortChildren:
         return 'sort children'
 
 class PassMergeWithChildren:
+    """Merges a node with one of its children. This is possible for n-ary operators like :code:`and` or :code:`+`."""
     def filter(self, node):
         return is_nary(node)
     def mutations(self, node):
@@ -46,6 +50,7 @@ class PassMergeWithChildren:
         return 'merge with child'
 
 class PassReplaceVariables:
+    """Replaces a variable by another variable."""
     def filter(self, node):
         return has_type(node)
     def mutations(self, node):
@@ -54,6 +59,7 @@ class PassReplaceVariables:
         return 'substitute by variable of same type'
 
 class PassLetSubstitution:
+    """Substitutes a variable bound by a let binder into the nested term."""
     def filter(self, node):
         return is_let(node) and not is_empty_let(node)
     def mutations(self, node):
@@ -67,6 +73,7 @@ class PassLetSubstitution:
         return 'substitute variable into let body'
 
 class PassLetElimination:
+    """Substitutes a let binder by its nested term. This usually requires, that :code:`PassLetSubstitution` has been run for all bound variables."""
     def filter(self, node):
         return is_empty_let(node)
     def mutations(self, node):
@@ -75,6 +82,7 @@ class PassLetElimination:
         return 'substitute let with body'
 
 class PassInlineDefinedFuns:
+    """Explicitly inlines a defined function."""
     def filter(self, node):
         return is_defined_function(node)
     def mutations(self, node):
