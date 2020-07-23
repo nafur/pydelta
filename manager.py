@@ -12,8 +12,10 @@ import mutator
 import options
 import parser
 
-Candidate = collections.namedtuple('Candidate', ['counter', 'simplification', 'exprs'])
+Candidate = collections.namedtuple('Candidate', ['priority', 'counter', 'simplification', 'exprs'])
 """Represents a simplification candidate.
+
+:code:`priority` gives the priority of this simplification (smallest first).
 
 :code:`counter` contains the number of the simplified node in the pre-order iteration of :meth:`semantics.iterate_nodes`.
 
@@ -28,7 +30,7 @@ class Manager:
     The :meth:`simplify` methods starts all threads and terminates them as soon as one valid simplication has been found.
     """
     def __init__(self):
-        self.q = queue.Queue(maxsize = 20)
+        self.q = queue.PriorityQueue(maxsize = 100)
         self.stop_operation = False
         self.finished_generation = False
         self.result = None
@@ -42,7 +44,7 @@ class Manager:
             if skip > 0:
                 skip -= 1
                 continue
-            self.q.put(Candidate(counter, candidate[0], candidate[1]))
+            self.q.put(Candidate(1/candidate[1], counter, candidate[0], copy.deepcopy(candidate[2])))
             if self.stop_operation:
                 break
         self.finished_generation = True

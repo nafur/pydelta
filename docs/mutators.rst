@@ -12,11 +12,16 @@ A mutator class should at least look like this:
 
     class PassDummy:
         def filter(self, node):
-            """Check whether this mutators can be applied to the given node."""
+            """Check whether this mutators can be applied to the given node.
+            If not specified, we use `True`"""
             return True
         def mutations(self, node):
             """Create a list of mutations of the given node."""
             return []
+        def priority(self, node, repl):
+            """Estimate the importance of the replacement of `node` by the mutation :code:`repl`.
+            If not specified, we use `node_count(node) / node_count(repl)`."""
+            return node_count(node) / node_count(repl)
         def __str__(self):
             """Returns a description of this mutator."""
             return "dummy"
