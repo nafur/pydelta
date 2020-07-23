@@ -80,7 +80,7 @@ while True:
             break
     else:
         # write current status to file and continue
-        logging.info('#{} simplification: {}'.format(iterations, simp.simplification))
+        logging.info('#{}: {}'.format(iterations, simp.simplification))
         skip = simp.counter
         exprs = simp.exprs
         parser.write_smtlib_to_file(exprs, args.outputfile)
