@@ -2,6 +2,10 @@ from mutators_generic import *
 import options
 from semantics import *
 
+class PassBoolConstant(PassConstant):
+    def __init__(self, constant):
+        super().__init__(lambda n: not is_boolean_constant(n) and is_boolean(n), constant)
+
 
 def collect_mutator_options(argparser):
     options.disable_mutator_argument(argparser, 'boolean', 'boolean mutators')
@@ -13,7 +17,7 @@ def collect_mutators(args):
     res = []
     if args.mutator_boolean:
         if args.mutator_constant_false:
-            res.append(PassConstant(lambda n: not is_boolean_constant(n) and is_boolean(n), 'false'))
+            res.append(PassBoolConstant('false'))
         if args.mutator_constant_true:
-            res.append(PassConstant(lambda n: not is_boolean_constant(n) and is_boolean(n), 'true'))
+            res.append(PassBoolConstant('true'))
     return res

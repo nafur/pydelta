@@ -11,6 +11,12 @@ Mutators
     :inherited-members:
     :show-inheritance:
 
+.. automodule:: mutators_generic
+    :members:
+    :undoc-members:
+    :inherited-members:
+    :show-inheritance:
+
 .. automodule:: mutators_core
     :members:
     :undoc-members:
