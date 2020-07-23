@@ -13,8 +13,20 @@ import options
 import parser
 
 Candidate = collections.namedtuple('Candidate', ['counter', 'simplification', 'exprs'])
+"""Represents a simplification candidate.
+
+:code:`counter` contains the number of the simplified node in the pre-order iteration of :meth:`semantics.iterate_nodes`.
+
+:code:`exprs` contains the simplified input.
+
+:code:`simplification` contains the name of the applied mutator.
+"""
 
 class Manager:
+    """Manages the asynchronous generation and checking of mutated inputs.
+    One thread runs the :meth:`producer` method that fills a :class:`queue.Queue` while as many threads as given by the :code:`--max-threads` options run and evaluate the candidates from the queue.
+    The :meth:`simplify` methods starts all threads and terminates them as soon as one valid simplication has been found.
+    """
     def __init__(self):
         self.q = queue.Queue(maxsize = 20)
         self.stop_operation = False
@@ -23,6 +35,7 @@ class Manager:
         self.result_lock = threading.Lock()
 
     def producer(self, input, skip = 0):
+        """Produces new mutated variants of the given input."""
         counter = 0
         for candidate in mutator.generate_mutations(input):
             counter += 1
@@ -35,6 +48,7 @@ class Manager:
         self.finished_generation = True
 
     def consumer(self):
+        """Takes candidates from the queue and checks whether their output matches the reference result."""
         while not self.stop_operation:
             try:
                 candidate = self.q.get(timeout = 0.25)
@@ -56,6 +70,7 @@ class Manager:
                     break
 
     def simplify(self, input, skip = 0):
+        """Starts one producer thread and multiple consumer thread and then waits for a valid simplification."""
         self.stop_operation = False
         self.finished_generation = False
         self.result = None
