@@ -40,6 +40,7 @@ def collect_mutator_options(argparser):
     options.disable_mutator_argument(argparser, 'arithmetic', 'arithmetic mutators')
     options.disable_mutator_argument(argparser, 'constant-one', 'replace nodes by one')
     options.disable_mutator_argument(argparser, 'constant-zero', 'replace nodes by zero')
+    options.disable_mutator_argument(argparser, 'simplify-constants', 'replaces constants by simpler ones')
 
 def collect_mutators(args):
     res = []
@@ -48,4 +49,6 @@ def collect_mutators(args):
             res.append(PassArithmeticConstant('1'))
         if args.mutator_constant_zero:
             res.append(PassArithmeticConstant('0'))
+        if args.mutator_simplify_constants:
+            res.append(PassArithmeticSimplifyConstant())
     return res
