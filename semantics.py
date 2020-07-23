@@ -2,7 +2,7 @@ import logging
 import re
 
 defined_functions = {}
-type_lookup = {}
+defined_variables = {}
 
 ##### Generic node utilities
 def is_leaf(node):
@@ -75,59 +75,27 @@ def substitute(node, repl):
     return list(map(lambda n: substitute(n, repl), node))
 
 ##### Type information about nodes
-def get_type_info():
+def get_variable_info():
     """Returns the type lookup table."""
-    return type_lookup
+    return defined_variables
 def has_type(node):
     """Checks whether :code:`node` was defined to have a certain type. Mostly applies to variables."""
-    return is_leaf(node) and node in type_lookup
+    return is_leaf(node) and node in defined_variables
 def get_type(node):
     """Returns the type of :code:`node` if it was defined to have a certain type. Assumes :code:`has_type(node)`."""
     assert has_type(node)
-    return type_lookup[node]
+    return defined_variables[node]
 
 def get_variables_with_type(type):
     """Returns all variables with the type :code:`type`."""
-    return [v for v in type_lookup if type_lookup[v] == type]
-
-def is_arithmetic(node):
-    """Checks whether the :code:`node` has an arithmetic type."""
-    if has_type(node):
-        return get_type(node) in ['Real', 'Int']
-    if is_ite(node):
-        return is_arithmetic(node[1])
-    if has_name(node):
-        return get_name(node) in ['*', '+', '-', '/', 'div', 'mod', 'abs']
-    return False
-
-def is_arithmetic_constant(node):
-    """Checks whether the :code:`node` is an arithmetic constant."""
-    return is_leaf(node) and re.match('[0-9]+(\\.[0-9]*)?', node) != None
-
-def is_boolean(node):
-    """Checks whether the :code:`node` is Boolean."""
-    if has_type(node):
-        return get_type(node) in ['Bool']
-    if is_ite(node):
-        return is_boolean(node[1])
-    if has_name(node):
-        return get_name(node) in [
-            # Core theory
-            'not', '=>', 'and', 'or', 'xor', '=', 'distinct'
-            '<', '<=', '>', '>=', 
-        ]
-    return False
-
-def is_boolean_constant(node):
-    """Checks whether the :code:`node` is a Boolean constant."""
-    return is_leaf(node) and node in ['false', 'true']
+    return [v for v in defined_variables if defined_variables[v] == type]
 
 def collect_information(exprs):
     """Initialize global lookups: defined functions and types."""
     global defined_functions
-    global type_lookup
+    global defined_variables
     defined_functions = {}
-    type_lookup = { 'true': 'Bool', 'false': 'Bool' }
+    defined_variables = {}
 
     for node in iterate_nodes(exprs):
         if not has_name(node):
@@ -136,11 +104,11 @@ def collect_information(exprs):
             assert len(node) == 3
             assert is_leaf(node[1])
             assert is_leaf(node[2])
-            type_lookup[node[1]] = node[2]
+            defined_variables[node[1]] = node[2]
         if get_name(node) == 'declare-fun':
             assert len(node) == 4
             assert is_leaf(node[1])
-            type_lookup[node[1]] = node[3]
+            defined_variables[node[1]] = node[3]
         if get_name(node) == 'define-fun':
             assert len(node) == 5
             assert is_leaf(node[1])
