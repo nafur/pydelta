@@ -1,25 +1,35 @@
-from mutators_generic import *
 import options
 from semantics import *
 
 def is_arithmetic(node):
     """Checks whether the :code:`node` has an arithmetic type."""
+    return get_return_type(node) in ['Int', 'Real']
+
+def is_int(node):
+    """Checks whether the :code:`node` has an int type."""
+    return get_return_type(node) in ['Int']
     if has_type(node):
-        return get_type(node) in ['Real', 'Int']
+        return get_type(node) in ['Int']
     if is_ite(node):
-        return is_arithmetic(node[1])
+        return is_int(node[1])
     if has_name(node):
-        return get_name(node) in ['*', '+', '-', '/', 'div', 'mod', 'abs']
+        if get_name(node) in ['div', 'mod', 'abs']:
+            return True
+        return get_name(node) in [
+                '*', '+', '-'
+            ] and all(map(is_int, node[1:]))
     return False
 
-def is_arithmetic_constant(node):
-    """Checks whether the :code:`node` is an arithmetic constant."""
-    return is_leaf(node) and re.match('[0-9]+(\\.[0-9]*)?', node) != None
-
-class PassArithmeticConstant(PassConstant):
-    """Replaces a node by a constant. Only applies to nodes of arithmetic types. Is used with constants :code:`'0'` and :code:`'1'`."""
-    def __init__(self, constant):
-        super().__init__(lambda n: not is_arithmetic_constant(n) and is_arithmetic(n), constant)
+def is_real(node):
+    """Checks whether the :code:`node` has a real type."""
+    return get_return_type(node) in ['Real']
+    if has_type(node):
+        return get_type(node) in ['Real']
+    if is_ite(node):
+        return is_real(node[1])
+    if has_name(node):
+        return get_name(node) in ['*', '+', '-', '/'] and any(map(is_real, node[1:]))
+    return False
 
 class PassArithmeticSimplifyConstant:
     """Replace a constant by a simpler version (smaller or fewer decimal places)."""
@@ -38,17 +48,11 @@ class PassArithmeticSimplifyConstant:
 
 def collect_mutator_options(argparser):
     options.disable_mutator_argument(argparser, 'arithmetic', 'arithmetic mutators')
-    options.disable_mutator_argument(argparser, 'constant-one', 'replace nodes by one')
-    options.disable_mutator_argument(argparser, 'constant-zero', 'replace nodes by zero')
     options.disable_mutator_argument(argparser, 'simplify-constants', 'replaces constants by simpler ones')
 
 def collect_mutators(args):
     res = []
     if args.mutator_arithmetic:
-        if args.mutator_constant_one:
-            res.append(PassArithmeticConstant('1'))
-        if args.mutator_constant_zero:
-            res.append(PassArithmeticConstant('0'))
         if args.mutator_simplify_constants:
             res.append(PassArithmeticSimplifyConstant())
     return res

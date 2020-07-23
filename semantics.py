@@ -71,6 +71,101 @@ def substitute(node, repl):
         return repl.get(node, node)
     return list(map(lambda n: substitute(n, repl), node))
 
+##### Collected information about theories
+
+def is_boolean_constant(node):
+    """Checks whether the :code:`node` is a Boolean constant."""
+    return is_leaf(node) and node in ['false', 'true']
+
+def is_arithmetic_constant(node):
+    """Checks whether the :code:`node` is an arithmetic constant."""
+    return is_leaf(node) and re.match('[0-9]+(\\.[0-9]*)?', node) != None
+
+def is_int_constant(node):
+    """Checks whether the :code:`node` is an int constant."""
+    return is_leaf(node) and re.match('^[0-9]+$', node) != None
+
+def is_real_constant(node):
+    """Checks whether the :code:`node` is a real constant."""
+    return is_leaf(node) and re.match('^[0-9]+(\\.[0-9]*)?$', node) != None
+
+def is_bitvector_type(node):
+    if is_leaf(node) or len(node) != 3: return False
+    if not has_name(node) or get_name(node) != '_': return False
+    return node[1] == 'BitVec'
+
+def is_set_type(node):
+    if is_leaf(node) or len(node) != 2: return False
+    if not has_name(node) or get_name(node) != 'Set': return False
+    return True
+
+def get_constants(type):
+    if type == 'Bool':
+        return ['false', 'true']
+    if type == 'Int':
+        return ['0', '1']
+    if type == 'Real':
+        return ['0.0', '1.0']
+    if is_bitvector_type(type):
+        return [['_', c, type[2]] for c in ['bv0', 'bv1']]
+    if is_set_type(type):
+        return [['as', 'emptyset', type]] + [['singleton', c] for c in get_constants(type[1])]
+    return []
+
+def get_return_type(node):
+    if has_type(node):
+        return get_type(node)
+    if is_boolean_constant(node):
+        return 'Bool'
+    if is_int_constant(node):
+        return 'Int'
+    if is_real_constant(node):
+        return 'Real'
+    if has_name(node):
+        if is_ite(node):
+            return get_return_type(node[1])
+        ### stuff that returns Bool
+        if get_name(node) in [
+            # core theory
+            'not', '=>', 'and', 'or', 'xor', '=', 'distinct',
+            # bv theory
+            'bvult',
+            # fp theory
+            'fp.leq', 'fp.lt', 'fp.geq', 'fp.gt', 'fp.eq',
+            'fp.isNormal', 'fp.isSubnormal', 'fp.isZero',
+            'fp.isInfinite', 'fp.isNaN', 'fp.isNegative', 'fp.isPositive',
+            # int / real theory
+            '<=', '<', '>>', '>', 'is_int',
+            # sets theory
+            'member', 'subset',
+            # string theory
+            'str.<', 'str.in_re', 'str.<=',
+            'str.prefixof', 'str.suffixof', 'str.contains',
+            'str.is_digit',
+        ]:
+            return 'Bool'
+        # int theory
+        if get_name(node) == '_' and len(node) == 3 and node[1] == 'divisible':
+            return 'Bool'
+        ### stuff that returns Int
+        if get_name(node) in [
+            'div', 'mod', 'abs', 'to_int',
+            # string theory
+            'str.len', 'str.indexof', 'str.to_code', 'str.to_int',
+            # sets theory
+            'card'
+        ]:
+            return 'Int'
+        ### stuff that returns Real
+        if get_name(node) in ['/', 'to_real', 'fp.to_real']:
+            return 'Real'
+        if get_name(node) in ['+', '-', '*']:
+            if any(map(lambda n: get_return_type(n) == 'Real', node[1:])):
+                return 'Real'
+            else:
+                return 'Int'
+    return None
+
 ##### Type information about nodes
 def get_variable_info():
     """Returns the type lookup table."""

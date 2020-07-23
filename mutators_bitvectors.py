@@ -1,11 +1,6 @@
 import options
 from semantics import *
 
-def is_bitvector_type(node):
-    if is_leaf(node) or len(node) != 3: return False
-    if not has_name(node) or get_name(node) != '_': return False
-    return node[1] == 'BitVec'
-
 def is_bitvector_extract(node):
     if is_leaf(node) or len(node) != 2:
         return False
@@ -28,6 +23,7 @@ def is_bitvector(node):
             'bvneg', 'bvadd', 'bvmul', 'bvudiv', 'bvurem', 'bvshl', 'bvshr', 'bvult',
             'concat'
         ]
+    return False
 
 def is_bitvector_constant(node):
     if is_leaf(node) or len(node) != 3: return False
@@ -52,7 +48,7 @@ def possible_bitvector_widths(node):
     return list(widths)
 
 class PassBVConstant:
-    """Replaces a node by a constant. Only applies to nodes of bitvector types. Is used with constants :code:`'bv0'` and :code:`'bv1'`, trying to guess the correct bit width."""
+    """Replaces a node by a bitvector constant. Only applies to nodes of bitvector types. Is used with constants :code:`'bv0'` and :code:`'bv1'`, trying to guess the correct bit width."""
     def __init__(self, constant):
         self.__constant = 'bv{}'.format(constant)
     def filter(self, node):
@@ -78,17 +74,11 @@ class PassBVExtractConstants:
 
 def collect_mutator_options(argparser):
     options.disable_mutator_argument(argparser, 'bitvector', 'bitvector mutators')
-    options.disable_mutator_argument(argparser, 'bv-constant-one', 'replace bitvector nodes by one')
-    options.disable_mutator_argument(argparser, 'bv-constant-zero', 'replace bitvector nodes by zero')
     options.disable_mutator_argument(argparser, 'bv-eval-extract', 'evaluate bitvector extract on constants')
 
 def collect_mutators(args):
     res = []
     if args.mutator_bitvector:
-        if args.mutator_bv_constant_one:
-            res.append(PassBVConstant('1'))
-        if args.mutator_bv_constant_zero:
-            res.append(PassBVConstant('0'))
         if args.mutator_bv_eval_extract:
             res.append(PassBVExtractConstants())
     return res

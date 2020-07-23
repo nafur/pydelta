@@ -24,6 +24,17 @@ class PassSubstituteChildren:
     def __str__(self):
         return 'substitute with child'
 
+class PassGenericConstants:
+    """Replaces any node by a constant."""
+    def mutations(self, node):
+        """Return :code:`get_constants(get_return_type(node))`."""
+        res = get_constants(get_return_type(node))
+        if node in res:
+            return []
+        return res
+    def __str__(self):
+        return 'substitute by a constant'
+
 class PassSortChildren:
     """Sorts the children of a node."""
     def filter(self, node):
@@ -90,9 +101,9 @@ class PassInlineDefinedFuns:
     def __str__(self):
         return 'inline defined functions'
 
-
 def collect_mutator_options(argparser):
     options.disable_mutator_argument(argparser, 'core', 'core mutators')
+    options.disable_mutator_argument(argparser, 'constants', 'replace by theory constants')
     options.disable_mutator_argument(argparser, 'eliminate-lets', 'eliminate let bindings')
     options.disable_mutator_argument(argparser, 'erase-children', 'erase individual children of nodes')
     options.disable_mutator_argument(argparser, 'inline-functions', 'inline defined functions')
@@ -111,6 +122,8 @@ def collect_mutators(args):
             res.append(PassEraseChildren())
         if args.mutator_inline_functions:
             res.append(PassInlineDefinedFuns())
+        if args.mutator_constants:
+            res.append(PassGenericConstants())
         if args.mutator_merge_children:
             res.append(PassMergeWithChildren())
         if args.mutator_replace_by_variable:
