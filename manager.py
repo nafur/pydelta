@@ -36,6 +36,12 @@ class Manager:
         self.result = None
         self.result_lock = threading.Lock()
 
+    def __empty_queue(self):
+        """Empty the queue."""
+        while not self.q.empty():
+            self.q.get()
+            self.q.task_done()
+
     def producer(self, input, skip = 0):
         """Produces new mutated variants of the given input."""
         counter = 0
@@ -63,16 +69,15 @@ class Manager:
                         if self.result == None:
                             self.stop_operation = True
                             self.result = candidate
-                            while not self.q.empty():
-                                self.q.get()
-                                self.q.task_done()
                 self.q.task_done()
             except queue.Empty:
                 if self.finished_generation:
                     break
+        self.__empty_queue()
 
     def simplify(self, input, skip = 0):
         """Starts one producer thread and multiple consumer thread and then waits for a valid simplification."""
+        assert self.q.empty()
         self.stop_operation = False
         self.finished_generation = False
         self.result = None
@@ -89,13 +94,12 @@ class Manager:
             
             for t in threads:
                 t.join()
+            self.__empty_queue()
         except KeyboardInterrupt:
             sys.stdout.write('\n')
             logging.warning('Stopping all computations.')
             self.stop_operation = True
-            while not self.q.empty():
-                self.q.get()
-                self.q.task_done()
+            self.__empty_queue()
             raise
             
         sys.stdout.write('\n')

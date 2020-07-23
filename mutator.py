@@ -42,8 +42,8 @@ def __generate_mutations(input, prg):
         for i in range(len(input)):
             cand = copy.copy(input)
             for mutated in __generate_mutations(input[i], prg):
-                cand[i] = mutated[1]
-                yield (mutated[0], copy.deepcopy(cand))
+                cand[i] = mutated[2]
+                yield (mutated[0], mutated[1], cand)
 
 def generate_mutations(input):
     """A generator that produces all possible mutations from the given input."""
