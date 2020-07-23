@@ -46,7 +46,7 @@ def possible_bitvector_widths(node):
         assert is_bitvector_type(get_type(node))
         return [get_type(node)[2]]
     widths = set()
-    for t in get_type_info().values():
+    for t in get_variable_info().values():
         for w in possible_bitvector_widths_imp(t):
             widths.add(w)
     return list(widths)
