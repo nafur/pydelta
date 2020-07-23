@@ -58,6 +58,15 @@ class PassReplaceVariables:
     def __str__(self):
         return 'substitute by variable of same type'
 
+class PassReplaceByVariable:
+    """Replaces a node by a variable."""
+    def filter(self, node):
+        return node_count(node) > 1
+    def mutations(self, node):
+        return list(get_variable_info().keys())
+    def __str__(self):
+        return 'substitute by existing variable'
+
 class PassLetSubstitution:
     """Substitutes a variable bound by a let binder into the nested term."""
     def filter(self, node):
@@ -88,6 +97,7 @@ def collect_mutator_options(argparser):
     options.disable_mutator_argument(argparser, 'erase-children', 'erase individual children of nodes')
     options.disable_mutator_argument(argparser, 'inline-functions', 'inline defined functions')
     options.disable_mutator_argument(argparser, 'merge-children', 'merge children into nodes')
+    options.disable_mutator_argument(argparser, 'replace-by-variable', 'replace with existing variable')
     options.disable_mutator_argument(argparser, 'replace-variables', 'replace variables of same type')
     options.disable_mutator_argument(argparser, 'sort-children', 'sort children of nodes')
     options.disable_mutator_argument(argparser, 'substitute-children', 'substitute nodes with their children')
@@ -103,6 +113,8 @@ def collect_mutators(args):
             res.append(PassInlineDefinedFuns())
         if args.mutator_merge_children:
             res.append(PassMergeWithChildren())
+        if args.mutator_replace_by_variable:
+            res.append(PassReplaceByVariable())
         if args.mutator_replace_variables:
             res.append(PassReplaceVariables())
         if args.mutator_sort_children:
