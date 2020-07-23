@@ -30,7 +30,10 @@ def __mutate_node(node):
     for m in enabled_mutators:
         if hasattr(m, 'filter') and not m.filter(node):
             continue
-        res = res + list(map(lambda x: (str(m), x), m.mutations(node)))
+        prio = lambda x: semantics.node_count(node) / semantics.node_count(x)
+        if hasattr(m, 'priority'):
+            prio = lambda x: m.priority(node, x)
+        res = res + list(map(lambda x: (str(m), prio(x), x), m.mutations(node)))
     return res
 
 
