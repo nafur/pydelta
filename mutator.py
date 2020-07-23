@@ -6,7 +6,7 @@ import mutators_arithmetic
 import mutators_bitvectors
 import mutators_boolean
 import mutators_core
-from semantics import *
+import semantics
 
 def collect_mutator_options(argparser):
     mutators_core.collect_mutator_options(argparser.add_argument_group('core mutator arguments'))
@@ -42,8 +42,8 @@ def __generate_mutations(input, prg):
                 yield (mutated[0], cand)
 
 def generate_mutations(input):
-    collect_information(input)
-    s = node_count(input)
+    semantics.collect_information(input)
+    s = semantics.node_count(input)
     widgets = [progressbar.Bar(), ' ', progressbar.Counter(), ' / ', str(s)]
     prg = progressbar.ProgressBar(maxval = s, widgets = widgets)
     prg.start()
