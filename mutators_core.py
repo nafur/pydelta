@@ -63,7 +63,7 @@ class PassReplaceByVariable:
     def filter(self, node):
         return node_count(node) > 1
     def mutations(self, node):
-        return list(get_variable_info().keys())
+        return [v for v in get_variable_info().keys() if node_count(v) < node_count(node)]
     def __str__(self):
         return 'substitute by existing variable'
 
@@ -97,7 +97,7 @@ def collect_mutator_options(argparser):
     options.disable_mutator_argument(argparser, 'erase-children', 'erase individual children of nodes')
     options.disable_mutator_argument(argparser, 'inline-functions', 'inline defined functions')
     options.disable_mutator_argument(argparser, 'merge-children', 'merge children into nodes')
-    options.disable_mutator_argument(argparser, 'replace-by-variable', 'replace with existing variable')
+    options.enable_mutator_argument(argparser, 'replace-by-variable', 'replace with existing variable')
     options.disable_mutator_argument(argparser, 'replace-variables', 'replace variables of same type')
     options.disable_mutator_argument(argparser, 'sort-children', 'sort children of nodes')
     options.disable_mutator_argument(argparser, 'substitute-children', 'substitute nodes with their children')
