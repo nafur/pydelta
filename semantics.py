@@ -26,9 +26,6 @@ def is_ite(node):
 def is_let(node):
     """Checks whether :code:`node` is a let binder."""
     return has_name(node) and get_name(node) == 'let'
-def is_empty_let(node):
-    """Checks whether :code:`node` is a let binder with no bound variables."""
-    return is_let(node) and is_empty(node[1])
 
 def is_defined_function(node):
     """Checks whether :code:`node` is a defined function."""

@@ -61,7 +61,7 @@ class PassReplaceVariables:
 class PassLetSubstitution:
     """Substitutes a variable bound by a let binder into the nested term."""
     def filter(self, node):
-        return is_let(node) and not is_empty_let(node)
+        return is_let(node)
     def mutations(self, node):
         res = []
         for var in node[1]:
@@ -71,15 +71,6 @@ class PassLetSubstitution:
         return res
     def __str__(self):
         return 'substitute variable into let body'
-
-class PassLetElimination:
-    """Substitutes a let binder by its nested term. This usually requires, that :code:`PassLetSubstitution` has been run for all bound variables."""
-    def filter(self, node):
-        return is_empty_let(node)
-    def mutations(self, node):
-        return [node[2]]
-    def __str__(self):
-        return 'substitute let with body'
 
 class PassInlineDefinedFuns:
     """Explicitly inlines a defined function."""
@@ -106,7 +97,6 @@ def collect_mutators(args):
     if args.mutator_core:
         if args.mutator_eliminate_lets:
             res.append(PassLetSubstitution())
-            res.append(PassLetElimination())
         if args.mutator_erase_children:
             res.append(PassEraseChildren())
         if args.mutator_inline_functions:
