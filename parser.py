@@ -73,6 +73,7 @@ def parse_expression(tokens):
     return tok.value
 
 def parse_smtlib(text):
+    """Parses an SMT-LIB input to a sequence of nodes."""
     token_stream = Peekable(lexer(text))
     exprs = []
     while not token_stream.empty():
@@ -80,12 +81,14 @@ def parse_smtlib(text):
     return exprs
 
 def render_expression(expr):
+    """Renders a node to a string."""
     if isinstance(expr, list):
         return '(' + ' '.join(map(render_expression, expr)) + ')'
     else:
         return expr
 
 def render_pretty_expression(expr, indent = ''):
+    """Renders a node to a string in a pretty way."""
     if isinstance(expr, list):
         if expr != [] and expr[0] in ['declare-fun']:
             return render_expression(expr)
@@ -100,6 +103,7 @@ def render_pretty_expression(expr, indent = ''):
         return expr
 
 def render_smtlib(exprs):
+    """Renders a sequence of nodes to a string."""
     if options.args().pretty_print:
         return '\n'.join(map(render_pretty_expression, exprs))
     res = map(render_expression, exprs)
@@ -108,4 +112,5 @@ def render_smtlib(exprs):
     return '\n'.join(res)
 
 def write_smtlib_to_file(exprs, filename):
+    """Writes a sequence of nodes to a file."""
     open(filename, 'w').write(render_smtlib(exprs))

@@ -10,6 +10,7 @@ ExecResult = collections.namedtuple('ExecResult', ['exitcode', 'stdout', 'stderr
 checks = 0
 
 def execute(cmd, inputfile):
+    """Executes :code:`cmd` on :code:`inputfile`."""
     try:
         global checks
         checks += 1
@@ -22,6 +23,9 @@ def execute(cmd, inputfile):
         return ExecResult(-1, '', '', 0)
 
 def compute_reference(cmd, inputfile):
+    """Computes the reference result on the original input.
+    Sets an automatic timeout if none was specified.
+    """
     global reference
     reference = execute(cmd, inputfile)
     logging.info('Reference result: exit code {} after {} seconds'.format(reference.exitcode, reference.runtime))
@@ -44,6 +48,7 @@ def compute_reference(cmd, inputfile):
     return True
 
 def matches_reference(result):
+    """Checkes whether the :code:`result` matches the reference result."""
     if reference.exitcode != result.exitcode:
         return False
     if not options.args().ignore_output:
