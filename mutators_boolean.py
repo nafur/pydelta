@@ -27,11 +27,20 @@ class PassBoolConstant(PassConstant):
     def __init__(self, constant):
         super().__init__(lambda n: not is_boolean_constant(n) and is_boolean(n), constant)
 
+class PassEliminateFalseEquality:
+    """Replaces an equality with :code:`false` by a negation."""
+    def filter(self, node):
+        return not is_leaf(node) and len(node) == 3 and has_name(node) and get_name(node) == '=' and node[1] == 'false'
+    def mutations(self, node):
+        return [['not', node[2]]]
+    def __str__(self):
+        return 'replace equality with false by negation'
 
 def collect_mutator_options(argparser):
     options.disable_mutator_argument(argparser, 'boolean', 'boolean mutators')
     options.disable_mutator_argument(argparser, 'constant-false', 'replace nodes by false')
     options.disable_mutator_argument(argparser, 'constant-true', 'replace nodes by true')
+    options.disable_mutator_argument(argparser, 'eliminate-false-eq', 'eliminate equalities with false')
     
 
 def collect_mutators(args):
@@ -41,4 +50,6 @@ def collect_mutators(args):
             res.append(PassBoolConstant('false'))
         if args.mutator_constant_true:
             res.append(PassBoolConstant('true'))
+        if args.mutator_eliminate_false_eq:
+            res.append(PassFalseEquality())
     return res
