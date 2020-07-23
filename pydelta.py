@@ -58,10 +58,9 @@ exprs = parser.parse_smtlib(open(args.inputfile).read())
 
 # setup the manager
 skip = 0
-iterations = 0
+simplifications = 0
 m = manager.Manager()
 while True:
-    iterations += 1
     try:
         # do one simplification step
         simp = m.simplify(exprs, skip)
@@ -79,10 +78,11 @@ while True:
             logging.info('Final input (written to {}):\n{}'.format(args.outputfile, parser.render_smtlib(exprs)))
             break
     else:
+        simplifications += 1
         # write current status to file and continue
-        logging.info('#{}: {}'.format(iterations, simp.simplification))
+        logging.info('#{}: {}'.format(simplifications, simp.simplification))
         skip = simp.counter
         exprs = simp.exprs
         parser.write_smtlib_to_file(exprs, args.outputfile)
 
-logging.info('Performed {} checks in {} iterations'.format(checker.checks, iterations))
+logging.info('Performed {} checks and {} simplifications'.format(checker.checks, simplifications))
