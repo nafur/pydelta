@@ -3,6 +3,7 @@ import sys
 
 import mutator
 
+__project_name__ = 'pyDelta'
 __version__ = "0.1"
 __author__  = "Gereon Kremer <gereon.kremer@gmail.com>"
 
