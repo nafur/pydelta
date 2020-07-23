@@ -42,7 +42,7 @@ class Manager:
             if skip > 0:
                 skip -= 1
                 continue
-            self.q.put(Candidate(counter, candidate[0], copy.deepcopy(candidate[1])))
+            self.q.put(Candidate(counter, candidate[0], candidate[1]))
             if self.stop_operation:
                 break
         self.finished_generation = True
