@@ -18,10 +18,6 @@ A mutator class should at least look like this:
         def mutations(self, node):
             """Create a list of mutations of the given node."""
             return []
-        def priority(self, node, repl):
-            """Estimate the importance of the replacement of `node` by the mutation :code:`repl`.
-            If not specified, we use `node_count(node) / node_count(repl)`."""
-            return node_count(node) / node_count(repl)
         def __str__(self):
             """Returns a description of this mutator."""
             return "dummy"

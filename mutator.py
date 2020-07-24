@@ -40,10 +40,7 @@ def __mutate_node(node):
     for m in enabled_mutators:
         if hasattr(m, 'filter') and not m.filter(node):
             continue
-        prio = lambda x: semantics.node_count(node) / semantics.node_count(x)
-        if hasattr(m, 'priority'):
-            prio = lambda x: m.priority(node, x)
-        res = res + list(map(lambda x: (str(m), prio(x), x), m.mutations(node)))
+        res = res + list(map(lambda x: (str(m), x), m.mutations(node)))
     return res
 
 
@@ -55,8 +52,11 @@ def __generate_mutations(input, prg):
         for i in range(len(input)):
             cand = copy.copy(input)
             for mutated in __generate_mutations(input[i], prg):
-                cand[i] = mutated[2]
-                yield (mutated[0], mutated[1], cand)
+                cand[i] = mutated[1]
+                yield (mutated[0], cand)
+
+def __generate_mutations_bfs(input, prg):
+    pass
 
 def generate_mutations(input):
     """A generator that produces all possible mutations from the given input."""
