@@ -24,7 +24,7 @@ class PassSubstituteChildren:
     def __str__(self):
         return 'substitute with child'
 
-class PassGenericConstants:
+class PassConstants:
     """Replaces any node by a constant."""
     def mutations(self, node):
         """Return :code:`get_constants(get_return_type(node))`."""
@@ -123,7 +123,7 @@ def collect_mutators(args):
         if args.mutator_inline_functions:
             res.append(PassInlineDefinedFuns())
         if args.mutator_constants:
-            res.append(PassGenericConstants())
+            res.append(PassConstants())
         if args.mutator_merge_children:
             res.append(PassMergeWithChildren())
         if args.mutator_replace_by_variable:

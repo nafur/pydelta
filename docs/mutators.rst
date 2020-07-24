@@ -25,25 +25,26 @@ A mutator class should at least look like this:
 Generic mutators
 ----------------
 
-.. autoclass:: mutators_generic.PassConstant
 .. autoclass:: mutators_core.PassEraseChildren
 .. autoclass:: mutators_core.PassSubstituteChildren
+.. autoclass:: mutators_core.PassConstants
 .. autoclass:: mutators_core.PassSortChildren
 .. autoclass:: mutators_core.PassMergeWithChildren
 .. autoclass:: mutators_core.PassReplaceVariables
+.. autoclass:: mutators_core.PassReplaceByVariable
 .. autoclass:: mutators_core.PassLetSubstitution
-.. autoclass:: mutators_core.PassLetElimination
 .. autoclass:: mutators_core.PassInlineDefinedFuns
 
 Boolean mutators
 ----------------
-.. autoclass:: mutators_boolean.PassBoolConstant
+.. autoclass:: mutators_boolean.PassDeMorgan
+.. autoclass:: mutators_boolean.PassDoubleNegation
+.. autoclass:: mutators_boolean.PassEliminateFalseEquality
 
 Arithmetic mutators
 -------------------
-.. autoclass:: mutators_arithmetic.PassArithmeticConstant
+.. autoclass:: mutators_arithmetic.PassArithmeticSimplifyConstant
 
 Bitvector mutators
 ------------------
-.. autoclass:: mutators_bitvectors.PassBVConstant
 .. autoclass:: mutators_bitvectors.PassBVExtractConstants
