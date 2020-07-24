@@ -195,7 +195,6 @@ def collect_information(exprs):
         if get_name(node) == 'declare-const':
             assert len(node) == 3
             assert is_leaf(node[1])
-            assert is_leaf(node[2])
             defined_variables[node[1]] = node[2]
         if get_name(node) == 'declare-fun':
             assert len(node) == 4
