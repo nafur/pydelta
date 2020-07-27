@@ -7,16 +7,16 @@ import options
 Token = collections.namedtuple('Token', ['kind', 'value'])
 
 def lexer(text):
-    __tokens = {
-        'LPAREN' : '\\(',
-        'RPAREN' : '\\)',
-        'STRINGLIT' : '"[^"]*"',
-        'QUOTEDSYM' : '\\|[^\\|]*\\|',
-        'SYMBOL' : '[:a-zA-Z0-9~!@$%\\^&*_+=<>.?/-]+',
-        'SPACE': '\\s+',
-        'MISMATCH': '.',
-    }
-    __token_re = re.compile('|'.join(['(?P<{}>{})'.format(tok, __tokens[tok]) for tok in __tokens]))
+    __tokens = [
+        ('LPAREN', '\\('),
+        ('RPAREN', '\\)'),
+        ('STRINGLIT', '"[^"]*"'),
+        ('QUOTEDSYM', '\\|[^\\|]*\\|'),
+        ('SYMBOL', '[:a-zA-Z0-9~!@$%\\^&*_+=<>.?/-]+'),
+        ('SPACE', '\\s+'),
+        ('MISMATCH', '.'),
+    ]
+    __token_re = re.compile('|'.join(['(?P<{}>{})'.format(tok[0], tok[1]) for tok in __tokens]))
 
     skip_until_newline = False
     for m in __token_re.finditer(text):
