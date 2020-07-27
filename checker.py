@@ -16,10 +16,13 @@ def execute(cmd, inputfile):
         checks += 1
         start = time.time()
         timeout = None if options.args().timeout == 0 else options.args().timeout
-        res = subprocess.run(cmd + [inputfile], capture_output = True, timeout = timeout)
+        proc = subprocess.Popen(cmd + [inputfile], stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+        out,err = proc.communicate(timeout = timeout)
         duration = time.time() - start
-        return ExecResult(res.returncode, res.stdout.decode('utf8').strip(), res.stderr.decode('utf8').strip(), duration)
+        return ExecResult(proc.returncode, out.decode('utf8').strip(), err.decode('utf8').strip(), duration)
     except subprocess.TimeoutExpired:
+        proc.terminate()
+        proc.wait()
         return ExecResult(-1, '', '', 0)
 
 def compute_reference(cmd, inputfile):
