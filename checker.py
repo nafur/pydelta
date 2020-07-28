@@ -1,6 +1,7 @@
 import collections
 import logging
 import re
+import resource
 import subprocess
 import time
 
@@ -9,6 +10,10 @@ import options
 ExecResult = collections.namedtuple('ExecResult', ['exitcode', 'stdout', 'stderr', 'runtime'])
 checks = 0
 
+def limit_memory():
+    if options.args().memout != 0:
+        resource.setrlimit(resource.RLIMIT_AS, (options.args().memout * 1024 * 1024, resource.RLIM_INFINITY))
+
 def execute(cmd, inputfile):
     """Executes :code:`cmd` on :code:`inputfile`."""
     try:
@@ -16,13 +21,20 @@ def execute(cmd, inputfile):
         checks += 1
         start = time.time()
         timeout = None if options.args().timeout == 0 else options.args().timeout
-        proc = subprocess.Popen(cmd + [inputfile], stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+        proc = subprocess.Popen(cmd + [inputfile], stdout = subprocess.PIPE, stderr = subprocess.PIPE, preexec_fn = limit_memory)
         out,err = proc.communicate(timeout = timeout)
         duration = time.time() - start
         return ExecResult(proc.returncode, out.decode('utf8').strip(), err.decode('utf8').strip(), duration)
     except subprocess.TimeoutExpired:
         proc.terminate()
-        proc.wait()
+        try:
+            proc.wait(timeout = 2)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+        try:
+            proc.wait(timeout = 2)
+        except subprocess.TimeoutExpired:
+            logging.warn('Killing pid {} failed. Please check manually to avoid memory exhaustion.')
         return ExecResult(-1, '', '', 0)
 
 def compute_reference(cmd, inputfile):
