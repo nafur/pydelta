@@ -31,6 +31,7 @@ def parse_options():
     argp_checking.add_argument('--parse-only', action = 'store_true', help = 'only parse the input file')
     argp_checking.add_argument('--max-threads', type = int, metavar = 'n', default = '-1', help = 'number of threads to use; #processors+n if n<=0')
     argp_checking.add_argument('--timeout', type = int, metavar = 'seconds', default = 0, help = 'timeout for individual checks')
+    argp_checking.add_argument('--memout', type = int, metavar = 'megabytes', default = 0, help = 'memout for individual checks')
 
     argp_output = argp.add_argument_group('output arguments')
     argp_output.add_argument('--outputfile', metavar = 'filename', default = 'delta.out.smt2', help = 'filename for the output file')
