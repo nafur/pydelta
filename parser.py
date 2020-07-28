@@ -90,7 +90,7 @@ def render_expression(expr):
 def render_pretty_expression(expr, indent = ''):
     """Renders a node to a string in a pretty way."""
     if isinstance(expr, list):
-        if expr != [] and expr[0] in ['declare-fun']:
+        if expr != [] and expr[0] in ['declare-const', 'declare-fun']:
             return render_expression(expr)
         if all(map(lambda e: not isinstance(e, list), expr)):
             return '(' + ' '.join(expr) + ')'
