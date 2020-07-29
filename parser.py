@@ -12,7 +12,7 @@ def lexer(text):
         ('RPAREN', '\\)'),
         ('STRINGLIT', '"[^"]*"'),
         ('QUOTEDSYM', '\\|[^\\|]*\\|'),
-        ('SYMBOL', '[:a-zA-Z0-9~!@$%\\^&*_+=<>.?/-]+'),
+        ('SYMBOL', '[:a-zA-Z0-9~!@$#%\\^&*_+=<>.?/-]+'),
         ('SPACE', '\\s+'),
         ('MISMATCH', '.'),
     ]
