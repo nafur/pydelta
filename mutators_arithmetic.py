@@ -10,8 +10,7 @@ class PassArithmeticSimplifyConstant:
         if int(f) == f:
             i = int(f)
             return [str(i // 2), str(i // 10)]
-        else:
-            return [str(int(f)), node[:-1]]
+        return [str(int(f)), node[:-1]]
     def __str__(self):
         return 'simplify arithmetic constant'
 

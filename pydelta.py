@@ -85,4 +85,4 @@ while True:
         exprs = simp.exprs
         parser.write_smtlib_to_file(exprs, args.outputfile)
 
-logging.info('Performed %d checks and %d simplifications', checker.checks, simplifications)
+logging.info('Performed %d checks and %d simplifications', checker.CHECKS, simplifications)

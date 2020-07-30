@@ -84,8 +84,7 @@ def render_expression(expr):
     """Renders a node to a string."""
     if isinstance(expr, list):
         return '(' + ' '.join(map(render_expression, expr)) + ')'
-    else:
-        return expr
+    return expr
 
 def render_pretty_expression(expr, indent = ''):
     """Renders a node to a string in a pretty way."""
@@ -99,8 +98,7 @@ def render_pretty_expression(expr, indent = ''):
             res += indent + '\t' + render_pretty_expression(e, indent + '\t') + '\n'
         res += indent + ')'
         return res
-    else:
-        return expr
+    return expr
 
 def render_smtlib(exprs):
     """Renders a sequence of nodes to a string."""
