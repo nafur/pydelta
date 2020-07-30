@@ -4,6 +4,7 @@ import logging
 import os
 import pprint
 import sys
+import time
 
 import checker
 import options
@@ -63,7 +64,9 @@ m = manager.Manager()
 while True:
     try:
         # do one simplification step
+        start = time.time()
         simp = m.simplify(exprs, skip)
+        duration = time.time() - start
     except KeyboardInterrupt:
         logging.warning('Aborting. See %s for results.', args.outputfile)
         break
@@ -80,7 +83,7 @@ while True:
     else:
         simplifications += 1
         # write current status to file and continue
-        logging.info('#%d: %s', simplifications, simp.simplification)
+        logging.info('#%3d: %-50s %6.2fs', simplifications, simp.simplification, duration)
         skip = simp.counter
         exprs = simp.exprs
         parser.write_smtlib_to_file(exprs, args.outputfile)
