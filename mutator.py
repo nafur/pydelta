@@ -1,5 +1,4 @@
 import copy
-import logging
 import progressbar
 
 import mutators_arithmetic
@@ -40,25 +39,25 @@ def __mutate_node(node):
     return res
 
 
-def __generate_mutations(input, prg):
-    """Generate mutations from the given input, updating the progress bar."""
+def __generate_mutations(original, prg):
+    """Generate mutations from the given original, updating the progress bar."""
     prg.update(prg.currval + 1)
-    yield from __mutate_node(input)
-    if isinstance(input, list):
-        for i in range(len(input)):
-            cand = copy.copy(input)
-            for mutated in __generate_mutations(input[i], prg):
+    yield from __mutate_node(original)
+    if isinstance(original, list):
+        for i,o in enumerate(original):
+            cand = copy.copy(original)
+            for mutated in __generate_mutations(o, prg):
                 cand[i] = mutated[1]
                 yield (mutated[0], cand)
 
-def __generate_mutations_bfs(input, prg):
+def __generate_mutations_bfs(original, prg):
     pass
 
-def generate_mutations(input):
-    """A generator that produces all possible mutations from the given input."""
-    semantics.collect_information(input)
-    s = semantics.node_count(input)
+def generate_mutations(original):
+    """A generator that produces all possible mutations from the given original."""
+    semantics.collect_information(original)
+    s = semantics.node_count(original)
     widgets = [progressbar.Bar(), ' ', progressbar.Counter(), ' / ', str(s)]
     prg = progressbar.ProgressBar(maxval = s, widgets = widgets)
     prg.start()
-    yield from __generate_mutations(input, prg)
+    yield from __generate_mutations(original, prg)

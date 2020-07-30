@@ -40,7 +40,7 @@ class PassSortChildren:
     def filter(self, node):
         return not is_leaf(node)
     def mutations(self, node):
-        s = sorted(node, key = lambda n: node_count(n))
+        s = sorted(node, key = node_count)
         if s != node:
             return [s]
         return []
@@ -53,8 +53,8 @@ class PassMergeWithChildren:
         return is_nary(node)
     def mutations(self, node):
         res = []
-        for cid in range(len(node)):
-            if has_name(node[cid]) and get_name(node) == get_name(node[cid]):
+        for cid,child in enumerate(node):
+            if has_name(child) and get_name(node) == get_name(child):
                 res.append(node[:cid] + node[cid][1:] + node[cid+1:])
         return res
     def __str__(self):

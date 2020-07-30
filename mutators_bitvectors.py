@@ -4,8 +4,10 @@ from semantics import *
 def get_bitvector_constant_value(node):
     assert is_bitvector_constant(node)
     if is_leaf(node):
-        if node.startswith('#b'): return (int(node[2:], 2), len(node[2:]))
-        if node.startswith('#x'): return (int(node[2:], 16), len(node[2:]) * 4)
+        if node.startswith('#b'):
+            return (int(node[2:], 2), len(node[2:]))
+        if node.startswith('#x'):
+            return (int(node[2:], 16), len(node[2:]) * 4)
         assert False
     return (int(node[1][2:]), node[2])
 
@@ -21,9 +23,9 @@ def possible_bitvector_widths(node):
         assert is_bitvector_type(get_type(node))
         return [get_type(node)[2]]
     widths = set()
-    for t in get_variable_info().values():
-        for w in possible_bitvector_widths_imp(t):
-            widths.add(w)
+    for bvtype in get_variable_info().values():
+        for wid in possible_bitvector_widths_imp(bvtype):
+            widths.add(wid)
     return list(widths)
 
 class PassBVExtractConstants:
@@ -50,7 +52,8 @@ class PassBVSimplifyConstant:
     def __str__(self):
         return 'simplify bitvector constant'
 
-class PassBVTrueFalseITE:
+class PassBVOneZeroITE:
+    """Replace an ite with bv1/bv0 cases by bvcomp."""
     def filter(self, node):
         if not is_ite(node):
             return False
@@ -71,7 +74,7 @@ def collect_mutator_options(argparser):
     options.disable_mutator_argument(argparser, 'bitvector', 'bitvector mutators')
     options.disable_mutator_argument(argparser, 'bv-constants', 'replaces constants by simpler ones')
     options.disable_mutator_argument(argparser, 'bv-eval-extract', 'evaluate bitvector extract on constants')
-    options.disable_mutator_argument(argparser, 'bv-ite-to-bvcomp', 'replaces true/false ites by bvcomp')
+    options.disable_mutator_argument(argparser, 'bv-ite-to-bvcomp', 'replaces bv1/bv0 ites by bvcomp')
 
 def collect_mutators(args):
     res = []
@@ -81,5 +84,5 @@ def collect_mutators(args):
         if args.mutator_bv_eval_extract:
             res.append(PassBVExtractConstants())
         if args.mutator_bv_ite_to_bvcomp:
-            res.append(PassBVTrueFalseITE())
+            res.append(PassBVOneZeroITE())
     return res

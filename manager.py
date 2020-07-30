@@ -1,7 +1,6 @@
 import collections
 import copy
 import logging
-import progressbar
 import queue
 import sys
 import tempfile
@@ -40,10 +39,10 @@ class Manager:
             self.q.get()
             self.q.task_done()
 
-    def producer(self, input, skip = 0):
+    def producer(self, original, skip = 0):
         """Produces new mutated variants of the given input."""
         counter = 0
-        for candidate in mutator.generate_mutations(input):
+        for candidate in mutator.generate_mutations(original):
             counter += 1
             if skip > 0:
                 skip -= 1
@@ -64,7 +63,7 @@ class Manager:
                 res = checker.execute(options.args().cmd, tmp.name)
                 if checker.matches_reference(res):
                     with self.result_lock:
-                        if self.result == None:
+                        if self.result is None:
                             self.stop_operation = True
                             self.result = candidate
                 self.q.task_done()
@@ -73,7 +72,7 @@ class Manager:
                     break
         self.__empty_queue()
 
-    def simplify(self, input, skip = 0):
+    def simplify(self, original, skip = 0):
         """Starts one producer thread and multiple consumer thread and then waits for a valid simplification."""
         assert self.q.empty()
         self.stop_operation = False
@@ -81,15 +80,13 @@ class Manager:
         self.result = None
         try:
             threads = [
-                threading.Thread(target = self.producer, name = 'producer', args = (input, skip))
+                threading.Thread(target = self.producer, name = 'producer', args = (original, skip))
             ] + [
                 threading.Thread(target = self.consumer, name = 'consumer-{}'.format(i + 1))
                 for i in range(options.args().max_threads)
             ]
-
             for t in threads:
                 t.start()
-            
             for t in threads:
                 t.join()
             self.__empty_queue()
@@ -99,6 +96,6 @@ class Manager:
             self.stop_operation = True
             self.__empty_queue()
             raise
-            
+
         sys.stdout.write('\n')
         return self.result

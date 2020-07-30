@@ -1,8 +1,7 @@
-import logging
 import re
 
-defined_functions = {}
-defined_variables = {}
+__defined_functions = {}
+__defined_variables = {}
 
 ##### Generic node utilities
 def is_leaf(node):
@@ -29,11 +28,11 @@ def is_let(node):
 
 def is_defined_function(node):
     """Checks whether :code:`node` is a defined function."""
-    return has_name(node) and get_name(node) in defined_functions
+    return has_name(node) and get_name(node) in __defined_functions
 def get_defined_function(node):
-    """Returns the defined function :code:`node` as a function object. Assumes :code:`is_defined_functions(node)`."""
+    """Returns the defined function :code:`node` as a function object. Assumes :code:`is___defined_functions(node)`."""
     assert is_defined_function(node)
-    return defined_functions[get_name(node)]
+    return __defined_functions[get_name(node)]
 
 def is_nary(node):
     """Checks whether the :code:`node` is a n-ary operator."""
@@ -74,13 +73,17 @@ def substitute(node, repl):
 ##### Collected information about theories
 
 def is_bitvector_type(node):
-    if is_leaf(node) or len(node) != 3: return False
-    if not has_name(node) or get_name(node) != '_': return False
+    if is_leaf(node) or len(node) != 3:
+        return False
+    if not has_name(node) or get_name(node) != '_':
+        return False
     return node[1] == 'BitVec'
 
 def is_set_type(node):
-    if is_leaf(node) or len(node) != 2: return False
-    if not has_name(node) or get_name(node) != 'Set': return False
+    if is_leaf(node) or len(node) != 2:
+        return False
+    if not has_name(node) or get_name(node) != 'Set':
+        return False
     return True
 
 def is_boolean_constant(node):
@@ -89,27 +92,31 @@ def is_boolean_constant(node):
 
 def is_arithmetic_constant(node):
     """Checks whether the :code:`node` is an arithmetic constant."""
-    return is_leaf(node) and re.match('[0-9]+(\\.[0-9]*)?', node) != None
+    return is_leaf(node) and re.match('[0-9]+(\\.[0-9]*)?', node) is not None
 
 def is_int_constant(node):
     """Checks whether the :code:`node` is an int constant."""
-    return is_leaf(node) and re.match('^[0-9]+$', node) != None
+    return is_leaf(node) and re.match('^[0-9]+$', node) is not None
 
 def is_real_constant(node):
     """Checks whether the :code:`node` is a real constant."""
-    return is_leaf(node) and re.match('^[0-9]+(\\.[0-9]*)?$', node) != None
+    return is_leaf(node) and re.match('^[0-9]+(\\.[0-9]*)?$', node) is not None
 
 def is_string_constant(node):
     """Checks whether the :code:`node` is a string constant."""
-    return is_leaf(node) and re.match('^\"[^\"]*\"$', node) != None
+    return is_leaf(node) and re.match('^\"[^\"]*\"$', node) is not None
 
 def is_bitvector_constant(node):
     if is_leaf(node):
-        if node.startswith('#b'): return True
-        if node.startswith('#x'): return True
+        if node.startswith('#b'):
+            return True
+        if node.startswith('#x'):
+            return True
         return False
-    if len(node) != 3: return False
-    if not has_name(node) or get_name(node) != '_': return False
+    if len(node) != 3:
+        return False
+    if not has_name(node) or get_name(node) != '_':
+        return False
     return node[1].startswith('bv')
 
 def is_indexed_op(node):
@@ -148,16 +155,18 @@ def is_bitvector_rotate(node):
 def get_bitvector_width(node):
     if is_bitvector_constant(node):
         if is_leaf(node):
-            if node.startswith('#b'): return len(node[2:])
-            if node.startswith('#x'): return len(node[2:]) * 4
+            if node.startswith('#b'):
+                return len(node[2:])
+            if node.startswith('#x'):
+                return len(node[2:]) * 4
         return int(node[2])
     if has_name(node):
         if get_name(node) in [
-            'bvnot', 'bvand', 'bvor',
-            'bvneg', 'bvadd', 'bvmul', 'bvudiv', 'bvurem',
-            'bvshl', 'bvshr',
-            'bvnand', 'bvnor', 'bvxor', 'bvsub', 'bvsdiv', 'bvsrem', 'bvsmod', 'bvashr'
-        ]:
+                'bvnot', 'bvand', 'bvor',
+                'bvneg', 'bvadd', 'bvmul', 'bvudiv', 'bvurem',
+                'bvshl', 'bvshr',
+                'bvnand', 'bvnor', 'bvxor', 'bvsub', 'bvsdiv', 'bvsrem', 'bvsmod', 'bvashr'
+            ]:
             return get_bitvector_width(node[1])
         if get_name(node) == 'concat':
             assert len(node) == 3
@@ -174,17 +183,17 @@ def get_bitvector_width(node):
             return get_bitvector_width(node[1])
     return -1
 
-def get_constants(type):
-    if type == 'Bool':
+def get_constants(const_type):
+    if const_type == 'Bool':
         return ['false', 'true']
-    if type == 'Int':
+    if const_type == 'Int':
         return ['0', '1']
-    if type == 'Real':
+    if const_type == 'Real':
         return ['0.0', '1.0']
-    if is_bitvector_type(type):
-        return [['_', c, type[2]] for c in ['bv0', 'bv1']]
-    if is_set_type(type):
-        return [['as', 'emptyset', type]] + [['singleton', c] for c in get_constants(type[1])]
+    if is_bitvector_type(const_type):
+        return [['_', c, const_type[2]] for c in ['bv0', 'bv1']]
+    if is_set_type(const_type):
+        return [['as', 'emptyset', const_type]] + [['singleton', c] for c in get_constants(const_type[1])]
     return []
 
 def get_return_type(node):
@@ -206,35 +215,35 @@ def get_return_type(node):
             return get_return_type(node[1])
         ### stuff that returns Bool
         if get_name(node) in [
-            # core theory
-            'not', '=>', 'and', 'or', 'xor', '=', 'distinct',
-            # bv theory
-            'bvult',
-            # fp theory
-            'fp.leq', 'fp.lt', 'fp.geq', 'fp.gt', 'fp.eq',
-            'fp.isNormal', 'fp.isSubnormal', 'fp.isZero',
-            'fp.isInfinite', 'fp.isNaN', 'fp.isNegative', 'fp.isPositive',
-            # int / real theory
-            '<=', '<', '>>', '>', 'is_int',
-            # sets theory
-            'member', 'subset',
-            # string theory
-            'str.<', 'str.in_re', 'str.<=',
-            'str.prefixof', 'str.suffixof', 'str.contains',
-            'str.is_digit',
-        ]:
+                # core theory
+                'not', '=>', 'and', 'or', 'xor', '=', 'distinct',
+                # bv theory
+                'bvult',
+                # fp theory
+                'fp.leq', 'fp.lt', 'fp.geq', 'fp.gt', 'fp.eq',
+                'fp.isNormal', 'fp.isSubnormal', 'fp.isZero',
+                'fp.isInfinite', 'fp.isNaN', 'fp.isNegative', 'fp.isPositive',
+                # int / real theory
+                '<=', '<', '>>', '>', 'is_int',
+                # sets theory
+                'member', 'subset',
+                # string theory
+                'str.<', 'str.in_re', 'str.<=',
+                'str.prefixof', 'str.suffixof', 'str.contains',
+                'str.is_digit',
+            ]:
             return 'Bool'
         # int theory
         if get_name(node) == '_' and len(node) == 3 and node[1] == 'divisible':
             return 'Bool'
         ### stuff that returns Int
         if get_name(node) in [
-            'div', 'mod', 'abs', 'to_int',
-            # string theory
-            'str.len', 'str.indexof', 'str.to_code', 'str.to_int',
-            # sets theory
-            'card'
-        ]:
+                'div', 'mod', 'abs', 'to_int',
+                # string theory
+                'str.len', 'str.indexof', 'str.to_code', 'str.to_int',
+                # sets theory
+                'card'
+            ]:
             return 'Int'
         ### stuff that returns Real
         if get_name(node) in ['/', 'to_real', 'fp.to_real']:
@@ -249,25 +258,25 @@ def get_return_type(node):
 ##### Type information about nodes
 def get_variable_info():
     """Returns the type lookup table."""
-    return defined_variables
+    return __defined_variables
 def has_type(node):
     """Checks whether :code:`node` was defined to have a certain type. Mostly applies to variables."""
-    return is_leaf(node) and node in defined_variables
+    return is_leaf(node) and node in __defined_variables
 def get_type(node):
     """Returns the type of :code:`node` if it was defined to have a certain type. Assumes :code:`has_type(node)`."""
     assert has_type(node)
-    return defined_variables[node]
+    return __defined_variables[node]
 
-def get_variables_with_type(type):
-    """Returns all variables with the type :code:`type`."""
-    return [v for v in defined_variables if defined_variables[v] == type]
+def get_variables_with_type(var_type):
+    """Returns all variables with the type :code:`var_type`."""
+    return [v for v in __defined_variables if __defined_variables[v] == var_type]
 
 def collect_information(exprs):
     """Initialize global lookups: defined functions and types."""
-    global defined_functions
-    global defined_variables
-    defined_functions = {}
-    defined_variables = {}
+    global __defined_functions
+    global __defined_variables
+    __defined_functions = {}
+    __defined_variables = {}
 
     for node in iterate_nodes(exprs):
         if not has_name(node):
@@ -275,16 +284,16 @@ def collect_information(exprs):
         if get_name(node) == 'declare-const':
             assert len(node) == 3
             assert is_leaf(node[1])
-            defined_variables[node[1]] = node[2]
+            __defined_variables[node[1]] = node[2]
         if get_name(node) == 'declare-fun':
             assert len(node) == 4
             assert is_leaf(node[1])
-            defined_variables[node[1]] = node[3]
+            __defined_variables[node[1]] = node[3]
         if get_name(node) == 'define-fun':
             assert len(node) == 5
             assert is_leaf(node[1])
             assert not is_leaf(node[2])
             assert is_leaf(node[3])
-            defined_functions[node[1]] = lambda args, node=node: substitute(node[4], {
+            __defined_functions[node[1]] = lambda args, node=node: substitute(node[4], {
                 node[2][i][0]: args[i] for i in range(len(args))
             })

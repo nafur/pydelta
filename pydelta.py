@@ -43,7 +43,7 @@ if args.max_threads != 1:
     # configure number of threads
     if args.max_threads <= 0:
         args.max_threads = os.cpu_count() + args.max_threads
-    logging.info('Using up to {} threads.'.format(args.max_threads))
+    logging.info('Using up to %d threads.', args.max_threads)
 
 # do the reference run
 if not checker.compute_reference(args.cmd, args.inputfile):
@@ -65,9 +65,9 @@ while True:
         # do one simplification step
         simp = m.simplify(exprs, skip)
     except KeyboardInterrupt:
-        logging.warning('Aborting. See {} for results.'.format(args.outputfile))
+        logging.warning('Aborting. See %s for results.', args.outputfile)
         break
-    if simp == None:
+    if simp is None:
         logging.info('No further simplification found')
         if skip > 0:
             skip = 0
@@ -75,14 +75,14 @@ while True:
         else:
             # terminate
             parser.write_smtlib_to_file(exprs, args.outputfile)
-            logging.info('Final input (written to {}):\n{}'.format(args.outputfile, parser.render_smtlib(exprs)))
+            logging.info('Final input (written to %s):\n%s', args.outputfile, parser.render_smtlib(exprs))
             break
     else:
         simplifications += 1
         # write current status to file and continue
-        logging.info('#{}: {}'.format(simplifications, simp.simplification))
+        logging.info('#%d: %s', simplifications, simp.simplification)
         skip = simp.counter
         exprs = simp.exprs
         parser.write_smtlib_to_file(exprs, args.outputfile)
 
-logging.info('Performed {} checks and {} simplifications'.format(checker.checks, simplifications))
+logging.info('Performed %d checks and %d simplifications', checker.checks, simplifications)

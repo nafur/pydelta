@@ -42,7 +42,7 @@ class Peekable:
             self.__peek = next(self.__gen)
         except StopIteration:
             self.__empty = True
-    
+
     def __iter__(self):
         return self
     def __next__(self):

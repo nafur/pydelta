@@ -47,21 +47,21 @@ def parse_options():
 
     return argp.parse_args()
 
-parsed_args = None
+__PARSED_ARGS = None
 
 def args():
     """Returns the commandline options. Calls :code:`parse_options()` if parsing has not yet happened."""
-    global parsed_args
-    if parsed_args == None:
-        parsed_args = parse_options()
-    return parsed_args
+    global __PARSED_ARGS
+    if __PARSED_ARGS is None:
+        __PARSED_ARGS = parse_options()
+    return __PARSED_ARGS
 
-def __add_mutator_argument(argparser, option, name, action, help):
+def __add_mutator_argument(argparser, option, name, action, help_msg):
     dest = 'mutator_{}'.format(name.replace('-', '_'))
-    argparser.add_argument(option, dest = dest, action = action, help = help)
-def enable_mutator_argument(argparser, name, help):
+    argparser.add_argument(option, dest = dest, action = action, help = help_msg)
+def enable_mutator_argument(argparser, name, help_msg):
     """Add an option :code:`--with-{name}` for a mutator."""
-    __add_mutator_argument(argparser, '--with-{}'.format(name), name, 'store_true', help)
-def disable_mutator_argument(argparser, name, help):
+    __add_mutator_argument(argparser, '--with-{}'.format(name), name, 'store_true', help_msg)
+def disable_mutator_argument(argparser, name, help_msg):
     """Add an option :code:`--without-{name}` for a mutator."""
-    __add_mutator_argument(argparser, '--without-{}'.format(name), name, 'store_false', help)
+    __add_mutator_argument(argparser, '--without-{}'.format(name), name, 'store_false', help_msg)

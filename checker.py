@@ -8,6 +8,7 @@ import time
 import options
 
 ExecResult = collections.namedtuple('ExecResult', ['exitcode', 'stdout', 'stderr', 'runtime'])
+__reference = ExecResult(-1, '', '', -1)
 checks = 0
 
 def limit_memory():
@@ -34,49 +35,49 @@ def execute(cmd, inputfile):
         try:
             proc.wait(timeout = 2)
         except subprocess.TimeoutExpired:
-            logging.warn('Killing pid {} failed. Please check manually to avoid memory exhaustion.')
+            logging.warning('Killing pid %d failed. Please check manually to avoid memory exhaustion.', proc.pid)
         return ExecResult(-1, '', '', 0)
 
 def compute_reference(cmd, inputfile):
     """Computes the reference result on the original input.
     Sets an automatic timeout if none was specified.
     """
-    global reference
-    reference = execute(cmd, inputfile)
-    logging.info('Reference result: exit code {} after {} seconds'.format(reference.exitcode, reference.runtime))
+    global __reference
+    __reference = execute(cmd, inputfile)
+    logging.info('Reference result: exit code %d after %.2f seconds', __reference.exitcode, __reference.runtime)
     if options.args().ignore_output:
         logging.info('Reference output is being ignored')
     else:
-        logging.info('Reference stdout: \"{}\"'.format(reference.stdout))
-        logging.info('Reference stderr: \"{}\"'.format(reference.stderr))
+        logging.info('Reference stdout: \"%s\"', __reference.stdout)
+        logging.info('Reference stderr: \"%s\"', __reference.stderr)
         if options.args().match_out is not None:
-            if not re.search(options.args().match_out, reference.stdout):
+            if not re.search(options.args().match_out, __reference.stdout):
                 logging.error('The pattern for stdout does not match the reference output')
                 return False
         if options.args().match_err is not None:
-            if not re.search(options.args().match_err, reference.stderr):
+            if not re.search(options.args().match_err, __reference.stderr):
                 logging.error('The pattern for stderr does not match the reference output')
                 return False
     if options.args().timeout == 0:
-        options.args().timeout = max(int(reference.runtime + 1) * 2, 1)
-        logging.info('Using automatic timeout of {} seconds (reference run took {:.2f} seconds)'.format(options.args().timeout, reference.runtime))
+        options.args().timeout = max(int(__reference.runtime + 1) * 2, 1)
+        logging.info('Using automatic timeout of %d seconds (reference run took %.2f seconds)', options.args().timeout, __reference.runtime)
     return True
 
 def matches_reference(result):
     """Checkes whether the :code:`result` matches the reference result."""
-    if reference.exitcode != result.exitcode:
+    if __reference.exitcode != result.exitcode:
         return False
     if not options.args().ignore_output:
         if options.args().match_out is None:
-            if reference.stdout != result.stdout:
+            if __reference.stdout != result.stdout:
                 return False
         else:
-            if not re.search(options.args().match_out, reference.stdout):
+            if not re.search(options.args().match_out, __reference.stdout):
                 return False
         if options.args().match_err is None:
-            if reference.stderr != result.stderr:
+            if __reference.stderr != result.stderr:
                 return False
         else:
-            if not re.search(options.args().match_err, reference.stderr):
+            if not re.search(options.args().match_err, __reference.stderr):
                 return False
     return True
