@@ -13,11 +13,11 @@ class PassStringSimplifyConstant:
 
 def collect_mutator_options(argparser):
     options.disable_mutator_argument(argparser, 'strings', 'strings mutators')
-    options.disable_mutator_argument(argparser, 'str-simplify-constants', 'replaces constants by simpler ones')
+    options.disable_mutator_argument(argparser, 'str-constants', 'replaces constants by simpler ones')
 
 def collect_mutators(args):
     res = []
     if args.mutator_strings:
-        if args.mutator_str_simplify_constants:
+        if args.mutator_str_constants:
             res.append(PassStringSimplifyConstant())
     return res

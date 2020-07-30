@@ -193,14 +193,14 @@ def get_return_type(node):
     if is_boolean_constant(node):
         return 'Bool'
     if is_bitvector_constant(node):
-        return ['_', 'BitVec', get_bitvector_width(node)]
+        return ['_', 'BitVec', str(get_bitvector_width(node))]
     if is_int_constant(node):
         return 'Int'
     if is_real_constant(node):
         return 'Real'
     bvwidth = get_bitvector_width(node)
     if bvwidth != -1:
-        return ['_', 'BitVec', bvwidth]
+        return ['_', 'BitVec', str(bvwidth)]
     if has_name(node):
         if is_ite(node):
             return get_return_type(node[1])
