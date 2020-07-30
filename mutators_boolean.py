@@ -22,6 +22,9 @@ def is_boolean(node):
 def is_not(node):
     return has_name(node) and get_name(node) == 'not'
 
+def is_quantifier(node):
+    return has_name(node) and get_name(node) in ['exists', 'forall']
+
 class PassEliminateFalseEquality:
     """Replaces an equality with :code:`false` by a negation."""
     def filter(self, node):
@@ -46,6 +49,19 @@ class PassDeMorgan:
     def __str__(self):
         return 'push negation inside'
 
+class PassNegatedQuantifiers:
+    """Pushes negation inside quantifiers."""
+    def filter(self, node):
+        return is_not(node) and is_quantifier(node[1])
+    def mutations(self, node):
+        if get_name(node[1]) == 'exists':
+            return [['forall', node[1][1], ['not', node[1][2]]]]
+        if get_name(node[1]) == 'forall':
+            return [['exists', node[1][1], ['not', node[1][2]]]]
+        return []
+    def __str__(self):
+        return 'push negation inside of quantifier'
+
 class PassDoubleNegation:
     """Elimination double negations."""
     def filter(self, node):
@@ -58,6 +74,7 @@ class PassDoubleNegation:
 def collect_mutator_options(argparser):
     options.disable_mutator_argument(argparser, 'boolean', 'boolean mutators')
     options.disable_mutator_argument(argparser, 'eliminate-false-eq', 'eliminate equalities with false')
+    options.disable_mutator_argument(argparser, 'negated-quant', 'push negations inside quantifiers')
 
 def collect_mutators(args):
     res = []
@@ -66,4 +83,6 @@ def collect_mutators(args):
         res.append(PassDoubleNegation())
         if args.mutator_eliminate_false_eq:
             res.append(PassEliminateFalseEquality())
+        if args.mutator_negated_quant:
+            res.append(PassNegatedQuantifiers())
     return res
