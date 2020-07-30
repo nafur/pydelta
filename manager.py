@@ -70,6 +70,8 @@ class Manager:
             except queue.Empty:
                 if self.finished_generation:
                     break
+            except FileNotFoundError:
+                logging.info('Removing the temporary file failed.')
         self.__empty_queue()
 
     def simplify(self, original, skip = 0):
