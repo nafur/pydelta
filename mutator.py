@@ -7,6 +7,7 @@ import mutators_bitvectors
 import mutators_boolean
 import mutators_core
 import mutators_smtlib
+import mutators_strings
 import semantics
 
 def collect_mutator_options(argparser):
@@ -16,6 +17,7 @@ def collect_mutator_options(argparser):
     mutators_arithmetic.collect_mutator_options(argparser.add_argument_group('arithmetic mutator arguments'))
     mutators_bitvectors.collect_mutator_options(argparser.add_argument_group('bitvector mutator arguments'))
     mutators_smtlib.collect_mutator_options(argparser.add_argument_group('smtlib mutator arguments'))
+    mutators_strings.collect_mutator_options(argparser.add_argument_group('strings mutator arguments'))
 
 enabled_mutators = []
 def collect_mutators(args):
@@ -26,6 +28,7 @@ def collect_mutators(args):
     enabled_mutators += mutators_arithmetic.collect_mutators(args)
     enabled_mutators += mutators_bitvectors.collect_mutators(args)
     enabled_mutators += mutators_smtlib.collect_mutators(args)
+    enabled_mutators += mutators_strings.collect_mutators(args)
 
 def __mutate_node(node):
     """Apply all active mutators to the given node. Returns a list of all possible mutations."""
