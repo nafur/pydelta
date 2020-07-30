@@ -83,7 +83,7 @@ while True:
     else:
         simplifications += 1
         # write current status to file and continue
-        logging.info('#%3d: %-50s %6.2fs', simplifications, simp.simplification, duration)
+        logging.info('#%d: %s (%.2fs)', simplifications, simp.simplification, duration)
         skip = simp.counter
         exprs = simp.exprs
         parser.write_smtlib_to_file(exprs, args.outputfile)
