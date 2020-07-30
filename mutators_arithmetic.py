@@ -1,36 +1,6 @@
 import options
 from semantics import *
 
-def is_arithmetic(node):
-    """Checks whether the :code:`node` has an arithmetic type."""
-    return get_return_type(node) in ['Int', 'Real']
-
-def is_int(node):
-    """Checks whether the :code:`node` has an int type."""
-    return get_return_type(node) in ['Int']
-    if has_type(node):
-        return get_type(node) in ['Int']
-    if is_ite(node):
-        return is_int(node[1])
-    if has_name(node):
-        if get_name(node) in ['div', 'mod', 'abs']:
-            return True
-        return get_name(node) in [
-                '*', '+', '-'
-            ] and all(map(is_int, node[1:]))
-    return False
-
-def is_real(node):
-    """Checks whether the :code:`node` has a real type."""
-    return get_return_type(node) in ['Real']
-    if has_type(node):
-        return get_type(node) in ['Real']
-    if is_ite(node):
-        return is_real(node[1])
-    if has_name(node):
-        return get_name(node) in ['*', '+', '-', '/'] and any(map(is_real, node[1:]))
-    return False
-
 class PassArithmeticSimplifyConstant:
     """Replace a constant by a simpler version (smaller or fewer decimal places)."""
     def filter(self, node):

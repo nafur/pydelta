@@ -9,13 +9,6 @@ import mutators_core
 import mutators_smtlib
 import semantics
 
-def get_constants(type):
-    res = []
-    res += mutators_boolean.get_constants(type)
-    res += mutators_arithmetic.get_constants(type)
-    res += mutators_bitvectors.get_constants(type)
-    return res
-
 def collect_mutator_options(argparser):
     """Adds all options related to mutators to the given argument parser."""
     mutators_core.collect_mutator_options(argparser.add_argument_group('core mutator arguments'))

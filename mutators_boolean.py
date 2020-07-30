@@ -1,24 +1,6 @@
 import options
 from semantics import *
 
-def is_boolean(node):
-    """Checks whether the :code:`node` is Boolean."""
-    if node in ['false', 'true']:
-        return True
-    if has_type(node):
-        return get_type(node) in ['Bool']
-    if is_ite(node):
-        return is_boolean(node[1])
-    if has_name(node):
-        return get_name(node) in [
-            # core theory
-            'not', '=>', 'and', 'or', 'xor', '=', 'distinct'
-            '<', '<=', '>', '>=',
-            # set theory
-            'member',
-        ]
-    return False
-
 def is_not(node):
     return has_name(node) and get_name(node) == 'not'
 
