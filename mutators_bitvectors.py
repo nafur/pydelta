@@ -50,17 +50,36 @@ class PassBVSimplifyConstant:
     def __str__(self):
         return 'simplify bitvector constant'
 
+class PassBVTrueFalseITE:
+    def filter(self, node):
+        if not is_ite(node):
+            return False
+        if not has_name(node[1]) or get_name(node[1]) != '=' or len(node[1]) != 3:
+            return False
+        if not is_bitvector_constant(node[2]) or get_bitvector_constant_value(node[2]) != (1, '1'):
+            return False
+        if not is_bitvector_constant(node[3]) or get_bitvector_constant_value(node[3]) != (0, '1'):
+            return False
+        return True
+    def mutations(self, node):
+        return [['bvcomp', node[1][1], node[1][2]]]
+    def __str__(self):
+        return 'eliminate ite with bv1 / bv0 cases'
+
 
 def collect_mutator_options(argparser):
     options.disable_mutator_argument(argparser, 'bitvector', 'bitvector mutators')
+    options.disable_mutator_argument(argparser, 'bv-constants', 'replaces constants by simpler ones')
     options.disable_mutator_argument(argparser, 'bv-eval-extract', 'evaluate bitvector extract on constants')
-    options.disable_mutator_argument(argparser, 'bv-simplify-constants', 'replaces constants by simpler ones')
+    options.disable_mutator_argument(argparser, 'bv-ite-to-bvcomp', 'replaces true/false ites by bvcomp')
 
 def collect_mutators(args):
     res = []
     if args.mutator_bitvector:
+        if args.mutator_bv_constants:
+            res.append(PassBVSimplifyConstant())
         if args.mutator_bv_eval_extract:
             res.append(PassBVExtractConstants())
-        if args.mutator_bv_simplify_constants:
-            res.append(PassBVSimplifyConstant())
+        if args.mutator_bv_ite_to_bvcomp:
+            res.append(PassBVTrueFalseITE())
     return res

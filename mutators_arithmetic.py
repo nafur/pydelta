@@ -18,11 +18,11 @@ class PassArithmeticSimplifyConstant:
 
 def collect_mutator_options(argparser):
     options.disable_mutator_argument(argparser, 'arithmetic', 'arithmetic mutators')
-    options.disable_mutator_argument(argparser, 'simplify-constants', 'replaces constants by simpler ones')
+    options.disable_mutator_argument(argparser, 'arith-constants', 'replaces constants by simpler ones')
 
 def collect_mutators(args):
     res = []
     if args.mutator_arithmetic:
-        if args.mutator_simplify_constants:
+        if args.mutator_arith_constants:
             res.append(PassArithmeticSimplifyConstant())
     return res
