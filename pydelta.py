@@ -58,7 +58,7 @@ mutator.collect_mutators(args)
 exprs = parser.parse_smtlib(open(args.inputfile).read())
 
 # setup the manager
-skip = 0
+skip = options.args().skip
 simplifications = 0
 m = manager.Manager()
 while True:
