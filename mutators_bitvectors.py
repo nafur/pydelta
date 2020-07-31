@@ -69,12 +69,28 @@ class PassBVOneZeroITE:
     def __str__(self):
         return 'eliminate ite with bv1 / bv0 cases'
 
+class PassConcatToZeroExtend:
+    """Replace a concat with zero by zero_extend."""
+    def filter(self, node):
+        if not has_name(node) or get_name(node) != 'concat':
+            return False
+        if not is_bitvector_constant(node[1]):
+            return False
+        return get_bitvector_constant_value(node[1])[0] == 0
+    def mutations(self, node):
+        return [
+            [['_', 'zero_extend', get_bitvector_constant_value(node[1])[1]], node[2]]
+        ]
+    def __str__(self):
+        return 'replace concat by zero_extend'
+
 
 def collect_mutator_options(argparser):
     options.disable_mutator_argument(argparser, 'bitvector', 'bitvector mutators')
     options.disable_mutator_argument(argparser, 'bv-constants', 'replaces constants by simpler ones')
     options.disable_mutator_argument(argparser, 'bv-eval-extract', 'evaluate bitvector extract on constants')
     options.disable_mutator_argument(argparser, 'bv-ite-to-bvcomp', 'replaces bv1/bv0 ites by bvcomp')
+    options.disable_mutator_argument(argparser, 'bv-zero-concat', 'replaces concat with zero by zero_extend')
 
 def collect_mutators(args):
     res = []
@@ -85,4 +101,6 @@ def collect_mutators(args):
             res.append(PassBVExtractConstants())
         if args.mutator_bv_ite_to_bvcomp:
             res.append(PassBVOneZeroITE())
+        if args.mutator_bv_zero_concat:
+            res.append(PassConcatToZeroExtend())
     return res
