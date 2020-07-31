@@ -1,10 +1,12 @@
 import collections
 import re
+import sys
 import textwrap
 
 import options
 
 Token = collections.namedtuple('Token', ['kind', 'value'])
+sys.setrecursionlimit(100000)
 
 def lexer(text):
     __tokens = [
