@@ -69,16 +69,18 @@ def matches_reference(result):
         if __REFERENCE.exitcode != result.exitcode:
             return False
     if not options.args().ignore_output:
-        if options.args().match_out is None:
+        if options.args().match_err is None and options.args().match_out is None:
+            # if neither --match-err or --match-out are given
             if __REFERENCE.stdout != result.stdout:
                 return False
-        else:
-            if not re.search(options.args().match_out, __REFERENCE.stdout):
-                return False
-        if options.args().match_err is None:
             if __REFERENCE.stderr != result.stderr:
                 return False
         else:
-            if not re.search(options.args().match_err, __REFERENCE.stderr):
-                return False
+            # --match-err or --match-out are given
+            if options.args().match_err is not None:
+                if not re.search(options.args().match_err, result.stderr):
+                    return False
+            if options.args().match_out is not None:
+                if not re.search(options.args().match_out, result.stdout):
+                    return False
     return True
