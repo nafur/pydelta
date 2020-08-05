@@ -40,6 +40,7 @@ def parse_options():
     argp_output.add_argument('--wrap-lines', action = 'store_true', help = 'wrap lines in output file')
 
     argp_comparator = argp.add_argument_group('comparator arguments')
+    argp_comparator.add_argument('--ignore-exitcode', action = 'store_true', help = 'ignore exitcode when comparing results')
     argp_comparator.add_argument('--ignore-output', action = 'store_true', help = 'ignore stdout and stderr when comparing results')
     argp_comparator.add_argument('--match-out', metavar = 'regex', help = 'regex that should match stdout')
     argp_comparator.add_argument('--match-err', metavar = 'regex', help = 'regex that should match stderr')

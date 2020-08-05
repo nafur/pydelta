@@ -65,8 +65,9 @@ def compute_reference(cmd, inputfile):
 
 def matches_reference(result):
     """Checkes whether the :code:`result` matches the reference result."""
-    if __REFERENCE.exitcode != result.exitcode:
-        return False
+    if not options.args().ignore_exitcode:
+        if __REFERENCE.exitcode != result.exitcode:
+            return False
     if not options.args().ignore_output:
         if options.args().match_out is None:
             if __REFERENCE.stdout != result.stdout:
