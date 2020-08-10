@@ -63,9 +63,9 @@ class PassMergeWithChildren:
 class PassReplaceVariables:
     """Replaces a variable by another variable."""
     def filter(self, node):
-        return has_type(node)
+        return get_return_type(node) is not None
     def mutations(self, node):
-        return [ v for v in get_variables_with_type(get_type(node)) if v < node]
+        return [ v for v in get_variables_with_type(get_return_type(node)) if is_smaller(v, node)]
     def __str__(self):
         return 'substitute by variable of same type'
 

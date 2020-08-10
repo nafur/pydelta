@@ -18,6 +18,18 @@ def get_name(node):
     assert has_name(node)
     return node[0]
 
+def is_smaller(n, m):
+    if isinstance(n, str):
+        if isinstance(m, str):
+            return n < m
+        else:
+            return True
+    else:
+        if isinstance(m, str):
+            return False
+        else:
+            return n < m
+
 ##### Generic constructs
 def is_ite(node):
     """Checks whether :code:`node` is an if-then-else expression."""
@@ -71,6 +83,9 @@ def substitute(node, repl):
     return list(map(lambda n: substitute(n, repl), node))
 
 ##### Collected information about theories
+
+def is_not(node):
+    return has_name(node) and get_name(node) == 'not'
 
 def is_bitvector_type(node):
     if is_leaf(node) or len(node) != 3:
