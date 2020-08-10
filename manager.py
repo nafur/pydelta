@@ -81,6 +81,7 @@ class Manager:
     def simplify(self, original, skip = 0):
         """Starts one producer thread and multiple consumer thread and then waits for a valid simplification."""
         assert self.q.empty()
+        self.q = queue.Queue(maxsize = 20)
         self.stop_operation = False
         self.finished_generation = False
         self.result = None
