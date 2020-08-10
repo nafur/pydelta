@@ -25,9 +25,9 @@ A mutator class should at least look like this:
 Generic mutators
 ----------------
 
+.. autoclass:: mutators_core.PassConstants
 .. autoclass:: mutators_core.PassEraseChildren
 .. autoclass:: mutators_core.PassSubstituteChildren
-.. autoclass:: mutators_core.PassConstants
 .. autoclass:: mutators_core.PassSortChildren
 .. autoclass:: mutators_core.PassMergeWithChildren
 .. autoclass:: mutators_core.PassReplaceVariables
@@ -35,16 +35,29 @@ Generic mutators
 .. autoclass:: mutators_core.PassLetSubstitution
 .. autoclass:: mutators_core.PassInlineDefinedFuns
 
+Arithmetic mutators
+-------------------
+.. autoclass:: mutators_arithmetic.PassArithmeticSimplifyConstant
+.. autoclass:: mutators_arithmetic.PassArithmeticNegateRelations
+
+Bitvector mutators
+------------------
+.. autoclass:: mutators_bitvectors.PassBVConcatToZeroExtend
+.. autoclass:: mutators_bitvectors.PassBVExtractConstants
+.. autoclass:: mutators_bitvectors.PassBVOneZeroITE
+.. autoclass:: mutators_bitvectors.PassBVSimplifyConstant
+
 Boolean mutators
 ----------------
 .. autoclass:: mutators_boolean.PassDeMorgan
 .. autoclass:: mutators_boolean.PassDoubleNegation
 .. autoclass:: mutators_boolean.PassEliminateFalseEquality
+.. autoclass:: mutators_boolean.PassNegatedQuantifiers
 
-Arithmetic mutators
--------------------
-.. autoclass:: mutators_arithmetic.PassArithmeticSimplifyConstant
+SMT-LIB mutators
+----------------
+.. autoclass:: mutators_smtlib.PassCheckSatAssuming
 
-Bitvector mutators
-------------------
-.. autoclass:: mutators_bitvectors.PassBVExtractConstants
+String mutators
+---------------
+.. autoclass:: mutators_strings.PassStringSimplifyConstant

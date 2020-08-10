@@ -28,6 +28,21 @@ def possible_bitvector_widths(node):
             widths.add(wid)
     return list(widths)
 
+class PassBVConcatToZeroExtend:
+    """Replace a concat with zero by zero_extend."""
+    def filter(self, node):
+        if not has_name(node) or get_name(node) != 'concat':
+            return False
+        if not is_bitvector_constant(node[1]):
+            return False
+        return get_bitvector_constant_value(node[1])[0] == 0
+    def mutations(self, node):
+        return [
+            [['_', 'zero_extend', get_bitvector_constant_value(node[1])[1]], node[2]]
+        ]
+    def __str__(self):
+        return 'replace concat by zero_extend'
+
 class PassBVExtractConstants:
     """Evaluates a bitvector :code:`extract` if it is applied to a constant."""
     def filter(self, node):
@@ -41,16 +56,6 @@ class PassBVExtractConstants:
         return [['_', 'bv{}'.format(constant), str(upper - lower + 1)]]
     def __str__(self):
         return 'evaluate bitvector extract on constant'
-
-class PassBVSimplifyConstant:
-    """Replace a constant by a simpler version (smaller fewer bits)."""
-    def filter(self, node):
-        return is_bitvector_constant(node) and get_bitvector_constant_value(node)[0] not in [0, 1]
-    def mutations(self, node):
-        val,width = get_bitvector_constant_value(node)
-        return ['#b{{:0>{}b}}'.format(width).format(v) for v in [val // 2, val // 10]]
-    def __str__(self):
-        return 'simplify bitvector constant'
 
 class PassBVOneZeroITE:
     """Replace an ite with bv1/bv0 cases by bvcomp."""
@@ -69,21 +74,15 @@ class PassBVOneZeroITE:
     def __str__(self):
         return 'eliminate ite with bv1 / bv0 cases'
 
-class PassConcatToZeroExtend:
-    """Replace a concat with zero by zero_extend."""
+class PassBVSimplifyConstant:
+    """Replace a constant by a simpler version (smaller fewer bits)."""
     def filter(self, node):
-        if not has_name(node) or get_name(node) != 'concat':
-            return False
-        if not is_bitvector_constant(node[1]):
-            return False
-        return get_bitvector_constant_value(node[1])[0] == 0
+        return is_bitvector_constant(node) and get_bitvector_constant_value(node)[0] not in [0, 1]
     def mutations(self, node):
-        return [
-            [['_', 'zero_extend', get_bitvector_constant_value(node[1])[1]], node[2]]
-        ]
+        val,width = get_bitvector_constant_value(node)
+        return ['#b{{:0>{}b}}'.format(width).format(v) for v in [val // 2, val // 10]]
     def __str__(self):
-        return 'replace concat by zero_extend'
-
+        return 'simplify bitvector constant'
 
 def collect_mutator_options(argparser):
     options.disable_mutator_argument(argparser, 'bitvector', 'bitvector mutators')
@@ -102,5 +101,5 @@ def collect_mutators(args):
         if args.mutator_bv_ite_to_bvcomp:
             res.append(PassBVOneZeroITE())
         if args.mutator_bv_zero_concat:
-            res.append(PassConcatToZeroExtend())
+            res.append(PassBVConcatToZeroExtend())
     return res

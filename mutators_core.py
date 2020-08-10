@@ -1,6 +1,17 @@
 import options
 from semantics import *
 
+class PassConstants:
+    """Replaces any node by a constant."""
+    def mutations(self, node):
+        """Return :code:`get_constants(get_return_type(node))`."""
+        res = get_constants(get_return_type(node))
+        if node in res:
+            return []
+        return res
+    def __str__(self):
+        return 'substitute by a constant'
+
 class PassEraseChildren:
     """Erases a single child of the given node."""
     def filter(self, node):
@@ -23,17 +34,6 @@ class PassSubstituteChildren:
         return node
     def __str__(self):
         return 'substitute with child'
-
-class PassConstants:
-    """Replaces any node by a constant."""
-    def mutations(self, node):
-        """Return :code:`get_constants(get_return_type(node))`."""
-        res = get_constants(get_return_type(node))
-        if node in res:
-            return []
-        return res
-    def __str__(self):
-        return 'substitute by a constant'
 
 class PassSortChildren:
     """Sorts the children of a node."""

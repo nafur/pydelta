@@ -4,15 +4,6 @@ from semantics import *
 def is_quantifier(node):
     return has_name(node) and get_name(node) in ['exists', 'forall']
 
-class PassEliminateFalseEquality:
-    """Replaces an equality with :code:`false` by a negation."""
-    def filter(self, node):
-        return not is_leaf(node) and len(node) == 3 and has_name(node) and get_name(node) == '=' and node[1] == 'false'
-    def mutations(self, node):
-        return [['not', node[2]]]
-    def __str__(self):
-        return 'replace equality with false by negation'
-
 class PassDeMorgan:
     """Uses de Morgans rules to push negations inside."""
     def filter(self, node):
@@ -28,6 +19,24 @@ class PassDeMorgan:
     def __str__(self):
         return 'push negation inside'
 
+class PassDoubleNegation:
+    """Elimination double negations."""
+    def filter(self, node):
+        return is_not(node) and is_not(node[1])
+    def mutations(self, node):
+        return [node[1][1]]
+    def __str__(self):
+        return 'eliminate double negation'
+
+class PassEliminateFalseEquality:
+    """Replaces an equality with :code:`false` by a negation."""
+    def filter(self, node):
+        return not is_leaf(node) and len(node) == 3 and has_name(node) and get_name(node) == '=' and node[1] == 'false'
+    def mutations(self, node):
+        return [['not', node[2]]]
+    def __str__(self):
+        return 'replace equality with false by negation'
+
 class PassNegatedQuantifiers:
     """Pushes negation inside quantifiers."""
     def filter(self, node):
@@ -40,15 +49,6 @@ class PassNegatedQuantifiers:
         return []
     def __str__(self):
         return 'push negation inside of quantifier'
-
-class PassDoubleNegation:
-    """Elimination double negations."""
-    def filter(self, node):
-        return is_not(node) and is_not(node[1])
-    def mutations(self, node):
-        return [node[1][1]]
-    def __str__(self):
-        return 'eliminate double negation'
 
 def collect_mutator_options(argparser):
     options.disable_mutator_argument(argparser, 'boolean', 'boolean mutators')
