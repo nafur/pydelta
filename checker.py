@@ -12,7 +12,7 @@ __REFERENCE = ExecResult(-1, '', '', -1)
 CHECKS = 0
 
 def limit_memory():
-    """Apply memory limit given by :code:`--memout`.""".
+    """Apply memory limit given by :code:`--memout`."""
     if options.args().memout != 0:
         resource.setrlimit(resource.RLIMIT_AS, (options.args().memout * 1024 * 1024, resource.RLIM_INFINITY))
 
