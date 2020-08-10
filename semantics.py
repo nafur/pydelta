@@ -199,6 +199,7 @@ def get_bitvector_width(node):
     return -1
 
 def get_constants(const_type):
+    """Returns a list of constants for the given type."""
     if const_type == 'Bool':
         return ['false', 'true']
     if const_type == 'Int':
@@ -212,6 +213,7 @@ def get_constants(const_type):
     return []
 
 def get_return_type(node):
+    """Tries to figure out the return type of the given node. Returns :code:`None` if it can not be inferred."""
     if has_type(node):
         return get_type(node)
     if is_boolean_constant(node):
