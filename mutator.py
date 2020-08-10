@@ -60,4 +60,5 @@ def generate_mutations(original):
     widgets = [progressbar.Bar(), ' ', progressbar.Counter(), ' / ', str(s)]
     prg = progressbar.ProgressBar(maxval = s, widgets = widgets)
     prg.start()
+    prg.update_interval = 1
     yield from __generate_mutations(original, prg)
