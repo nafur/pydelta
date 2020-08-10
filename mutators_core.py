@@ -31,7 +31,7 @@ class PassSubstituteChildren:
     def filter(self, node):
         return not is_leaf(node)
     def mutations(self, node):
-        return node
+        return node[1:]
     def __str__(self):
         return 'substitute with child'
 
