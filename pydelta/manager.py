@@ -6,10 +6,10 @@ import sys
 import tempfile
 import threading
 
-import checker
-import mutator
-import options
-import parser
+from . import checker
+from . import mutator
+from . import options
+from . import parser
 
 Candidate = collections.namedtuple('Candidate', ['counter', 'simplification', 'exprs'])
 """Represents a simplification candidate.

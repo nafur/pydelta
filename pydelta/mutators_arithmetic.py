@@ -1,5 +1,5 @@
-import options
-from semantics import *
+from . import options
+from .semantics import *
 
 def is_arithmetic_relation(node):
     if not has_name(node):

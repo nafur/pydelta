@@ -5,7 +5,7 @@ import resource
 import subprocess
 import time
 
-import options
+from . import options
 
 ExecResult = collections.namedtuple('ExecResult', ['exitcode', 'stdout', 'stderr', 'runtime'])
 __REFERENCE = ExecResult(-1, '', '', -1)

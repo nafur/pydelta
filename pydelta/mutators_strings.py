@@ -1,5 +1,5 @@
-import options
-from semantics import *
+from . import options
+from .semantics import *
 
 class PassStringSimplifyConstant:
     """Replace a string constant by a shorter version."""

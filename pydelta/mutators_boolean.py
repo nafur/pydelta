@@ -1,5 +1,5 @@
-import options
-from semantics import *
+from . import options
+from .semantics import *
 
 def is_quantifier(node):
     return has_name(node) and get_name(node) in ['exists', 'forall']

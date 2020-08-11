@@ -3,7 +3,7 @@ import re
 import sys
 import textwrap
 
-import options
+from . import options
 
 Token = collections.namedtuple('Token', ['kind', 'value'])
 sys.setrecursionlimit(100000)

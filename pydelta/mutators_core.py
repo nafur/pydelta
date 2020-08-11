@@ -1,5 +1,5 @@
-import options
-from semantics import *
+from . import options
+from .semantics import *
 
 class PassConstants:
     """Replaces any node by a constant."""

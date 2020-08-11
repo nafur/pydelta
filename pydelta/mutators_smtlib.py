@@ -1,5 +1,5 @@
-import options
-from semantics import *
+from . import options
+from .semantics import *
 
 class PassCheckSatAssuming:
     """Replaces a :code:`check-sat-assuming` by a regular :code:`check-sat`."""

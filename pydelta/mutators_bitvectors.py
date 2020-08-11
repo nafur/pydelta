@@ -1,5 +1,5 @@
-import options
-from semantics import *
+from . import options
+from .semantics import *
 
 def get_bitvector_constant_value(node):
     assert is_bitvector_constant(node)

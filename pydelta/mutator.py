@@ -1,13 +1,13 @@
 import copy
 import progressbar
 
-import mutators_arithmetic
-import mutators_bitvectors
-import mutators_boolean
-import mutators_core
-import mutators_smtlib
-import mutators_strings
-import semantics
+from . import mutators_arithmetic
+from . import mutators_bitvectors
+from . import mutators_boolean
+from . import mutators_core
+from . import mutators_smtlib
+from . import mutators_strings
+from . import semantics
 
 def collect_mutator_options(argparser):
     """Adds all options related to mutators to the given argument parser."""

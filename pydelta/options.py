@@ -1,11 +1,8 @@
 import argparse
 import sys
 
-import mutator
-
-__project_name__ = 'pyDelta'
-__version__ = "0.1"
-__author__  = "Gereon Kremer <gereon.kremer@gmail.com>"
+from . import info
+from . import mutator
 
 class CustomFormatter(argparse.ArgumentDefaultsHelpFormatter, argparse.HelpFormatter):
     """A custom formatter for printing the commandline help. It combines :code:`argparse.ArgumentDefaultsHelpFormatter` with the :code:`argparse.HelpFormatter`, slightly increases the width reserved for the options and removed defaults for the mutator options."""
@@ -25,7 +22,7 @@ def parse_options():
     argp.add_argument('cmd', nargs = argparse.REMAINDER, help = 'the command (with optional arguments)')
 
     argp.add_argument('-v', '--verbose', action='store_true', help = 'be more verbose')
-    argp.add_argument('--version', action = 'version', version = __version__)
+    argp.add_argument('--version', action = 'version', version = info.__version__)
 
     argp_checking = argp.add_argument_group('checking arguments')
     argp_checking.add_argument('--parse-only', action = 'store_true', help = 'only parse the input file')
