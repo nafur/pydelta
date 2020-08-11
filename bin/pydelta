@@ -1,0 +1,8 @@
+#!/usr/bin/env python3
+
+from pydelta import cli
+
+cli.setup_logging()
+cli.check_options()
+cli.do_reference_run()
+cli.run_pydelta(cli.parse_input())
