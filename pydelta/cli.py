@@ -50,7 +50,7 @@ def do_reference_run():
 def parse_input():
     return parser.parse_smtlib(open(options.args().inputfile).read())
 
-def run_pydelta(input):
+def run_pydelta(original):
     mutator.collect_mutators(options.args())
     skip = options.args().skip
     simplifications = 0
@@ -59,7 +59,7 @@ def run_pydelta(input):
         try:
             # do one simplification step
             start = time.time()
-            simp = m.simplify(input, skip)
+            simp = m.simplify(original, skip)
             duration = time.time() - start
         except KeyboardInterrupt:
             logging.warning('Aborting. See %s for results.', options.args().outputfile)
@@ -71,15 +71,15 @@ def run_pydelta(input):
                 logging.info('Starting over')
             else:
                 # terminate
-                parser.write_smtlib_to_file(input, options.args().outputfile)
-                logging.info('Final input (written to %s):\n%s', options.args().outputfile, parser.render_smtlib(input))
+                parser.write_smtlib_to_file(original, options.args().outputfile)
+                logging.info('Final input (written to %s):\n%s', options.args().outputfile, parser.render_smtlib(original))
                 break
         else:
             simplifications += 1
             # write current status to file and continue
             logging.info('#%d: %s (%.2fs)', simplifications, simp.simplification, duration)
             skip = simp.counter
-            input = simp.exprs
-            parser.write_smtlib_to_file(input, options.args().outputfile)
+            original = simp.exprs
+            parser.write_smtlib_to_file(original, options.args().outputfile)
 
     logging.info('Performed %d checks and %d simplifications', checker.CHECKS, simplifications)

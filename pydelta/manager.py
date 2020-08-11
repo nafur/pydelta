@@ -47,7 +47,6 @@ class Manager:
             if skip > 0:
                 skip -= 1
                 continue
-            logging.debug('Put next candidate... current queue length: {}'.format(self.q.qsize()))
             self.q.put(Candidate(counter, candidate[0], copy.deepcopy(candidate[1])))
             if self.stop_operation:
                 break
@@ -58,7 +57,6 @@ class Manager:
         while not self.stop_operation:
             try:
                 candidate = self.q.get(timeout = 0.25)
-                logging.debug('Testing next candidate in {}'.format(threading.current_thread().name))
                 try:
                     with tempfile.NamedTemporaryFile('w', suffix = '.smt2') as tmp:
                         tmp.write(parser.render_smtlib(candidate.exprs))
@@ -75,7 +73,6 @@ class Manager:
             except queue.Empty:
                 if self.finished_generation:
                     break
-        logging.debug('Terminated {}'.format(threading.current_thread().name))
         self.__empty_queue()
 
     def simplify(self, original, skip = 0):
