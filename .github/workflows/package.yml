@@ -10,8 +10,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: unshallow
-      run: git fetch --prune --unshallow
+      with:
+        fetch-depth: 0
     - name: set up python
       uses: actions/setup-python@v2
       with:
