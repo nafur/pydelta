@@ -305,14 +305,17 @@ def collect_information(exprs):
             assert is_leaf(node[1])
             __defined_variables[node[1]] = node[2]
         if get_name(node) == 'declare-fun':
-            assert len(node) == 4
+            if not len(node) == 4:
+                continue
             assert is_leaf(node[1])
             __defined_variables[node[1]] = node[3]
         if get_name(node) == 'define-fun':
-            assert len(node) == 5
+            if not len(node) == 5:
+                continue
             assert is_leaf(node[1])
             assert not is_leaf(node[2])
-            assert is_leaf(node[3])
+            if not is_leaf(node[3]):
+                continue
             __defined_functions[node[1]] = lambda args, node=node: substitute(node[4], {
                 node[2][i][0]: args[i] for i in range(len(args))
             })
