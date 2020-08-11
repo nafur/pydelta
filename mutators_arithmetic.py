@@ -26,7 +26,7 @@ class PassArithmeticNegateRelations:
     def mutations(self, node):
         negator = { '<': '>=', '<=': '>', '!=': '=', '<>': '=', '>=': '<', '>': '<=' }
         if node[1][0] in negator:
-            return [negator[node[1][0]]] + node[1][1:]
+            return [[negator[node[1][0]]] + node[1][1:]]
         return []
     def __str__(self):
         return 'push negations into relations'
