@@ -22,7 +22,7 @@ def parse_options():
     argp.add_argument('cmd', nargs = argparse.REMAINDER, help = 'the command (with optional arguments)')
 
     argp.add_argument('-v', '--verbose', action='store_true', help = 'be more verbose')
-    argp.add_argument('--version', action = 'version', version = info.__version__)
+    argp.add_argument('--version', action = 'version', version = info.VERSION)
 
     argp_checking = argp.add_argument_group('checking arguments')
     argp_checking.add_argument('--parse-only', action = 'store_true', help = 'only parse the input file')
