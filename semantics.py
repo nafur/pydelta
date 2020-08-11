@@ -51,7 +51,9 @@ def is_nary(node):
     if is_leaf(node) or not has_name(node):
         return False
     return get_name(node) in [
-        '=>', 'and', 'or', 'xor',
+        '=>', 'and', 'or', 'xor', '=', 'distinct',
+        '+', '-', '*', 'div', '/',
+        '<=', '<', '>=', '>',
         'bvand', 'bvor', 'bvadd', 'bvmul'
     ]
 
