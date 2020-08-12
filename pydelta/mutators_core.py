@@ -43,7 +43,7 @@ class PassLetElimination:
     def filter(self, node):
         return is_let(node)
     def mutations(self, node):
-        return node[2]
+        return [node[2]]
     def __str__(self):
         return 'eliminate let binder'
 
