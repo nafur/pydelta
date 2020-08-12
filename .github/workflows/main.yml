@@ -33,7 +33,7 @@ jobs:
         pytest
   
   package:
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')
     needs: test
     runs-on: ubuntu-latest
 
@@ -58,7 +58,7 @@ jobs:
         twine upload dist/*
 
   install:
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')
     needs: package
     runs-on: ubuntu-latest
 
