@@ -1,8 +1,8 @@
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/nafur/pydelta/main)
-![Read the Docs](https://img.shields.io/readthedocs/pydelta)
-![PyPI](https://img.shields.io/pypi/v/pydelta-smt)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/nafur/pydelta/main)](https://github.com/nafur/pydelta/actions)
+[![Read the Docs](https://img.shields.io/readthedocs/pydelta)](https://pydelta.readthedocs.io/)
+[![PyPI](https://img.shields.io/pypi/v/pydelta-smt)](https://pypi.org/project/pydelta-smt/)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pydelta-smt)
-![PyPI - License](https://img.shields.io/pypi/l/pydelta-smt)
+[![PyPI - License](https://img.shields.io/pypi/l/pydelta-smt)](https://github.com/nafur/pydelta/blob/master/LICENSE)
 
 pyDelta: delta debugging for SMT-LIB
 ====================================
