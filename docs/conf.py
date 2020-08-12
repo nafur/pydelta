@@ -3,10 +3,12 @@
 import os
 import subprocess
 import sys
-import pydelta.version
 
 # add project root path
 sys.path.insert(0, os.path.abspath('..'))
+
+import pydelta.version
+
 # make sure we can see the last tag
 subprocess.call(['git', 'fetch', '--unshallow'])
 
