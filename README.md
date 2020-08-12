@@ -1,3 +1,7 @@
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/nafur/pydelta/main)
+![Read the Docs](https://img.shields.io/readthedocs/pydelta)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pydelta-smt)
+
 pyDelta: delta debugging for SMT-LIB
 ====================================
 
