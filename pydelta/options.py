@@ -2,28 +2,12 @@ import argparse
 import sys
 
 from . import info
-from . import mutator
+from . import mutator_options
 
 class CustomFormatter(argparse.ArgumentDefaultsHelpFormatter, argparse.HelpFormatter):
     """A custom formatter for printing the commandline help. It combines :code:`argparse.ArgumentDefaultsHelpFormatter` with the :code:`argparse.HelpFormatter`, slightly increases the width reserved for the options and removed defaults for the mutator options."""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs, max_help_position = 35)
-
-class LetEliminationAction(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string = None):
-       setattr(namespace, 'mutator_constants', False)
-       setattr(namespace, 'mutator_erase_children', False)
-       setattr(namespace, 'mutator_merge_children', False)
-       setattr(namespace, 'mutator_replace_by_variable', False)
-       setattr(namespace, 'mutator_sort_children', False)
-       setattr(namespace, 'mutator_substitute_children', False)
-       setattr(namespace, 'mutator_arithmetic', False)
-       setattr(namespace, 'mutator_bitvector', False)
-       setattr(namespace, 'mutator_boolean', False)
-       setattr(namespace, 'mutator_smtlib', False)
-       setattr(namespace, 'mutator_strings', False)
-       setattr(namespace, 'mutator_let_elimination', True)
-       setattr(namespace, 'mutator_let_substitution', True)
 
 def parse_options():
     """Configures the commandline parse and then parse the commandline options."""
@@ -57,7 +41,7 @@ def parse_options():
     argp_comparator.add_argument('--match-out', metavar = 'regex', help = 'regex that should match stdout')
     argp_comparator.add_argument('--match-err', metavar = 'regex', help = 'regex that should match stderr')
 
-    mutator.collect_mutator_options(argp)
+    mutator_options.collect_mutator_options(argp)
 
     return argp.parse_args()
 

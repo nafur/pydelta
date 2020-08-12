@@ -1,33 +1,15 @@
 import copy
 import progressbar
 
-from . import mutators_arithmetic
-from . import mutators_bitvectors
-from . import mutators_boolean
-from . import mutators_core
-from . import mutators_smtlib
-from . import mutators_strings
-from . import semantics
+from . import mutator_options
 
-def collect_mutator_options(argparser):
-    """Adds all options related to mutators to the given argument parser."""
-    mutators_core.collect_mutator_options(argparser.add_argument_group('core mutator arguments'))
-    mutators_boolean.collect_mutator_options(argparser.add_argument_group('boolean mutator arguments'))
-    mutators_arithmetic.collect_mutator_options(argparser.add_argument_group('arithmetic mutator arguments'))
-    mutators_bitvectors.collect_mutator_options(argparser.add_argument_group('bitvector mutator arguments'))
-    mutators_smtlib.collect_mutator_options(argparser.add_argument_group('smtlib mutator arguments'))
-    mutators_strings.collect_mutator_options(argparser.add_argument_group('strings mutator arguments'))
+from . import semantics
 
 enabled_mutators = []
 def collect_mutators(args):
     """Initializes the list of all active mutators."""
     global enabled_mutators
-    enabled_mutators += mutators_core.collect_mutators(args)
-    enabled_mutators += mutators_boolean.collect_mutators(args)
-    enabled_mutators += mutators_arithmetic.collect_mutators(args)
-    enabled_mutators += mutators_bitvectors.collect_mutators(args)
-    enabled_mutators += mutators_smtlib.collect_mutators(args)
-    enabled_mutators += mutators_strings.collect_mutators(args)
+    enabled_mutators = mutator_options.collect_mutators(args)
 
 def __mutate_node(node):
     """Apply all active mutators to the given node. Returns a list of all possible mutations."""
