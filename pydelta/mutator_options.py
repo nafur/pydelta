@@ -7,11 +7,11 @@ from . import mutators_core
 from . import mutators_smtlib
 from . import mutators_strings
 
-def disable(namespace, value):
-    setattr(namespace, 'mutator_{}'.format(value), False)
-def disable_all(namespace, values):
-    for v in values:
-        disable(namespace, v)
+def disable(namespace, option):
+    setattr(namespace, 'mutator_{}'.format(option.replace('-', '_')), False)
+def disable_all(namespace, options):
+    for o in options:
+        disable(namespace, o)
 
 class LetEliminationAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string = None):
