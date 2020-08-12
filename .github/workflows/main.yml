@@ -1,4 +1,4 @@
-name: package and publish
+name: test and publish
 
 on: [push, pull_request]
 
