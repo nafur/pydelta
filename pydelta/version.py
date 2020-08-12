@@ -23,10 +23,3 @@ if os.path.isdir('.git'):
     VERSION = version_from_git()
 else:
     VERSION = version_from_package_metadata()
-
-PACKAGE_NAME = 'pydelta-smt'
-PROJECT_NAME = 'pyDelta'
-DESCRIPTION = 'Delta debugger for SMT-LIB files'
-AUTHOR = 'Gereon Kremer'
-AUTHOR_EMAIL  = 'gereon.kremer@gmail.com'
-REPOSITORY = 'https://github.com/nafur/pydelta'

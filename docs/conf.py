@@ -18,19 +18,19 @@ sys.path.insert(0, os.path.abspath('..'))
 
 import sphinx_rtd_theme
 
-from pydelta import info
+from pydelta import version
 
 
 # -- Project information -----------------------------------------------------
 
-project = info.PROJECT_NAME
+project = 'pyDelta'
 copyright = '2020, Gereon Kremer'
 author = 'Gereon Kremer'
 
 # The short X.Y version
-version = info.VERSION
+version = version.VERSION
 # The full version, including alpha/beta/rc tags
-release = info.VERSION
+release = version.VERSION
 
 
 # -- General configuration ---------------------------------------------------

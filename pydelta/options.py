@@ -1,7 +1,7 @@
 import argparse
 import sys
 
-from . import info
+from . import version
 from . import mutator_options
 
 class CustomFormatter(argparse.ArgumentDefaultsHelpFormatter, argparse.HelpFormatter):
@@ -18,7 +18,7 @@ def parse_options():
     argp.add_argument('cmd', nargs = argparse.REMAINDER, help = 'the command (with optional arguments)')
 
     argp.add_argument('-v', '--verbose', action='store_true', help = 'be more verbose')
-    argp.add_argument('--version', action = 'version', version = info.VERSION)
+    argp.add_argument('--version', action = 'version', version = version.VERSION)
 
     argp_modes = argp.add_argument_group('special modes')
     mutator_options.collect_mutator_modes(argp_modes)
