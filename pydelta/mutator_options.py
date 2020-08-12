@@ -15,6 +15,7 @@ def disable_all(namespace, options):
 
 class LetEliminationAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string = None):
+        setattr(namespace, 'mode_let_elimination', True)
         disable(namespace, mutators_arithmetic.NAME)
         disable(namespace, mutators_bitvectors.NAME)
         disable(namespace, mutators_boolean.NAME)
@@ -26,6 +27,7 @@ class LetEliminationAction(argparse.Action):
 
 class AgressiveAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string = None):
+        setattr(namespace, 'mode_aggressive', True)
         disable(namespace, mutators_arithmetic.NAME)
         disable(namespace, mutators_bitvectors.NAME)
         disable(namespace, mutators_boolean.NAME)
