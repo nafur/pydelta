@@ -19,7 +19,7 @@ def version_from_package_metadata():
         import importlib_metadata as metadata
     return metadata.version('pydelta-smt')
 
-if os.path.isdir('.git'):
+if os.path.isdir('.git') or os.path.isdir('../.git'):
     VERSION = version_from_git()
 else:
     VERSION = version_from_package_metadata()
