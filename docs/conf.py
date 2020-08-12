@@ -21,7 +21,7 @@ import sphinx_rtd_theme
 
 subprocess.call(['git', 'fetch', '--unshallow'])
 
-from pydelta import version
+import pydelta.version
 
 
 # -- Project information -----------------------------------------------------
@@ -31,9 +31,9 @@ copyright = '2020, Gereon Kremer'
 author = 'Gereon Kremer'
 
 # The short X.Y version
-version = version.VERSION
+version = pydelta.version.VERSION
 # The full version, including alpha/beta/rc tags
-release = version.VERSION
+release = pydelta.version.VERSION
 
 
 # -- General configuration ---------------------------------------------------
