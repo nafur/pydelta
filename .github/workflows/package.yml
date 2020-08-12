@@ -29,6 +29,7 @@ jobs:
         twine upload dist/*
 
   install:
+    needs: package
     runs-on: ubuntu-latest
 
     strategy:
