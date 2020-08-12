@@ -109,7 +109,7 @@ def collect_mutator_options(argparser):
     options.add_mutator_argument(argparser, 'constants', True, 'replace by theory constants')
     options.add_mutator_argument(argparser, 'erase-children', True, 'erase individual children of nodes')
     options.add_mutator_argument(argparser, 'inline-functions', True, 'inline defined functions')
-    options.add_mutator_argument(argparser, 'let-elimination', True, 'eliminate let bindings')
+    options.add_mutator_argument(argparser, 'let-elimination', False, 'eliminate let bindings')
     options.add_mutator_argument(argparser, 'let-substitution', True, 'substitute bound variables in let bindings')
     options.add_mutator_argument(argparser, 'merge-children', True, 'merge children into nodes')
     options.add_mutator_argument(argparser, 'replace-by-variable', True, 'replace with existing variable')
