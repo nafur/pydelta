@@ -18,6 +18,15 @@ def setup_logging():
         logging.getLogger().setLevel(level=logging.INFO)
 
 def check_options():
+    if options.args().max_threads != 1:
+        # configure number of threads
+        if options.args().max_threads <= 0:
+            options.args().max_threads = os.cpu_count() + options.args().max_threads
+        logging.info('Using up to %d threads.', options.args().max_threads)
+
+    if options.args().dump_config:
+        pprint.pprint(vars(options.args()))
+
     # check input file
     if not os.path.isfile(options.args().inputfile):
         raise Exception('Input file is not a regular file')
@@ -35,12 +44,6 @@ def check_options():
         raise Exception('Command "{}" is not a regular file'.format(options.args().cmd[0]))
     if not os.access(options.args().cmd[0], os.X_OK):
         raise Exception('Command "{}" is not executable'.format(options.args().cmd[0]))
-
-    if options.args().max_threads != 1:
-        # configure number of threads
-        if options.args().max_threads <= 0:
-            options.args().max_threads = os.cpu_count() + options.args().max_threads
-        logging.info('Using up to %d threads.', options.args().max_threads)
 
 def do_reference_run():
     if not checker.compute_reference(options.args().cmd, options.args().inputfile):
