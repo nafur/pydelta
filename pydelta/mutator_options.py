@@ -24,8 +24,22 @@ class LetEliminationAction(argparse.Action):
         setattr(namespace, 'mutator_let_elimination', True)
         setattr(namespace, 'mutator_let_substitution', True)
 
+class AgressiveAction(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string = None):
+        disable(namespace, mutators_arithmetic.NAME)
+        disable(namespace, mutators_bitvectors.NAME)
+        disable(namespace, mutators_boolean.NAME)
+        disable_all(namespace, mutators_core.MUTATORS)
+        disable(namespace, mutators_strings.NAME)
+        setattr(namespace, 'mutator_constants', True)
+        setattr(namespace, 'mutator_erase_children', True)
+        setattr(namespace, 'mutator_inline_functions', True)
+        setattr(namespace, 'mutator_replace_by_variable', True)
+        setattr(namespace, 'mutator_substitute_children', True)
+
 def collect_mutator_modes(argparser):
     argparser.add_argument('--mode-let-elimination', nargs = 0, action = LetEliminationAction, help = 'only eliminate let binders')
+    argparser.add_argument('--mode-aggressive', nargs = 0, action = AgressiveAction, help = 'agressively minimize')
 
 def collect_mutator_options(argparser):
     """Adds all options related to mutators to the given argument parser."""
