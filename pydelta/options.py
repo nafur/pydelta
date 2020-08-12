@@ -9,6 +9,22 @@ class CustomFormatter(argparse.ArgumentDefaultsHelpFormatter, argparse.HelpForma
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs, max_help_position = 35)
 
+class LetEliminationAction(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string = None):
+       setattr(namespace, 'mutator_constants', False)
+       setattr(namespace, 'mutator_erase_children', False)
+       setattr(namespace, 'mutator_merge_children', False)
+       setattr(namespace, 'mutator_replace_by_variable', False)
+       setattr(namespace, 'mutator_sort_children', False)
+       setattr(namespace, 'mutator_substitute_children', False)
+       setattr(namespace, 'mutator_arithmetic', False)
+       setattr(namespace, 'mutator_bitvector', False)
+       setattr(namespace, 'mutator_boolean', False)
+       setattr(namespace, 'mutator_smtlib', False)
+       setattr(namespace, 'mutator_strings', False)
+       setattr(namespace, 'mutator_let_elimination', True)
+       setattr(namespace, 'mutator_let_substitution', True)
+
 def parse_options():
     """Configures the commandline parse and then parse the commandline options."""
     usage = "{} [<options>] <inputfile> <cmd> [<cmd options>]".format(sys.argv[0])
@@ -19,6 +35,9 @@ def parse_options():
 
     argp.add_argument('-v', '--verbose', action='store_true', help = 'be more verbose')
     argp.add_argument('--version', action = 'version', version = info.VERSION)
+
+    argp_modes = argp.add_argument_group('special modes')
+    argp_modes.add_argument('--mode-let-elimination', nargs = 0, action = LetEliminationAction, help = 'only eliminate let binders')
 
     argp_checking = argp.add_argument_group('checking arguments')
     argp_checking.add_argument('--parse-only', action = 'store_true', help = 'only parse the input file')
