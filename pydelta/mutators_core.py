@@ -2,7 +2,7 @@ from . import options
 from .semantics import *
 
 NAME = 'core'
-MUTATORS = ['core', 'constants', 'erase-children', 'inline-functions', 'let-elimination', 'let-substitution', 'merge-children', 'replace-by-variable', 'sort-children', 'substitute-children']
+MUTATORS = ['constants', 'erase-children', 'inline-functions', 'let-elimination', 'let-substitution', 'merge-children', 'replace-by-variable', 'sort-children', 'substitute-children']
 
 class PassConstants:
     """Replaces any node by a constant."""
