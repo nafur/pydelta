@@ -10,6 +10,7 @@ from . import checker
 from . import mutator
 from . import options
 from . import parser
+from . import semantics
 
 Candidate = collections.namedtuple('Candidate', ['counter', 'simplification', 'exprs'])
 """Represents a simplification candidate.
@@ -42,11 +43,15 @@ class Manager:
     def producer(self, original, skip = 0):
         """Produces new mutated variants of the given input."""
         counter = 0
+        original_size = semantics.node_count(original)
         for candidate in mutator.generate_mutations(original):
             counter += 1
             if skip > 0:
                 skip -= 1
                 continue
+            if options.args().mode_aggressive:
+                if semantics.node_count(candidate[1]) > original_size * 0.99:
+                    continue
             self.q.put(Candidate(counter, candidate[0], copy.deepcopy(candidate[1])))
             if self.stop_operation:
                 break
