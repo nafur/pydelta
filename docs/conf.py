@@ -13,10 +13,13 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
+import subprocess
 import sys
 sys.path.insert(0, os.path.abspath('..'))
 
 import sphinx_rtd_theme
+
+subprocess.call(['git', 'fetch', '--unshallow'])
 
 from pydelta import version
 
