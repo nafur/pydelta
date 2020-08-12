@@ -51,7 +51,7 @@ class Manager:
                 skip -= 1
                 continue
             if options.args().mode_aggressive:
-                if semantics.node_count(candidate[1]) > original_size * 0.99:
+                if semantics.node_count(candidate[1]) > original_size * (1 - options.args().aggressiveness):
                     continue
             self.q.put(Candidate(counter, candidate[0], copy.deepcopy(candidate[1])))
             if self.stop_operation:

@@ -45,6 +45,8 @@ class AgressiveAction(argparse.Action):
 def collect_mutator_modes(argparser):
     argparser.add_argument('--mode-let-elimination', nargs = 0, action = LetEliminationAction, help = 'only eliminate let binders')
     argparser.add_argument('--mode-aggressive', nargs = 0, action = AgressiveAction, help = 'agressively minimize')
+    argparser.add_argument('--aggressiveness', metavar = 'perc', type = float, default = 0.01,
+                           help = 'percentage of the input a mutators needs to remove')
 
 def collect_mutator_options(argparser):
     """Adds all options related to mutators to the given argument parser."""
