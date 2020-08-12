@@ -21,6 +21,8 @@ def execute(cmd, inputfile):
     try:
         global CHECKS
         CHECKS += 1
+        if options.args().run_unchecked:
+            return ExecResult(0, '', '', 0)
         start = time.time()
         timeout = None if options.args().timeout == 0 else options.args().timeout
         proc = subprocess.Popen(cmd + [inputfile], stdout = subprocess.PIPE, stderr = subprocess.PIPE, preexec_fn = limit_memory)
@@ -66,6 +68,8 @@ def compute_reference(cmd, inputfile):
 
 def matches_reference(result):
     """Checkes whether the :code:`result` matches the reference result."""
+    if options.args().run_unchecked:
+        return True
     if not options.args().ignore_exitcode:
         if __REFERENCE.exitcode != result.exitcode:
             return False
