@@ -78,4 +78,4 @@ jobs:
         pip install --pre pydelta-smt
     - name: test package
       run: |
-        pytest --pyargs delta
+        pytest --pyargs pydelta
