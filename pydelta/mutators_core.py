@@ -102,16 +102,16 @@ class PassInlineDefinedFuns:
         return 'inline defined functions'
 
 def collect_mutator_options(argparser):
-    options.disable_mutator_argument(argparser, 'core', 'core mutators')
-    options.disable_mutator_argument(argparser, 'constants', 'replace by theory constants')
-    options.disable_mutator_argument(argparser, 'eliminate-lets', 'eliminate let bindings')
-    options.disable_mutator_argument(argparser, 'erase-children', 'erase individual children of nodes')
-    options.disable_mutator_argument(argparser, 'inline-functions', 'inline defined functions')
-    options.disable_mutator_argument(argparser, 'merge-children', 'merge children into nodes')
-    options.enable_mutator_argument(argparser, 'replace-by-variable', 'replace with existing variable')
-    options.disable_mutator_argument(argparser, 'replace-variables', 'replace variables of same type')
-    options.disable_mutator_argument(argparser, 'sort-children', 'sort children of nodes')
-    options.disable_mutator_argument(argparser, 'substitute-children', 'substitute nodes with their children')
+    options.add_mutator_argument(argparser, 'core', True, 'core mutators')
+    options.add_mutator_argument(argparser, 'constants', True, 'replace by theory constants')
+    options.add_mutator_argument(argparser, 'eliminate-lets', True, 'eliminate let bindings')
+    options.add_mutator_argument(argparser, 'erase-children', True, 'erase individual children of nodes')
+    options.add_mutator_argument(argparser, 'inline-functions', True, 'inline defined functions')
+    options.add_mutator_argument(argparser, 'merge-children', True, 'merge children into nodes')
+    options.add_mutator_argument(argparser, 'replace-by-variable', True, 'replace with existing variable')
+    options.add_mutator_argument(argparser, 'replace-variables', False, 'replace variables of same type')
+    options.add_mutator_argument(argparser, 'sort-children', True, 'sort children of nodes')
+    options.add_mutator_argument(argparser, 'substitute-children', True, 'substitute nodes with their children')
 
 def collect_mutators(args):
     res = []

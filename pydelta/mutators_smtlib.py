@@ -11,8 +11,8 @@ class PassCheckSatAssuming:
         return 'substitute check-sat-assuming by check-sat'
 
 def collect_mutator_options(argparser):
-    options.disable_mutator_argument(argparser, 'smtlib', 'smtlib mutators')
-    options.disable_mutator_argument(argparser, 'check-sat-assuming', 'replace check-sat-assuming by check-sat')
+    options.add_mutator_argument(argparser, 'smtlib', True, 'smtlib mutators')
+    options.add_mutator_argument(argparser, 'check-sat-assuming', True, 'replace check-sat-assuming by check-sat')
 
 def collect_mutators(args):
     res = []

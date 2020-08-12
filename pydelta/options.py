@@ -55,12 +55,8 @@ def args():
         __PARSED_ARGS = parse_options()
     return __PARSED_ARGS
 
-def __add_mutator_argument(argparser, option, name, action, help_msg):
+def add_mutator_argument(argparser, name, default, help_msg):
     dest = 'mutator_{}'.format(name.replace('-', '_'))
-    argparser.add_argument(option, dest = dest, action = action, help = help_msg)
-def enable_mutator_argument(argparser, name, help_msg):
-    """Add an option :code:`--with-{name}` for a mutator."""
-    __add_mutator_argument(argparser, '--with-{}'.format(name), name, 'store_true', help_msg)
-def disable_mutator_argument(argparser, name, help_msg):
-    """Add an option :code:`--without-{name}` for a mutator."""
-    __add_mutator_argument(argparser, '--without-{}'.format(name), name, 'store_false', help_msg)
+    grp = argparser.add_mutually_exclusive_group()
+    grp.add_argument('--{}'.format(name), action = 'store_true', default = default, dest = dest, help = help_msg if not default else argparse.SUPPRESS)
+    grp.add_argument('--no-{}'.format(name), action = 'store_false', default = default, dest = dest, help = help_msg if default else argparse.SUPPRESS)

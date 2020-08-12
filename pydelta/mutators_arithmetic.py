@@ -32,9 +32,9 @@ class PassArithmeticNegateRelations:
         return 'push negations into relations'
 
 def collect_mutator_options(argparser):
-    options.disable_mutator_argument(argparser, 'arithmetic', 'arithmetic mutators')
-    options.disable_mutator_argument(argparser, 'arith-constants', 'replaces constants by simpler ones')
-    options.disable_mutator_argument(argparser, 'arith-negate-relations', 'push negations inside of relations')
+    options.add_mutator_argument(argparser, 'arithmetic', True, 'arithmetic mutators')
+    options.add_mutator_argument(argparser, 'arith-constants', True, 'replaces constants by simpler ones')
+    options.add_mutator_argument(argparser, 'arith-negate-relations', True, 'push negations inside of relations')
 
 def collect_mutators(args):
     res = []

@@ -51,9 +51,9 @@ class PassNegatedQuantifiers:
         return 'push negation inside of quantifier'
 
 def collect_mutator_options(argparser):
-    options.disable_mutator_argument(argparser, 'boolean', 'boolean mutators')
-    options.disable_mutator_argument(argparser, 'eliminate-false-eq', 'eliminate equalities with false')
-    options.disable_mutator_argument(argparser, 'negated-quant', 'push negations inside quantifiers')
+    options.add_mutator_argument(argparser, 'boolean', True, 'boolean mutators')
+    options.add_mutator_argument(argparser, 'eliminate-false-eq', True, 'eliminate equalities with false')
+    options.add_mutator_argument(argparser, 'negated-quant', True, 'push negations inside quantifiers')
 
 def collect_mutators(args):
     res = []

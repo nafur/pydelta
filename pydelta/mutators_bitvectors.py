@@ -85,11 +85,11 @@ class PassBVSimplifyConstant:
         return 'simplify bitvector constant'
 
 def collect_mutator_options(argparser):
-    options.disable_mutator_argument(argparser, 'bitvector', 'bitvector mutators')
-    options.disable_mutator_argument(argparser, 'bv-constants', 'replaces constants by simpler ones')
-    options.disable_mutator_argument(argparser, 'bv-eval-extract', 'evaluate bitvector extract on constants')
-    options.disable_mutator_argument(argparser, 'bv-ite-to-bvcomp', 'replaces bv1/bv0 ites by bvcomp')
-    options.disable_mutator_argument(argparser, 'bv-zero-concat', 'replaces concat with zero by zero_extend')
+    options.add_mutator_argument(argparser, 'bitvector', True, 'bitvector mutators')
+    options.add_mutator_argument(argparser, 'bv-constants', True, 'replaces constants by simpler ones')
+    options.add_mutator_argument(argparser, 'bv-eval-extract', True, 'evaluate bitvector extract on constants')
+    options.add_mutator_argument(argparser, 'bv-ite-to-bvcomp', True, 'replaces bv1/bv0 ites by bvcomp')
+    options.add_mutator_argument(argparser, 'bv-zero-concat', True, 'replaces concat with zero by zero_extend')
 
 def collect_mutators(args):
     res = []
