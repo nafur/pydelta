@@ -2,7 +2,10 @@ from . import options
 from .semantics import *
 
 NAME = 'core'
-MUTATORS = ['constants', 'erase-children', 'inline-functions', 'let-elimination', 'let-substitution', 'merge-children', 'replace-by-variable', 'sort-children', 'substitute-children']
+MUTATORS = [
+    'constants', 'erase-children', 'inline-functions', 'let-elimination', 'let-substitution',
+    'merge-children', 'replace-by-variable', 'sort-children', 'substitute-children'
+]
 
 class PassConstants:
     """Replaces any node by a constant."""
@@ -67,9 +70,9 @@ class PassMergeWithChildren:
         return is_nary(node)
     def mutations(self, node):
         res = []
-        for cid,child in enumerate(node):
+        for cid, child in enumerate(node):
             if has_name(child) and get_name(node) == get_name(child):
-                res.append(node[:cid] + node[cid][1:] + node[cid+1:])
+                res.append(node[:cid] + node[cid][1:] + node[cid + 1:])
         return res
     def __str__(self):
         return 'merge with child'

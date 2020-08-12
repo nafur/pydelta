@@ -54,7 +54,7 @@ class PassBVExtractConstants:
         upper = int(node[0][2])
         lower = int(node[0][3])
         constant = get_bitvector_constant_value(node[1])[0]
-        constant = constant % (2**(upper+1))
+        constant = constant % (2**(upper + 1))
         constant -= constant % (2**lower)
         return [['_', 'bv{}'.format(constant), str(upper - lower + 1)]]
     def __str__(self):
@@ -82,7 +82,7 @@ class PassBVSimplifyConstant:
     def filter(self, node):
         return is_bitvector_constant(node) and get_bitvector_constant_value(node)[0] not in [0, 1]
     def mutations(self, node):
-        val,width = get_bitvector_constant_value(node)
+        val, width = get_bitvector_constant_value(node)
         return ['#b{{:0>{}b}}'.format(width).format(v) for v in [val // 2, val // 10]]
     def __str__(self):
         return 'simplify bitvector constant'

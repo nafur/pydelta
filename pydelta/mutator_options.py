@@ -9,11 +9,13 @@ from . import mutators_strings
 
 def disable(namespace, option):
     setattr(namespace, 'mutator_{}'.format(option.replace('-', '_')), False)
+
 def disable_all(namespace, options):
-    for o in options:
-        disable(namespace, o)
+    for opt in options:
+        disable(namespace, opt)
 
 class LetEliminationAction(argparse.Action):
+    """Mode that only checks for let eliminations."""
     def __call__(self, parser, namespace, values, option_string = None):
         setattr(namespace, 'mode_let_elimination', True)
         disable(namespace, mutators_arithmetic.NAME)
@@ -26,6 +28,7 @@ class LetEliminationAction(argparse.Action):
         setattr(namespace, 'mutator_let_substitution', True)
 
 class AgressiveAction(argparse.Action):
+    """Mode that only checks aggressive mutations."""
     def __call__(self, parser, namespace, values, option_string = None):
         setattr(namespace, 'mode_aggressive', True)
         disable(namespace, mutators_arithmetic.NAME)

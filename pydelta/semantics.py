@@ -3,18 +3,22 @@ import re
 __defined_functions = {}
 __defined_variables = {}
 
-##### Generic node utilities
 def is_leaf(node):
     """Checks whether the :code:`node` is a leaf node."""
     return not isinstance(node, list)
+
 def is_empty(node):
     """Checks whether the :code:`node` is empty."""
     return node == []
+
 def has_name(node):
-    """Checks whether the :code:`node` has a name, that is its first child is a leaf node."""
+    """Checks whether the :code:`node` has a name,
+    that is its first child is a leaf node."""
     return not is_leaf(node) and not is_empty(node) and is_leaf(node[0])
+
 def get_name(node):
-    """Gets the name of the :code:`node`, asserting that :code:`has_name(node)`."""
+    """Gets the name of the :code:`node`,
+    asserting that :code:`has_name(node)`."""
     assert has_name(node)
     return node[0]
 
@@ -30,10 +34,10 @@ def is_smaller(n, m):
         else:
             return n < m
 
-##### Generic constructs
 def is_ite(node):
     """Checks whether :code:`node` is an if-then-else expression."""
     return has_name(node) and get_name(node) == 'ite'
+
 def is_let(node):
     """Checks whether :code:`node` is a let binder."""
     return has_name(node) and get_name(node) == 'let'
@@ -41,8 +45,10 @@ def is_let(node):
 def is_defined_function(node):
     """Checks whether :code:`node` is a defined function."""
     return has_name(node) and get_name(node) in __defined_functions
+
 def get_defined_function(node):
-    """Returns the defined function :code:`node` as a function object. Assumes :code:`is___defined_functions(node)`."""
+    """Returns the defined function :code:`node` as a function object.
+    Assumes :code:`is___defined_functions(node)`."""
     assert is_defined_function(node)
     return __defined_functions[get_name(node)]
 
@@ -79,14 +85,14 @@ def contains(node, sub):
     return any(map(lambda n: contains(n, sub), node))
 
 def substitute(node, repl):
-    """Performs substitution recursively within :code:`node`. :code:`repl` specifies the substitutions as a dictionary."""
+    """Performs substitution recursively within :code:`node`.
+    :code:`repl` specifies the substitutions as a dictionary."""
     if is_leaf(node):
         return repl.get(node, node)
     return list(map(lambda n: substitute(n, repl), node))
 
-##### Collected information about theories
-
 def is_not(node):
+    """Checks whether :code:`node` is a negation."""
     return has_name(node) and get_name(node) == 'not'
 
 def is_bitvector_type(node):
@@ -182,8 +188,9 @@ def get_bitvector_width(node):
                 'bvnot', 'bvand', 'bvor',
                 'bvneg', 'bvadd', 'bvmul', 'bvudiv', 'bvurem',
                 'bvshl', 'bvshr',
-                'bvnand', 'bvnor', 'bvxor', 'bvsub', 'bvsdiv', 'bvsrem', 'bvsmod', 'bvashr'
-            ]:
+                'bvnand', 'bvnor', 'bvxor', 'bvsub', 'bvsdiv',
+                'bvsrem', 'bvsmod', 'bvashr'
+        ]:
             return get_bitvector_width(node[1])
         if get_name(node) == 'concat':
             assert len(node) == 3
@@ -211,11 +218,14 @@ def get_constants(const_type):
     if is_bitvector_type(const_type):
         return [['_', c, const_type[2]] for c in ['bv0', 'bv1']]
     if is_set_type(const_type):
-        return [['as', 'emptyset', const_type]] + [['singleton', c] for c in get_constants(const_type[1])]
+        return [['as', 'emptyset', const_type]] + [
+            ['singleton', c] for c in get_constants(const_type[1])
+        ]
     return []
 
 def get_return_type(node):
-    """Tries to figure out the return type of the given node. Returns :code:`None` if it can not be inferred."""
+    """Tries to figure out the return type of the given node.
+    Returns :code:`None` if it can not be inferred."""
     if has_type(node):
         return get_type(node)
     if is_boolean_constant(node):
@@ -232,7 +242,7 @@ def get_return_type(node):
     if has_name(node):
         if is_ite(node):
             return get_return_type(node[1])
-        ### stuff that returns Bool
+        # stuff that returns Bool
         if get_name(node) in [
                 # core theory
                 'not', '=>', 'and', 'or', 'xor', '=', 'distinct',
@@ -241,7 +251,8 @@ def get_return_type(node):
                 # fp theory
                 'fp.leq', 'fp.lt', 'fp.geq', 'fp.gt', 'fp.eq',
                 'fp.isNormal', 'fp.isSubnormal', 'fp.isZero',
-                'fp.isInfinite', 'fp.isNaN', 'fp.isNegative', 'fp.isPositive',
+                'fp.isInfinite', 'fp.isNaN',
+                'fp.isNegative', 'fp.isPositive',
                 # int / real theory
                 '<=', '<', '>>', '>', 'is_int',
                 # sets theory
@@ -250,21 +261,21 @@ def get_return_type(node):
                 'str.<', 'str.in_re', 'str.<=',
                 'str.prefixof', 'str.suffixof', 'str.contains',
                 'str.is_digit',
-            ]:
+        ]:
             return 'Bool'
         # int theory
         if get_name(node) == '_' and len(node) == 3 and node[1] == 'divisible':
             return 'Bool'
-        ### stuff that returns Int
+        # stuff that returns Int
         if get_name(node) in [
                 'div', 'mod', 'abs', 'to_int',
                 # string theory
                 'str.len', 'str.indexof', 'str.to_code', 'str.to_int',
                 # sets theory
                 'card'
-            ]:
+        ]:
             return 'Int'
-        ### stuff that returns Real
+        # stuff that returns Real
         if get_name(node) in ['/', 'to_real', 'fp.to_real']:
             return 'Real'
         if get_name(node) in ['+', '-', '*']:
@@ -274,21 +285,28 @@ def get_return_type(node):
                 return 'Int'
     return None
 
-##### Type information about nodes
 def get_variable_info():
     """Returns the type lookup table."""
     return __defined_variables
+
 def has_type(node):
-    """Checks whether :code:`node` was defined to have a certain type. Mostly applies to variables."""
+    """Checks whether :code:`node` was defined to have a certain type.
+    Mostly applies to variables."""
     return is_leaf(node) and node in __defined_variables
+
 def get_type(node):
-    """Returns the type of :code:`node` if it was defined to have a certain type. Assumes :code:`has_type(node)`."""
+    """Returns the type of :code:`node` if it was defined to have a certain type.
+    Assumes :code:`has_type(node)`."""
     assert has_type(node)
     return __defined_variables[node]
 
 def get_variables_with_type(var_type):
     """Returns all variables with the type :code:`var_type`."""
-    return [v for v in __defined_variables if __defined_variables[v] == var_type]
+    return [
+        v for v in __defined_variables
+        if __defined_variables[v] == var_type
+    ]
+
 
 def collect_information(exprs):
     """Initialize global lookups: defined functions and types."""
@@ -316,6 +334,7 @@ def collect_information(exprs):
             assert not is_leaf(node[2])
             if not is_leaf(node[3]):
                 continue
-            __defined_functions[node[1]] = lambda args, node=node: substitute(node[4], {
-                node[2][i][0]: args[i] for i in range(len(args))
-            })
+            __defined_functions[node[1]] = lambda args, node=node: substitute(
+                node[4],
+                {node[2][i][0]: args[i] for i in range(len(args))}
+            )

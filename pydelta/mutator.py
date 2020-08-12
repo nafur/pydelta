@@ -5,6 +5,7 @@ from . import mutator_options
 from . import semantics
 
 enabled_mutators = []
+
 def collect_mutators(args):
     """Initializes the list of all active mutators."""
     global enabled_mutators
@@ -19,13 +20,12 @@ def __mutate_node(node):
         res = res + list(map(lambda x: (str(m), x), m.mutations(node)))
     return res
 
-
 def __generate_mutations(original, prg):
     """Generate mutations from the given original, updating the progress bar."""
     prg.update(prg.currval + 1)
     yield from __mutate_node(original)
     if isinstance(original, list):
-        for i,o in enumerate(original):
+        for i, o in enumerate(original):
             cand = copy.copy(original)
             for mutated in __generate_mutations(o, prg):
                 cand[i] = mutated[1]

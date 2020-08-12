@@ -24,7 +24,8 @@ Candidate = collections.namedtuple('Candidate', ['counter', 'simplification', 'e
 
 class Manager:
     """Manages the asynchronous generation and checking of mutated inputs.
-    One thread runs the :meth:`producer` method that fills a :class:`queue.Queue` while as many threads as given by the :code:`--max-threads` options run and evaluate the candidates from the queue.
+    One thread runs the :meth:`producer` method that fills a :class:`queue.Queue`
+    while as many threads as given by the :code:`--max-threads` options run and evaluate the candidates from the queue.
     The :meth:`simplify` methods starts all threads and terminates them as soon as one valid simplication has been found.
     """
     def __init__(self):

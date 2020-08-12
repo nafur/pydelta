@@ -26,7 +26,7 @@ def execute(cmd, inputfile):
         start = time.time()
         timeout = None if options.args().timeout == 0 else options.args().timeout
         proc = subprocess.Popen(cmd + [inputfile], stdout = subprocess.PIPE, stderr = subprocess.PIPE, preexec_fn = limit_memory)
-        out,err = proc.communicate(timeout = timeout)
+        out, err = proc.communicate(timeout = timeout)
         duration = time.time() - start
         return ExecResult(proc.returncode, out.decode('utf8').strip(), err.decode('utf8').strip(), duration)
     except subprocess.TimeoutExpired:
