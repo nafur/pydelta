@@ -8,10 +8,6 @@ class CustomFormatter(argparse.ArgumentDefaultsHelpFormatter, argparse.HelpForma
     """A custom formatter for printing the commandline help. It combines :code:`argparse.ArgumentDefaultsHelpFormatter` with the :code:`argparse.HelpFormatter`, slightly increases the width reserved for the options and removed defaults for the mutator options."""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs, max_help_position = 35)
-    def _get_help_string(self, action):
-        if action.dest.startswith('mutator_'):
-            return action.help
-        return super()._get_help_string(action)
 
 def parse_options():
     """Configures the commandline parse and then parse the commandline options."""
