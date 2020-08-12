@@ -2,7 +2,6 @@ import copy
 import progressbar
 
 from . import mutator_options
-
 from . import semantics
 
 enabled_mutators = []
