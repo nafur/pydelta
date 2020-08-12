@@ -1,6 +1,9 @@
 from . import options
 from .semantics import *
 
+NAME = 'smtlib'
+MUTATORS = ['check-sat-assuming']
+
 class PassCheckSatAssuming:
     """Replaces a :code:`check-sat-assuming` by a regular :code:`check-sat`."""
     def filter(self, node):
@@ -11,7 +14,7 @@ class PassCheckSatAssuming:
         return 'substitute check-sat-assuming by check-sat'
 
 def collect_mutator_options(argparser):
-    options.add_mutator_argument(argparser, 'smtlib', True, 'smtlib mutators')
+    options.add_mutator_argument(argparser, NAME, True, 'smtlib mutators')
     options.add_mutator_argument(argparser, 'check-sat-assuming', True, 'replace check-sat-assuming by check-sat')
 
 def collect_mutators(args):

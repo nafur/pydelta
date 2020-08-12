@@ -1,6 +1,9 @@
 from . import options
 from .semantics import *
 
+NAME = 'arithmetic'
+MUTATORS = ['arith-constants', 'arith-negate-relations']
+
 def is_arithmetic_relation(node):
     if not has_name(node):
         return False
@@ -32,7 +35,7 @@ class PassArithmeticNegateRelations:
         return 'push negations into relations'
 
 def collect_mutator_options(argparser):
-    options.add_mutator_argument(argparser, 'arithmetic', True, 'arithmetic mutators')
+    options.add_mutator_argument(argparser, NAME, True, 'arithmetic mutators')
     options.add_mutator_argument(argparser, 'arith-constants', True, 'replaces constants by simpler ones')
     options.add_mutator_argument(argparser, 'arith-negate-relations', True, 'push negations inside of relations')
 

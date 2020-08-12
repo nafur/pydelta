@@ -1,6 +1,9 @@
 from . import options
 from .semantics import *
 
+NAME = 'boolean'
+MUTATORS = ['eliminate-false-eq', 'negate-quant']
+
 def is_quantifier(node):
     return has_name(node) and get_name(node) in ['exists', 'forall']
 
@@ -51,7 +54,7 @@ class PassNegatedQuantifiers:
         return 'push negation inside of quantifier'
 
 def collect_mutator_options(argparser):
-    options.add_mutator_argument(argparser, 'boolean', True, 'boolean mutators')
+    options.add_mutator_argument(argparser, NAME, True, 'boolean mutators')
     options.add_mutator_argument(argparser, 'eliminate-false-eq', True, 'eliminate equalities with false')
     options.add_mutator_argument(argparser, 'negated-quant', True, 'push negations inside quantifiers')
 

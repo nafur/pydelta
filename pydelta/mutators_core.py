@@ -1,6 +1,9 @@
 from . import options
 from .semantics import *
 
+NAME = 'core'
+MUTATORS = ['core', 'constants', 'erase-children', 'inline-functions', 'let-elimination', 'let-substitution', 'merge-children', 'replace-by-variable', 'sort-children', 'substitute-children']
+
 class PassConstants:
     """Replaces any node by a constant."""
     def mutations(self, node):
@@ -102,7 +105,7 @@ class PassSubstituteChildren:
         return 'substitute with child'
 
 def collect_mutator_options(argparser):
-    options.add_mutator_argument(argparser, 'core', True, 'core mutators')
+    options.add_mutator_argument(argparser, NAME, True, 'core mutators')
     options.add_mutator_argument(argparser, 'constants', True, 'replace by theory constants')
     options.add_mutator_argument(argparser, 'erase-children', True, 'erase individual children of nodes')
     options.add_mutator_argument(argparser, 'inline-functions', True, 'inline defined functions')

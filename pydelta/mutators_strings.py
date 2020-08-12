@@ -1,6 +1,9 @@
 from . import options
 from .semantics import *
 
+NAME = 'strings'
+MUTATORS = ['str-constants']
+
 class PassStringSimplifyConstant:
     """Replace a string constant by a shorter version."""
     def filter(self, node):
@@ -12,7 +15,7 @@ class PassStringSimplifyConstant:
         return 'simplify string constant'
 
 def collect_mutator_options(argparser):
-    options.add_mutator_argument(argparser, 'strings', True, 'strings mutators')
+    options.add_mutator_argument(argparser, NAME, True, 'strings mutators')
     options.add_mutator_argument(argparser, 'str-constants', True, 'replaces constants by simpler ones')
 
 def collect_mutators(args):

@@ -1,6 +1,9 @@
 from . import options
 from .semantics import *
 
+NAME = 'bitvector'
+MUTATORS = ['bv-constants', 'bv-eval-extract', 'bv-ite-to-bvcomp', 'bv-zero-concat']
+
 def get_bitvector_constant_value(node):
     assert is_bitvector_constant(node)
     if is_leaf(node):
@@ -85,7 +88,7 @@ class PassBVSimplifyConstant:
         return 'simplify bitvector constant'
 
 def collect_mutator_options(argparser):
-    options.add_mutator_argument(argparser, 'bitvector', True, 'bitvector mutators')
+    options.add_mutator_argument(argparser, NAME, True, 'bitvector mutators')
     options.add_mutator_argument(argparser, 'bv-constants', True, 'replaces constants by simpler ones')
     options.add_mutator_argument(argparser, 'bv-eval-extract', True, 'evaluate bitvector extract on constants')
     options.add_mutator_argument(argparser, 'bv-ite-to-bvcomp', True, 'replaces bv1/bv0 ites by bvcomp')
