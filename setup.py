@@ -19,5 +19,10 @@ setuptools.setup(
     zip_safe = False,
     scripts = [
         'bin/pydelta'
+    ],
+    install_requires = [
+        'progressbar>=2.5',
+        'sphinx-rtd-theme>=0.4.3',
+        'importlib-metadata>=1.7 ; python_version<"3.8"',
     ]
 )
