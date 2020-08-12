@@ -7,7 +7,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name = info.PACKAGE_NAME,
-    version = info.PYPI_VERSION,
+    version = info.VERSION,
     description = info.DESCRIPTION,
     long_description = long_description,
     long_description_content_type = 'text/markdown',
