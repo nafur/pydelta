@@ -21,7 +21,7 @@ def parse_options():
     argp.add_argument('--version', action = 'version', version = info.VERSION)
 
     argp_modes = argp.add_argument_group('special modes')
-    argp_modes.add_argument('--mode-let-elimination', nargs = 0, action = LetEliminationAction, help = 'only eliminate let binders')
+    mutator_options.collect_mutator_modes(argp_modes)
 
     argp_checking = argp.add_argument_group('checking arguments')
     argp_checking.add_argument('--parse-only', action = 'store_true', help = 'only parse the input file')

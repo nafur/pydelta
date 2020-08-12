@@ -8,6 +8,7 @@ from pydelta import checker
 from pydelta import options
 from pydelta import manager
 from pydelta import mutator
+from pydelta import mutator_options
 from pydelta import parser
 
 def setup_logging():
