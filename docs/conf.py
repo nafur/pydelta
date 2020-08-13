@@ -5,7 +5,8 @@ import subprocess
 import sys
 
 # add project root path
-sys.path.insert(0, os.path.abspath('..'))
+__root_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
+sys.path.insert(0, __root_dir)
 
 import pydelta.version
 
