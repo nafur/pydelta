@@ -183,6 +183,9 @@ def get_bitvector_width(node):
             if node.startswith('#x'):
                 return len(node[2:]) * 4
         return int(node[2])
+    if has_type(node):
+        assert is_bitvector_type(get_type(node))
+        return get_type(node)[2]
     if has_name(node):
         if get_name(node) in [
                 'bvnot', 'bvand', 'bvor',
