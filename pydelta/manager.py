@@ -37,9 +37,13 @@ class Manager:
 
     def __empty_queue(self):
         """Empty the queue."""
-        while not self.q.empty():
-            self.q.get()
-            self.q.task_done()
+        try:
+            while not self.q.empty():
+                self.q.get(timeout = 0.1)
+                self.q.task_done()
+        except queue.Empty:
+            pass
+
 
     def producer(self, original, skip = 0):
         """Produces new mutated variants of the given input."""
@@ -63,6 +67,7 @@ class Manager:
         while not self.stop_operation:
             try:
                 candidate = self.q.get(timeout = 0.25)
+                self.q.task_done()
                 try:
                     with tempfile.NamedTemporaryFile('w', suffix = '.smt2') as tmp:
                         tmp.write(parser.render_smtlib(candidate.exprs))
@@ -75,7 +80,6 @@ class Manager:
                         if self.result is None:
                             self.stop_operation = True
                             self.result = candidate
-                self.q.task_done()
             except queue.Empty:
                 if self.finished_generation:
                     break
