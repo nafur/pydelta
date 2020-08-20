@@ -27,6 +27,12 @@ class LetEliminationAction(argparse.Action):
         setattr(namespace, 'mutator_let_elimination', True)
         setattr(namespace, 'mutator_let_substitution', True)
 
+class ReductionOnlyAction(argparse.Action):
+    """Mode that only checks mutations that reduce the number of nodes."""
+    def __call__(self, parser, namespace, values, option_string = None):
+        setattr(namespace, 'mode_reduction_only', True)
+        setattr(namespace, 'mutator_sort_children', False)
+
 class AgressiveAction(argparse.Action):
     """Mode that only checks aggressive mutations."""
     def __call__(self, parser, namespace, values, option_string = None):
@@ -43,10 +49,11 @@ class AgressiveAction(argparse.Action):
         setattr(namespace, 'mutator_substitute_children', True)
 
 def collect_mutator_modes(argparser):
-    argparser.add_argument('--mode-let-elimination', nargs = 0, action = LetEliminationAction, help = 'only eliminate let binders')
-    argparser.add_argument('--mode-aggressive', nargs = 0, action = AgressiveAction, help = 'agressively minimize')
+    argparser.add_argument('--mode-let-elimination', default = False, nargs = 0, action = LetEliminationAction, help = 'only eliminate let binders')
+    argparser.add_argument('--mode-aggressive', default = False, nargs = 0, action = AgressiveAction, help = 'agressively minimize')
     argparser.add_argument('--aggressiveness', metavar = 'perc', type = float, default = 0.01,
                            help = 'percentage of the input a mutators needs to remove')
+    argparser.add_argument('--mode-reduction-only', default = False, nargs = 0, action = ReductionOnlyAction, help = 'only allow reducing mutations')
 
 def collect_mutator_options(argparser):
     """Adds all options related to mutators to the given argument parser."""
