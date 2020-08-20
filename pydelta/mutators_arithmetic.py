@@ -34,10 +34,23 @@ class PassArithmeticNegateRelations:
     def __str__(self):
         return 'push negations into relations'
 
+class PassArithmeticStrengthenRelations:
+    """Replace a relation by a stronger relation."""
+    def filter(self, node):
+        return is_arithmetic_relation(node)
+    def mutations(self, node):
+        negator = { '<': ['='], '>': ['='], '<=': ['<', '='], '>=': ['>', '='] }
+        if node[0] in negator:
+            return [[rel] + node[1:] for rel in negator[node[0]]]
+        return []
+    def __str__(self):
+        return 'strengthen relation'
+
 def collect_mutator_options(argparser):
     options.add_mutator_argument(argparser, NAME, True, 'arithmetic mutators')
     options.add_mutator_argument(argparser, 'arith-constants', True, 'replaces constants by simpler ones')
     options.add_mutator_argument(argparser, 'arith-negate-relations', True, 'push negations inside of relations')
+    options.add_mutator_argument(argparser, 'arith-strengthen-relations', True, 'strengthen relations')
 
 def collect_mutators(args):
     res = []
@@ -46,4 +59,6 @@ def collect_mutators(args):
             res.append(PassArithmeticSimplifyConstant())
         if args.mutator_arith_negate_relations:
             res.append(PassArithmeticNegateRelations())
+        if args.mutator_arith_strengthen_relations:
+            res.append(PassArithmeticStrengthenRelations())
     return res
