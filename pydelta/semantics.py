@@ -44,13 +44,17 @@ def is_let(node):
 
 def is_defined_function(node):
     """Checks whether :code:`node` is a defined function."""
+    if is_leaf(node):
+        return node in __defined_functions
     return has_name(node) and get_name(node) in __defined_functions
 
 def get_defined_function(node):
-    """Returns the defined function :code:`node` as a function object.
-    Assumes :code:`is___defined_functions(node)`."""
+    """Returns the defined function :code:`node`, instantiated with the arguments of :code:`node` if necessary.
+    Assumes :code:`__is_defined_functions(node)`."""
     assert is_defined_function(node)
-    return __defined_functions[get_name(node)]
+    if is_leaf(node):
+        return __defined_functions[node]([])
+    return __defined_functions[get_name(node)](node[1:])
 
 def is_nary(node):
     """Checks whether the :code:`node` is a n-ary operator."""

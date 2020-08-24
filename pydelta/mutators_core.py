@@ -37,7 +37,7 @@ class PassInlineDefinedFuns:
     def filter(self, node):
         return is_defined_function(node)
     def mutations(self, node):
-        return [ get_defined_function(node)(node[1:]) ]
+        return [ get_defined_function(node) ]
     def __str__(self):
         return 'inline defined functions'
 
