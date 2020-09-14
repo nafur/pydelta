@@ -86,3 +86,5 @@ def run_pydelta(original):
             parser.write_smtlib_to_file(original, options.args().outputfile)
 
     logging.info('Performed %d checks and %d simplifications', checker.CHECKS, simplifications)
+    if checker.TIMEOUTS > 0:
+        logging.info('Overall, checking timed out %d times', checker.TIMEOUTS)

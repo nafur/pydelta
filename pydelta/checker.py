@@ -10,6 +10,7 @@ from . import options
 ExecResult = collections.namedtuple('ExecResult', ['exitcode', 'stdout', 'stderr', 'runtime'])
 __REFERENCE = ExecResult(-1, '', '', -1)
 CHECKS = 0
+TIMEOUTS = 0
 
 def limit_memory():
     """Apply memory limit given by :code:`--memout`."""
@@ -30,6 +31,8 @@ def execute(cmd, inputfile):
         duration = time.time() - start
         return ExecResult(proc.returncode, out.decode('utf8').strip(), err.decode('utf8').strip(), duration)
     except subprocess.TimeoutExpired:
+        global TIMEOUTS
+        TIMEOUTS += 1
         proc.terminate()
         try:
             proc.wait(timeout = 2)
