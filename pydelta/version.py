@@ -1,9 +1,9 @@
 import os
 
-def version_from_git():
+def version_from_git(gitdir):
     import re
     import subprocess
-    GIT_VERSION = subprocess.check_output(['git', 'describe', '--tags']).decode('utf8').strip()
+    GIT_VERSION = subprocess.check_output(['git', 'describe', '--tags'], cwd = gitdir).decode('utf8').strip()
     if re.match('^v[0-9.]+$', GIT_VERSION) is not None:
         return GIT_VERSION[1:]
     else:
@@ -21,6 +21,6 @@ def version_from_package_metadata():
 
 __git_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '.git')
 if os.path.isdir(__git_dir):
-    VERSION = version_from_git()
+    VERSION = version_from_git(__git_dir)
 else:
     VERSION = version_from_package_metadata()
