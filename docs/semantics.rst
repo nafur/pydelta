@@ -8,7 +8,7 @@ The node representation holds no semantic information, but it is sometimes very 
    :maxdepth: 2
    :caption: Contents:
 
-.. automodule:: semantics
+.. automodule:: pydelta.semantics
     :members:
     :undoc-members:
     :inherited-members:

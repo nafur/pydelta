@@ -5,14 +5,14 @@ Utilities
 Execution
 ---------
 
-.. autofunction:: checker.execute
-.. autofunction:: checker.compute_reference
-.. autofunction:: checker.matches_reference
+.. autofunction:: pydelta.checker.execute
+.. autofunction:: pydelta.checker.compute_reference
+.. autofunction:: pydelta.checker.matches_reference
 
 Option parsing
 --------------
 
-.. automodule:: options
+.. automodule:: pydelta.options
     :members:
     :undoc-members:
     :show-inheritance:
@@ -20,16 +20,16 @@ Option parsing
 SMT-LIB input and output
 ------------------------
 
-.. autofunction:: parser.parse_smtlib
-.. autofunction:: parser.render_expression
-.. autofunction:: parser.render_pretty_expression
-.. autofunction:: parser.render_smtlib
-.. autofunction:: parser.write_smtlib_to_file
+.. autofunction:: pydelta.parser.parse_smtlib
+.. autofunction:: pydelta.parser.render_expression
+.. autofunction:: pydelta.parser.render_pretty_expression
+.. autofunction:: pydelta.parser.render_smtlib
+.. autofunction:: pydelta.parser.write_smtlib_to_file
 
 Manager
 -------
 
-.. automodule:: manager
+.. automodule:: pydelta.manager
     :members:
     :undoc-members:
     :show-inheritance:

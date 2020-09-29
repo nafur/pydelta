@@ -25,39 +25,40 @@ A mutator class should at least look like this:
 Generic mutators
 ----------------
 
-.. autoclass:: mutators_core.PassConstants
-.. autoclass:: mutators_core.PassEraseChildren
-.. autoclass:: mutators_core.PassSubstituteChildren
-.. autoclass:: mutators_core.PassSortChildren
-.. autoclass:: mutators_core.PassMergeWithChildren
-.. autoclass:: mutators_core.PassReplaceVariables
-.. autoclass:: mutators_core.PassReplaceByVariable
-.. autoclass:: mutators_core.PassLetSubstitution
-.. autoclass:: mutators_core.PassInlineDefinedFuns
+.. autoclass:: pydelta.mutators_core.PassConstants
+.. autoclass:: pydelta.mutators_core.PassEraseChildren
+.. autoclass:: pydelta.mutators_core.PassInlineDefinedFuns
+.. autoclass:: pydelta.mutators_core.PassLetElimination
+.. autoclass:: pydelta.mutators_core.PassLetSubstitution
+.. autoclass:: pydelta.mutators_core.PassMergeWithChildren
+.. autoclass:: pydelta.mutators_core.PassReplaceByVariable
+.. autoclass:: pydelta.mutators_core.PassSortChildren
+.. autoclass:: pydelta.mutators_core.PassSubstituteChildren
 
 Arithmetic mutators
 -------------------
-.. autoclass:: mutators_arithmetic.PassArithmeticSimplifyConstant
-.. autoclass:: mutators_arithmetic.PassArithmeticNegateRelations
+.. autoclass:: pydelta.mutators_arithmetic.PassArithmeticSimplifyConstant
+.. autoclass:: pydelta.mutators_arithmetic.PassArithmeticNegateRelations
+.. autoclass:: pydelta.mutators_arithmetic.PassArithmeticStrengthenRelations
 
 Bitvector mutators
 ------------------
-.. autoclass:: mutators_bitvectors.PassBVConcatToZeroExtend
-.. autoclass:: mutators_bitvectors.PassBVExtractConstants
-.. autoclass:: mutators_bitvectors.PassBVOneZeroITE
-.. autoclass:: mutators_bitvectors.PassBVSimplifyConstant
+.. autoclass:: pydelta.mutators_bitvectors.PassBVConcatToZeroExtend
+.. autoclass:: pydelta.mutators_bitvectors.PassBVExtractConstants
+.. autoclass:: pydelta.mutators_bitvectors.PassBVOneZeroITE
+.. autoclass:: pydelta.mutators_bitvectors.PassBVSimplifyConstant
 
 Boolean mutators
 ----------------
-.. autoclass:: mutators_boolean.PassDeMorgan
-.. autoclass:: mutators_boolean.PassDoubleNegation
-.. autoclass:: mutators_boolean.PassEliminateFalseEquality
-.. autoclass:: mutators_boolean.PassNegatedQuantifiers
+.. autoclass:: pydelta.mutators_boolean.PassDeMorgan
+.. autoclass:: pydelta.mutators_boolean.PassDoubleNegation
+.. autoclass:: pydelta.mutators_boolean.PassEliminateFalseEquality
+.. autoclass:: pydelta.mutators_boolean.PassNegatedQuantifiers
 
 SMT-LIB mutators
 ----------------
-.. autoclass:: mutators_smtlib.PassCheckSatAssuming
+.. autoclass:: pydelta.mutators_smtlib.PassCheckSatAssuming
 
 String mutators
 ---------------
-.. autoclass:: mutators_strings.PassStringSimplifyConstant
+.. autoclass:: pydelta.mutators_strings.PassStringSimplifyConstant
