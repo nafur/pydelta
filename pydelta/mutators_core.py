@@ -18,6 +18,15 @@ class PassConstants:
     def __str__(self):
         return 'substitute by a constant'
 
+class PassEliminateDistinct:
+    """Replaces distinct by a negated equality."""
+    def filter(self, node):
+        return has_name(node) and get_name(node) == 'distinct'
+    def mutations(self, node):
+        return [['not', ['='] + node[1:]]]
+    def __str__(self):
+        return 'eliminate distinct'
+
 class PassEraseChildren:
     """Erases a single child of the given node."""
     def filter(self, node):
@@ -110,6 +119,7 @@ class PassSubstituteChildren:
 def collect_mutator_options(argparser):
     options.add_mutator_argument(argparser, NAME, True, 'core mutators')
     options.add_mutator_argument(argparser, 'constants', True, 'replace by theory constants')
+    options.add_mutator_argument(argparser, 'eliminate-distinct', True, 'eliminate distinct by negated equalities')
     options.add_mutator_argument(argparser, 'erase-children', True, 'erase individual children of nodes')
     options.add_mutator_argument(argparser, 'inline-functions', True, 'inline defined functions')
     options.add_mutator_argument(argparser, 'let-elimination', True, 'eliminate let bindings')
@@ -124,6 +134,8 @@ def collect_mutators(args):
     if args.mutator_core:
         if args.mutator_constants:
             res.append(PassConstants())
+        if args.mutator_eliminate_distinct:
+            res.append(PassEliminateDistinct())
         if args.mutator_erase_children:
             res.append(PassEraseChildren())
         if args.mutator_inline_functions:
