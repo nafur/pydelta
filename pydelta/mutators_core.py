@@ -89,8 +89,14 @@ class PassMergeWithChildren:
 class PassReplaceByVariable:
     """Replaces a node by a variable."""
     def filter(self, node):
-        return node_count(node) > 1
+        return not is_leaf(node) or has_type(node)
     def mutations(self, node):
+        if is_leaf(node):
+            variables = get_variables_with_type(get_type(node))
+            variables = get_variable_info().keys()
+            if options.args().replace_by_variable_mode == 'inc':
+                return [v for v in variables if v > node]
+            return [v for v in variables if v < node]
         return [v for v in get_variable_info().keys() if node_count(v) < node_count(node)]
     def __str__(self):
         return 'substitute by existing variable'
@@ -126,6 +132,8 @@ def collect_mutator_options(argparser):
     options.add_mutator_argument(argparser, 'let-substitution', True, 'substitute bound variables in let bindings')
     options.add_mutator_argument(argparser, 'merge-children', True, 'merge children into nodes')
     options.add_mutator_argument(argparser, 'replace-by-variable', True, 'replace with existing variable')
+    argparser.add_argument('--replace-by-variable-mode',
+                           choices = ['inc', 'dec'], default = 'inc', help = 'replace with existing variables that are larger or smaller')
     options.add_mutator_argument(argparser, 'sort-children', True, 'sort children of nodes')
     options.add_mutator_argument(argparser, 'substitute-children', True, 'substitute nodes with their children')
 
