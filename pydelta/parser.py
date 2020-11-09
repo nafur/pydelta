@@ -1,4 +1,5 @@
 import collections
+import logging
 import re
 import sys
 import textwrap
@@ -10,6 +11,7 @@ sys.setrecursionlimit(100000)
 
 def lexer(text):
     __tokens = [
+        ('COMMENT', ';[^\n]*'),
         ('LPAREN', '\\('),
         ('RPAREN', '\\)'),
         ('STRINGLIT', '"[^"]*"'),
@@ -20,19 +22,13 @@ def lexer(text):
     ]
     __token_re = re.compile('|'.join(['(?P<{}>{})'.format(tok[0], tok[1]) for tok in __tokens]))
 
-    skip_until_newline = False
     for m in __token_re.finditer(text):
         kind = m.lastgroup
         value = m.group()
-        if kind == 'SPACE':
-            if skip_until_newline and value == '\n':
-                skip_until_newline = False
+        if kind in ['COMMENT', 'SPACE']:
             continue
-        if skip_until_newline:
-            continue
-        if kind == 'MISMATCH' and value == ';':
-            skip_until_newline = True
-            continue
+        if kind == 'MISMATCH':
+            logging.warning('Unexpected  {}'.format(value))
         yield Token(kind, value)
 
 class Peekable:
