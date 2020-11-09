@@ -40,7 +40,7 @@ class PassPushPopRemoval:
         for i in range(len(node)):
             if node[i] == ['push']:
                 stack.append(i)
-            if node[i] == ['pop']:
+            if node[i] == ['pop'] and stack != []:
                 pairs.append((stack[-1], i))
                 stack.pop()
         # remove directly successive pairs
