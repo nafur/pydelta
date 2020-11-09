@@ -19,6 +19,8 @@ pyDelta is based on a few fundamental ideas:
 .. toctree::
    :maxdepth: 2
 
+   installation
+   usage
    modes
    mutators
    semantics
