@@ -89,7 +89,7 @@ class PassMergeWithChildren:
 class PassReplaceByVariable:
     """Replaces a node by a variable."""
     def filter(self, node):
-        return not is_leaf(node) or has_type(node)
+        return not is_constant(node) and has_type(node)
     def mutations(self, node):
         if is_leaf(node):
             variables = get_variables_with_type(get_type(node))

@@ -146,6 +146,9 @@ def is_bitvector_constant(node):
         return False
     return node[1].startswith('bv')
 
+def is_constant(node):
+    return is_boolean_constant(node) or is_arithmetic_constant(node) or is_int_constant(node) or is_real_constant(node) or is_string_constant(node) or is_bitvector_constant(node)
+
 def is_indexed_op(node):
     if is_leaf(node) or len(node) < 2:
         return False
