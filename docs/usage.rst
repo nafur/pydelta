@@ -35,29 +35,12 @@ If no arguments are given, a run is considered equivalent to the reference run i
 With ``--ignore-exitcode`` the exit code is ignored and only the (standard and error) outputs are considered.
 With ``--ignore-output`` the (standard and error) outputs are ignored and only the exit code is considered.
 If at least one of ``--match-out`` and ``--match-err`` are given, the outputs are not compared for equality but instead matched against the given regular expressions. Initially, pyDelta ensures that the reference run matches the given regular expressions.
-In pseudo-code, the matching works as follows:
+The exact matching works as follows:
 
-.. code-block:: python3
-
-    def matches_reference(result):
-        if not ignore_exitcode:
-            if reference.exitcode != result.exitcode:
-                return False
-        if not ignore_output:
-            if not match_err and not match_out:
-                if reference.stdout != result.stdout:
-                    return False
-                if reference.stderr != result.stderr:
-                    return False
-            else:
-                if match_err:
-                    if not re.search(match_err, result.stderr):
-                        return False
-                if match_out:
-                    if not re.search(match_out, result.stdout):
-                        return False
-        return True
-
+.. literalinclude:: ../pydelta/checker.py
+   :language: python3
+   :linenos:
+   :pyobject: matches_reference
 
 Debugging unsoundness
 ---------------------
@@ -65,7 +48,7 @@ Debugging unsoundness
 Sometimes bugs in solvers do not make the command crash or print an error message, but simply provide an incorrect result.
 This is a particular nasty case for pyDelta, as the solver itself oftentimes can not detect this issue. Relying on annotations in the input (i.e. the SMTLIB status) is usually not a good idea, as mutating the input may very well change the correct output (i.e. flip from sat to unsat or vice-versa) but still retain the underlying error.
 
-A better approach is usually to use another solver as reference solver and employ a wrapper script that checks whether the two solvers disagree. A wrapper script for this purpose is provided in :download:`../scripts/result_differs.py`. It runs two solvers (``'A'`` and ``'B'``) and compares their outputs. Note that this script expects the solver to only output ``sat`` or ``unsat``.
+A better approach is usually to use another solver as reference solver and employ a wrapper script that checks whether the two solvers disagree. A wrapper script for this purpose is provided in :download:`scripts/result_differs.py <../scripts/result_differs.py>`. It runs two solvers (``'A'`` and ``'B'``) and compares their outputs. Note that this script expects the solver to only output ``sat`` or ``unsat``.
 
 .. literalinclude:: ../scripts/result_differs.py
    :language: python3
@@ -74,7 +57,7 @@ A better approach is usually to use another solver as reference solver and emplo
 Debugging performance issues
 ----------------------------
 
-Similarly nasty are performance issues, and as for soundness issues it usually only makes sense to assess performance relative to another solver. Again a wrapper script for this purpose is provided in :download:`../scripts/compare_time.py`. This script runs two solvers (``'A'`` and ``'B'``) and checks whether the slower one is (still) much slower than the faster one.
+Similarly nasty are performance issues, and as for soundness issues it usually only makes sense to assess performance relative to another solver. Again a wrapper script for this purpose is provided in :download:`scripts/compare_time.py <../scripts/compare_time.py>`. This script runs two solvers (``'A'`` and ``'B'``) and checks whether the slower one is (still) much slower than the faster one.
 As it outputs some information about the timings, it should be used in combination with ``--ignore-output``.
 
 .. literalinclude:: ../scripts/compare_time.py

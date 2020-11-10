@@ -26,6 +26,7 @@ Generic mutators
 ----------------
 
 .. autoclass:: pydelta.mutators_core.PassConstants
+.. autoclass:: pydelta.mutators_core.PassEliminateDistinct
 .. autoclass:: pydelta.mutators_core.PassEraseChildren
 .. autoclass:: pydelta.mutators_core.PassInlineDefinedFuns
 .. autoclass:: pydelta.mutators_core.PassLetElimination
@@ -58,6 +59,8 @@ Boolean mutators
 SMT-LIB mutators
 ----------------
 .. autoclass:: pydelta.mutators_smtlib.PassCheckSatAssuming
+.. autoclass:: pydelta.mutators_smtlib.PassPushPopRemoval
+.. autoclass:: pydelta.mutators_smtlib.PassSimplifyLogic
 
 String mutators
 ---------------
