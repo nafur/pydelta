@@ -35,6 +35,7 @@ Generic mutators
 .. autoclass:: pydelta.mutators_core.PassReplaceByVariable
 .. autoclass:: pydelta.mutators_core.PassSortChildren
 .. autoclass:: pydelta.mutators_core.PassSubstituteChildren
+.. autoclass:: pydelta.mutators_core.PassVariableNames
 
 Arithmetic mutators
 -------------------

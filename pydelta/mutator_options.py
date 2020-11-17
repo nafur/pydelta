@@ -48,12 +48,19 @@ class AgressiveAction(argparse.Action):
         setattr(namespace, 'mutator_replace_by_variable', True)
         setattr(namespace, 'mutator_substitute_children', True)
 
+class BeautifyAction(argparse.Action):
+    """Mode that enables mutations merely beautify the output."""
+    def __call__(self, parser, namespace, values, option_string = None):
+        setattr(namespace, 'mutator_variable_names', True)
+        setattr(namespace, 'pretty_print', True)
+
 def collect_mutator_modes(argparser):
     argparser.add_argument('--mode-let-elimination', default = False, nargs = 0, action = LetEliminationAction, help = 'only eliminate let binders')
     argparser.add_argument('--mode-aggressive', default = False, nargs = 0, action = AgressiveAction, help = 'agressively minimize')
     argparser.add_argument('--aggressiveness', metavar = 'perc', type = float, default = 0.01,
                            help = 'percentage of the input a mutators needs to remove')
     argparser.add_argument('--mode-reduction-only', default = False, nargs = 0, action = ReductionOnlyAction, help = 'only allow reducing mutations')
+    argparser.add_argument('--mode-beautify', default = False, nargs = 0, action = BeautifyAction, help = 'enables beautification mutators')
 
 def collect_mutator_options(argparser):
     """Adds all options related to mutators to the given argument parser."""
