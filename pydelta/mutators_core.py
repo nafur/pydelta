@@ -127,7 +127,11 @@ class PassVariableName:
     def filter(self, node):
         return has_name(node) and get_name(node) == 'declare-fun'
     def global_mutations(self, linput, ginput):
-        return [ substitute(ginput, {linput[1]: linput[1][:-1]}) ]
+        half = len(linput[1]) // 2
+        return [
+            substitute(ginput, {linput[1]: linput[1][:half]}),
+            substitute(ginput, {linput[1]: linput[1][:-1]})
+        ]
     def __str__(self):
         return 'simplify variable name'
 
