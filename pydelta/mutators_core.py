@@ -122,6 +122,15 @@ class PassSubstituteChildren:
     def __str__(self):
         return 'substitute with child'
 
+class PassVariableName:
+    """Simplify variable names."""
+    def filter(self, node):
+        return has_name(node) and get_name(node) == 'declare-fun'
+    def global_mutations(self, linput, ginput):
+        return [ substitute(ginput, {linput[1]: linput[1][:-1]}) ]
+    def __str__(self):
+        return 'simplify variable name'
+
 def collect_mutator_options(argparser):
     options.add_mutator_argument(argparser, NAME, True, 'core mutators')
     options.add_mutator_argument(argparser, 'constants', True, 'replace by theory constants')
@@ -136,6 +145,7 @@ def collect_mutator_options(argparser):
                            choices = ['inc', 'dec'], default = 'inc', help = 'replace with existing variables that are larger or smaller')
     options.add_mutator_argument(argparser, 'sort-children', True, 'sort children of nodes')
     options.add_mutator_argument(argparser, 'substitute-children', True, 'substitute nodes with their children')
+    options.add_mutator_argument(argparser, 'variable-names', True, 'simplify variable names')
 
 def collect_mutators(args):
     res = []
@@ -160,4 +170,6 @@ def collect_mutators(args):
             res.append(PassSortChildren())
         if args.mutator_substitute_children:
             res.append(PassSubstituteChildren())
+        if args.mutator_variable_names:
+            res.append(PassVariableName())
     return res
