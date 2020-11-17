@@ -19,6 +19,8 @@ class PassArithmeticSimplifyConstant:
             i = int(f)
             return [str(i // 2), str(i // 10)]
         return [str(int(f)), node[:-1]]
+    def global_mutations(self, linput, ginput):
+        return [ substitute(ginput, {linput: rep}) for rep in self.mutations(linput) ]
     def __str__(self):
         return 'simplify arithmetic constant'
 
