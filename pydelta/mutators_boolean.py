@@ -40,6 +40,15 @@ class PassEliminateFalseEquality:
     def __str__(self):
         return 'replace equality with false by negation'
 
+class PassEliminateImplications:
+    """Replaces implications by disjunctions."""
+    def filter(self, node):
+        return has_name(node) and get_name(node) == '=>' and len(node) == 3
+    def mutations(self, node):
+        return [['or', ['not', node[1]], node[2]]]
+    def __str__(self):
+        return 'eliminate implication'
+
 class PassNegatedQuantifiers:
     """Pushes negation inside quantifiers."""
     def filter(self, node):
@@ -56,6 +65,7 @@ class PassNegatedQuantifiers:
 def collect_mutator_options(argparser):
     options.add_mutator_argument(argparser, NAME, True, 'boolean mutators')
     options.add_mutator_argument(argparser, 'eliminate-false-eq', True, 'eliminate equalities with false')
+    options.add_mutator_argument(argparser, 'eliminate-implications', True, 'eliminate equalities with false')
     options.add_mutator_argument(argparser, 'negated-quant', True, 'push negations inside quantifiers')
 
 def collect_mutators(args):
@@ -65,6 +75,8 @@ def collect_mutators(args):
         res.append(PassDoubleNegation())
         if args.mutator_eliminate_false_eq:
             res.append(PassEliminateFalseEquality())
+        if args.mutator_eliminate_implications:
+            res.append(PassEliminateImplications())
         if args.mutator_negated_quant:
             res.append(PassNegatedQuantifiers())
     return res
