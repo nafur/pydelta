@@ -41,6 +41,7 @@ Arithmetic mutators
 -------------------
 .. autoclass:: pydelta.mutators_arithmetic.PassArithmeticSimplifyConstant
 .. autoclass:: pydelta.mutators_arithmetic.PassArithmeticNegateRelations
+.. autoclass:: pydelta.mutators_arithmetic.PassArithmeticSplitNaryRelations
 .. autoclass:: pydelta.mutators_arithmetic.PassArithmeticStrengthenRelations
 
 Bitvector mutators
@@ -55,6 +56,7 @@ Boolean mutators
 .. autoclass:: pydelta.mutators_boolean.PassDeMorgan
 .. autoclass:: pydelta.mutators_boolean.PassDoubleNegation
 .. autoclass:: pydelta.mutators_boolean.PassEliminateFalseEquality
+.. autoclass:: pydelta.mutators_boolean.PassEliminateImplications
 .. autoclass:: pydelta.mutators_boolean.PassNegatedQuantifiers
 
 SMT-LIB mutators
