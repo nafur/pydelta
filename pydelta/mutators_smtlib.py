@@ -4,7 +4,7 @@ from .semantics import *
 NAME = 'smtlib'
 MUTATORS = ['check-sat-assuming', 'push-pop-removal']
 
-class PassCheckSatAssuming:
+class CheckSatAssuming:
     """Replaces a :code:`check-sat-assuming` by a regular :code:`check-sat`."""
     def filter(self, node):
         return has_name(node) and get_name(node) == 'check-sat-assuming'
@@ -13,7 +13,7 @@ class PassCheckSatAssuming:
     def __str__(self):
         return 'substitute check-sat-assuming by check-sat'
 
-class PassSimplifyLogic:
+class SimplifyLogic:
     """Replaces the logic specified in :code`(check-logic ...)` by a simpler one."""
     def filter(self, node):
         return has_name(node) and get_name(node) == 'set-logic'
@@ -28,7 +28,7 @@ class PassSimplifyLogic:
     def __str__(self):
         return 'simplify logic'
 
-class PassPushPopRemoval:
+class PushPopRemoval:
     """Removes matching :code:`(push)(pop)` pairs. First tries successive pairs, distant ones later."""
     def filter(self, node):
         return not has_name(node)
@@ -68,9 +68,9 @@ def collect_mutators(args):
     res = []
     if args.mutator_smtlib:
         if args.mutator_check_sat_assuming:
-            res.append(PassCheckSatAssuming())
+            res.append(CheckSatAssuming())
         if args.mutator_push_pop_removal:
-            res.append(PassPushPopRemoval())
+            res.append(PushPopRemoval())
         if args.mutator_simplify_logic:
-            res.append(PassSimplifyLogic())
+            res.append(SimplifyLogic())
     return res

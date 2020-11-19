@@ -4,7 +4,7 @@ from .semantics import *
 NAME = 'strings'
 MUTATORS = ['str-constants']
 
-class PassStringSimplifyConstant:
+class StringSimplifyConstant:
     """Replace a string constant by a shorter version."""
     def filter(self, node):
         return is_string_constant(node) and node != '""'
@@ -22,5 +22,5 @@ def collect_mutators(args):
     res = []
     if args.mutator_strings:
         if args.mutator_str_constants:
-            res.append(PassStringSimplifyConstant())
+            res.append(StringSimplifyConstant())
     return res

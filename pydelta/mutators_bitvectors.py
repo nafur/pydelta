@@ -31,7 +31,7 @@ def possible_bitvector_widths(node):
             widths.add(wid)
     return list(widths)
 
-class PassBVConcatToZeroExtend:
+class BVConcatToZeroExtend:
     """Replace a concat with zero by zero_extend."""
     def filter(self, node):
         if not has_name(node) or get_name(node) != 'concat':
@@ -46,7 +46,7 @@ class PassBVConcatToZeroExtend:
     def __str__(self):
         return 'replace concat by zero_extend'
 
-class PassBVExtractConstants:
+class BVExtractConstants:
     """Evaluates a bitvector :code:`extract` if it is applied to a constant."""
     def filter(self, node):
         return is_bitvector_extract(node) and is_bitvector_constant(node[1])
@@ -60,7 +60,7 @@ class PassBVExtractConstants:
     def __str__(self):
         return 'evaluate bitvector extract on constant'
 
-class PassBVOneZeroITE:
+class BVOneZeroITE:
     """Replace an ite with bv1/bv0 cases by bvcomp."""
     def filter(self, node):
         if not is_ite(node):
@@ -77,7 +77,7 @@ class PassBVOneZeroITE:
     def __str__(self):
         return 'eliminate ite with bv1 / bv0 cases'
 
-class PassBVSimplifyConstant:
+class BVSimplifyConstant:
     """Replace a constant by a simpler version (smaller fewer bits)."""
     def filter(self, node):
         return is_bitvector_constant(node) and get_bitvector_constant_value(node)[0] not in [0, 1]
@@ -98,11 +98,11 @@ def collect_mutators(args):
     res = []
     if args.mutator_bitvector:
         if args.mutator_bv_constants:
-            res.append(PassBVSimplifyConstant())
+            res.append(BVSimplifyConstant())
         if args.mutator_bv_eval_extract:
-            res.append(PassBVExtractConstants())
+            res.append(BVExtractConstants())
         if args.mutator_bv_ite_to_bvcomp:
-            res.append(PassBVOneZeroITE())
+            res.append(BVOneZeroITE())
         if args.mutator_bv_zero_concat:
-            res.append(PassBVConcatToZeroExtend())
+            res.append(BVConcatToZeroExtend())
     return res

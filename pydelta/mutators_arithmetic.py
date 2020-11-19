@@ -9,7 +9,7 @@ def is_arithmetic_relation(node):
         return False
     return get_name(node) in ['=', '<', '>', '>=', '<=', '!=', '<>']
 
-class PassArithmeticSimplifyConstant:
+class ArithmeticSimplifyConstant:
     """Replace a constant by a simpler version (smaller or fewer decimal places)."""
     def filter(self, node):
         return is_arithmetic_constant(node) and float(node) not in [0, 1]
@@ -24,7 +24,7 @@ class PassArithmeticSimplifyConstant:
     def __str__(self):
         return 'simplify arithmetic constant'
 
-class PassArithmeticNegateRelations:
+class ArithmeticNegateRelations:
     """Replace a constant by a simpler version (smaller or fewer decimal places)."""
     def filter(self, node):
         return is_not(node) and is_arithmetic_relation(node[1])
@@ -36,7 +36,7 @@ class PassArithmeticNegateRelations:
     def __str__(self):
         return 'push negations into relations'
 
-class PassArithmeticSplitNaryRelations:
+class ArithmeticSplitNaryRelations:
     """Split n-ary relations."""
     def filter(self, node):
         return is_arithmetic_relation(node) and len(node) > 3
@@ -46,7 +46,7 @@ class PassArithmeticSplitNaryRelations:
     def __str__(self):
         return 'split n-ary relation'
 
-class PassArithmeticStrengthenRelations:
+class ArithmeticStrengthenRelations:
     """Replace a relation by a stronger relation."""
     def filter(self, node):
         return is_arithmetic_relation(node)
@@ -69,11 +69,11 @@ def collect_mutators(args):
     res = []
     if args.mutator_arithmetic:
         if args.mutator_arith_constants:
-            res.append(PassArithmeticSimplifyConstant())
+            res.append(ArithmeticSimplifyConstant())
         if args.mutator_arith_negate_relations:
-            res.append(PassArithmeticNegateRelations())
+            res.append(ArithmeticNegateRelations())
         if args.mutator_arith_split_nary_relations:
-            res.append(PassArithmeticSplitNaryRelations())
+            res.append(ArithmeticSplitNaryRelations())
         if args.mutator_arith_strengthen_relations:
-            res.append(PassArithmeticStrengthenRelations())
+            res.append(ArithmeticStrengthenRelations())
     return res

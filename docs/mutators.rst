@@ -10,7 +10,7 @@ A mutator class should at least look like this:
 
 .. code-block:: python3
 
-    class PassDummy:
+    class Dummy:
         def filter(self, node):
             """Check whether this mutators can be applied to the given node.
             If not specified, we use `True`"""
@@ -30,46 +30,46 @@ Note that a mutator can work in two ways: :code:`mutations` constructs **local**
 Generic mutators
 ----------------
 
-.. autoclass:: pydelta.mutators_core.PassConstants
-.. autoclass:: pydelta.mutators_core.PassEliminateDistinct
-.. autoclass:: pydelta.mutators_core.PassEraseChildren
-.. autoclass:: pydelta.mutators_core.PassInlineDefinedFuns
-.. autoclass:: pydelta.mutators_core.PassLetElimination
-.. autoclass:: pydelta.mutators_core.PassLetSubstitution
-.. autoclass:: pydelta.mutators_core.PassMergeWithChildren
-.. autoclass:: pydelta.mutators_core.PassReplaceByVariable
-.. autoclass:: pydelta.mutators_core.PassSortChildren
-.. autoclass:: pydelta.mutators_core.PassSubstituteChildren
-.. autoclass:: pydelta.mutators_core.PassVariableNames
+.. autoclass:: pydelta.mutators_core.Constants
+.. autoclass:: pydelta.mutators_core.EliminateDistinct
+.. autoclass:: pydelta.mutators_core.EraseChildren
+.. autoclass:: pydelta.mutators_core.InlineDefinedFuns
+.. autoclass:: pydelta.mutators_core.LetElimination
+.. autoclass:: pydelta.mutators_core.LetSubstitution
+.. autoclass:: pydelta.mutators_core.MergeWithChildren
+.. autoclass:: pydelta.mutators_core.ReplaceByVariable
+.. autoclass:: pydelta.mutators_core.SortChildren
+.. autoclass:: pydelta.mutators_core.SubstituteChildren
+.. autoclass:: pydelta.mutators_core.VariableNames
 
 Arithmetic mutators
 -------------------
-.. autoclass:: pydelta.mutators_arithmetic.PassArithmeticSimplifyConstant
-.. autoclass:: pydelta.mutators_arithmetic.PassArithmeticNegateRelations
-.. autoclass:: pydelta.mutators_arithmetic.PassArithmeticSplitNaryRelations
-.. autoclass:: pydelta.mutators_arithmetic.PassArithmeticStrengthenRelations
+.. autoclass:: pydelta.mutators_arithmetic.ArithmeticSimplifyConstant
+.. autoclass:: pydelta.mutators_arithmetic.ArithmeticNegateRelations
+.. autoclass:: pydelta.mutators_arithmetic.ArithmeticSplitNaryRelations
+.. autoclass:: pydelta.mutators_arithmetic.ArithmeticStrengthenRelations
 
 Bitvector mutators
 ------------------
-.. autoclass:: pydelta.mutators_bitvectors.PassBVConcatToZeroExtend
-.. autoclass:: pydelta.mutators_bitvectors.PassBVExtractConstants
-.. autoclass:: pydelta.mutators_bitvectors.PassBVOneZeroITE
-.. autoclass:: pydelta.mutators_bitvectors.PassBVSimplifyConstant
+.. autoclass:: pydelta.mutators_bitvectors.BVConcatToZeroExtend
+.. autoclass:: pydelta.mutators_bitvectors.BVExtractConstants
+.. autoclass:: pydelta.mutators_bitvectors.BVOneZeroITE
+.. autoclass:: pydelta.mutators_bitvectors.BVSimplifyConstant
 
 Boolean mutators
 ----------------
-.. autoclass:: pydelta.mutators_boolean.PassDeMorgan
-.. autoclass:: pydelta.mutators_boolean.PassDoubleNegation
-.. autoclass:: pydelta.mutators_boolean.PassEliminateFalseEquality
-.. autoclass:: pydelta.mutators_boolean.PassEliminateImplications
-.. autoclass:: pydelta.mutators_boolean.PassNegatedQuantifiers
+.. autoclass:: pydelta.mutators_boolean.DeMorgan
+.. autoclass:: pydelta.mutators_boolean.DoubleNegation
+.. autoclass:: pydelta.mutators_boolean.EliminateFalseEquality
+.. autoclass:: pydelta.mutators_boolean.EliminateImplications
+.. autoclass:: pydelta.mutators_boolean.NegatedQuantifiers
 
 SMT-LIB mutators
 ----------------
-.. autoclass:: pydelta.mutators_smtlib.PassCheckSatAssuming
-.. autoclass:: pydelta.mutators_smtlib.PassPushPopRemoval
-.. autoclass:: pydelta.mutators_smtlib.PassSimplifyLogic
+.. autoclass:: pydelta.mutators_smtlib.CheckSatAssuming
+.. autoclass:: pydelta.mutators_smtlib.PushPopRemoval
+.. autoclass:: pydelta.mutators_smtlib.SimplifyLogic
 
 String mutators
 ---------------
-.. autoclass:: pydelta.mutators_strings.PassStringSimplifyConstant
+.. autoclass:: pydelta.mutators_strings.StringSimplifyConstant

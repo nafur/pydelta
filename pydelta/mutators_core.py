@@ -7,7 +7,7 @@ MUTATORS = [
     'merge-children', 'replace-by-variable', 'sort-children', 'substitute-children'
 ]
 
-class PassConstants:
+class Constants:
     """Replaces any node by a constant."""
     def mutations(self, node):
         """Return :code:`get_constants(get_return_type(node))`."""
@@ -18,7 +18,7 @@ class PassConstants:
     def __str__(self):
         return 'substitute by a constant'
 
-class PassEliminateDistinct:
+class EliminateDistinct:
     """Replaces distinct by a negated equality."""
     def filter(self, node):
         return has_name(node) and get_name(node) == 'distinct'
@@ -27,7 +27,7 @@ class PassEliminateDistinct:
     def __str__(self):
         return 'eliminate distinct'
 
-class PassEraseChildren:
+class EraseChildren:
     """Erases a single child of the given node."""
     def filter(self, node):
         return not is_leaf(node)
@@ -41,7 +41,7 @@ class PassEraseChildren:
     def __str__(self):
         return 'erase child'
 
-class PassInlineDefinedFuns:
+class InlineDefinedFuns:
     """Explicitly inlines a defined function."""
     def filter(self, node):
         return is_defined_function(node)
@@ -50,7 +50,7 @@ class PassInlineDefinedFuns:
     def __str__(self):
         return 'inline defined functions'
 
-class PassLetElimination:
+class LetElimination:
     """Substitutes a let expression with its body."""
     def filter(self, node):
         return is_let(node)
@@ -59,7 +59,7 @@ class PassLetElimination:
     def __str__(self):
         return 'eliminate let binder'
 
-class PassLetSubstitution:
+class LetSubstitution:
     """Substitutes a variable bound by a let binder into the nested term."""
     def filter(self, node):
         return is_let(node)
@@ -73,7 +73,7 @@ class PassLetSubstitution:
     def __str__(self):
         return 'substitute variable into let body'
 
-class PassMergeWithChildren:
+class MergeWithChildren:
     """Merges a node with one of its children. This is possible for n-ary operators like :code:`and` or :code:`+`."""
     def filter(self, node):
         return is_nary(node)
@@ -86,7 +86,7 @@ class PassMergeWithChildren:
     def __str__(self):
         return 'merge with child'
 
-class PassReplaceByVariable:
+class ReplaceByVariable:
     """Replaces a node by a variable."""
     def filter(self, node):
         return not is_constant(node) and has_type(node)
@@ -101,7 +101,7 @@ class PassReplaceByVariable:
     def __str__(self):
         return 'substitute by existing variable'
 
-class PassSortChildren:
+class SortChildren:
     """Sorts the children of a node."""
     def filter(self, node):
         return not is_leaf(node)
@@ -113,7 +113,7 @@ class PassSortChildren:
     def __str__(self):
         return 'sort children'
 
-class PassSubstituteChildren:
+class SubstituteChildren:
     """Substitutes a node with one of its children."""
     def filter(self, node):
         return not is_leaf(node) and not is_let(node)
@@ -122,7 +122,7 @@ class PassSubstituteChildren:
     def __str__(self):
         return 'substitute with child'
 
-class PassVariableNames:
+class VariableNames:
     """Simplify variable names."""
     def filter(self, node):
         return has_name(node) and get_name(node) == 'declare-fun'
@@ -155,25 +155,25 @@ def collect_mutators(args):
     res = []
     if args.mutator_core:
         if args.mutator_constants:
-            res.append(PassConstants())
+            res.append(Constants())
         if args.mutator_eliminate_distinct:
-            res.append(PassEliminateDistinct())
+            res.append(EliminateDistinct())
         if args.mutator_erase_children:
-            res.append(PassEraseChildren())
+            res.append(EraseChildren())
         if args.mutator_inline_functions:
-            res.append(PassInlineDefinedFuns())
+            res.append(InlineDefinedFuns())
         if args.mutator_let_elimination:
-            res.append(PassLetElimination())
+            res.append(LetElimination())
         if args.mutator_let_substitution:
-            res.append(PassLetSubstitution())
+            res.append(LetSubstitution())
         if args.mutator_merge_children:
-            res.append(PassMergeWithChildren())
+            res.append(MergeWithChildren())
         if args.mutator_replace_by_variable:
-            res.append(PassReplaceByVariable())
+            res.append(ReplaceByVariable())
         if args.mutator_sort_children:
-            res.append(PassSortChildren())
+            res.append(SortChildren())
         if args.mutator_substitute_children:
-            res.append(PassSubstituteChildren())
+            res.append(SubstituteChildren())
         if args.mutator_variable_names:
-            res.append(PassVariableNames())
+            res.append(VariableNames())
     return res

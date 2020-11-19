@@ -7,7 +7,7 @@ MUTATORS = ['eliminate-false-eq', 'negate-quant']
 def is_quantifier(node):
     return has_name(node) and get_name(node) in ['exists', 'forall']
 
-class PassDeMorgan:
+class DeMorgan:
     """Uses de Morgans rules to push negations inside."""
     def filter(self, node):
         return is_not(node) and has_name(node[1])
@@ -22,7 +22,7 @@ class PassDeMorgan:
     def __str__(self):
         return 'push negation inside'
 
-class PassDoubleNegation:
+class DoubleNegation:
     """Elimination double negations."""
     def filter(self, node):
         return is_not(node) and is_not(node[1])
@@ -31,7 +31,7 @@ class PassDoubleNegation:
     def __str__(self):
         return 'eliminate double negation'
 
-class PassEliminateFalseEquality:
+class EliminateFalseEquality:
     """Replaces an equality with :code:`false` by a negation."""
     def filter(self, node):
         return not is_leaf(node) and len(node) == 3 and has_name(node) and get_name(node) == '=' and node[1] == 'false'
@@ -40,7 +40,7 @@ class PassEliminateFalseEquality:
     def __str__(self):
         return 'replace equality with false by negation'
 
-class PassEliminateImplications:
+class EliminateImplications:
     """Replaces implications by disjunctions."""
     def filter(self, node):
         return has_name(node) and get_name(node) == '=>' and len(node) == 3
@@ -49,7 +49,7 @@ class PassEliminateImplications:
     def __str__(self):
         return 'eliminate implication'
 
-class PassNegatedQuantifiers:
+class NegatedQuantifiers:
     """Pushes negation inside quantifiers."""
     def filter(self, node):
         return is_not(node) and is_quantifier(node[1])
@@ -71,12 +71,12 @@ def collect_mutator_options(argparser):
 def collect_mutators(args):
     res = []
     if args.mutator_boolean:
-        res.append(PassDeMorgan())
-        res.append(PassDoubleNegation())
+        res.append(DeMorgan())
+        res.append(DoubleNegation())
         if args.mutator_eliminate_false_eq:
-            res.append(PassEliminateFalseEquality())
+            res.append(EliminateFalseEquality())
         if args.mutator_eliminate_implications:
-            res.append(PassEliminateImplications())
+            res.append(EliminateImplications())
         if args.mutator_negated_quant:
-            res.append(PassNegatedQuantifiers())
+            res.append(NegatedQuantifiers())
     return res
