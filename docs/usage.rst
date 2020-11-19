@@ -24,7 +24,7 @@ pyDelta provides options that cover many common use cases. Please consult ``pyde
 * ``--pretty-print`` and ``--wrap-lines`` post-process the output.
 * ``--ignore-exitcode``, ``--ignore-output``, ``--match-out`` and ``--match-err`` allow to change how the comparison with the reference run is performed. See :ref:`lbl-comparison` for more details.
 * ``--no-<group>`` disables all mutators from some group (like ``smtlib`` or ``arithmetic``).
-* ``--no-<mutators>`` disables one particular mutator (like ``--no-replace-by-variable``. See :doc:`mutators` for more details.
+* ``--no-<mutator>`` disables one particular mutator (like ``--no-replace-by-variable``. See :doc:`mutators` for more details.
 
 .. _lbl-comparison:
 

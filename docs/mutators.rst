@@ -27,20 +27,20 @@ A mutator class should at least look like this:
 
 Note that a mutator can work in two ways: :code:`mutations` constructs **local** replacements for a given node. :code:`global_mutations` on the other hand constructs **global** replacements for the whole input, given both a specific node and the current input. The idea for the latter is that some node (:code:`linput`) triggers a simplification that needs to be applied to the whole input (:code:`ginput`) at once, for example variable renaming or simplification of constants that occur multiple times.
 
+Below follows a list of all available mutators, grouped by their main concern: generic mutators that work on the node structure, SMT-LIB mutators that deal with certain SMT-LIB constructs, and mutators for individual SMT-LIB theories.
+
+Most mutators can be enabled or disabled using options of the form :code:`--<mutator>` or :code:`--no-<mutator>` (like :code:`--no-constants`), most are enabled by default. The same is possible for all mutators from a group with :code:`--<group>` or :code:`--no-<group>` (like :code:`--no-generic`).
+:doc:`Preconfigured modes <modes>` for common tasks are available as well.
+
 Generic mutators
 ----------------
 
 .. autoclass:: pydelta.mutators_core.Constants
-.. autoclass:: pydelta.mutators_core.EliminateDistinct
 .. autoclass:: pydelta.mutators_core.EraseChildren
-.. autoclass:: pydelta.mutators_core.InlineDefinedFuns
-.. autoclass:: pydelta.mutators_core.LetElimination
-.. autoclass:: pydelta.mutators_core.LetSubstitution
 .. autoclass:: pydelta.mutators_core.MergeWithChildren
 .. autoclass:: pydelta.mutators_core.ReplaceByVariable
 .. autoclass:: pydelta.mutators_core.SortChildren
 .. autoclass:: pydelta.mutators_core.SubstituteChildren
-.. autoclass:: pydelta.mutators_core.VariableNames
 
 Arithmetic mutators
 -------------------
@@ -67,8 +67,13 @@ Boolean mutators
 SMT-LIB mutators
 ----------------
 .. autoclass:: pydelta.mutators_smtlib.CheckSatAssuming
+.. autoclass:: pydelta.mutators_smtlib.EliminateDistinct
+.. autoclass:: pydelta.mutators_smtlib.InlineDefinedFuns
+.. autoclass:: pydelta.mutators_smtlib.LetElimination
+.. autoclass:: pydelta.mutators_smtlib.LetSubstitution
 .. autoclass:: pydelta.mutators_smtlib.PushPopRemoval
 .. autoclass:: pydelta.mutators_smtlib.SimplifyLogic
+.. autoclass:: pydelta.mutators_smtlib.VariableNames
 
 String mutators
 ---------------

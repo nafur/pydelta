@@ -18,15 +18,6 @@ class Constants:
     def __str__(self):
         return 'substitute by a constant'
 
-class EliminateDistinct:
-    """Replaces distinct by a negated equality."""
-    def filter(self, node):
-        return has_name(node) and get_name(node) == 'distinct'
-    def mutations(self, node):
-        return [['not', ['='] + node[1:]]]
-    def __str__(self):
-        return 'eliminate distinct'
-
 class EraseChildren:
     """Erases a single child of the given node."""
     def filter(self, node):
@@ -40,38 +31,6 @@ class EraseChildren:
         return res
     def __str__(self):
         return 'erase child'
-
-class InlineDefinedFuns:
-    """Explicitly inlines a defined function."""
-    def filter(self, node):
-        return is_defined_function(node)
-    def mutations(self, node):
-        return [ get_defined_function(node) ]
-    def __str__(self):
-        return 'inline defined functions'
-
-class LetElimination:
-    """Substitutes a let expression with its body."""
-    def filter(self, node):
-        return is_let(node)
-    def mutations(self, node):
-        return [node[2]]
-    def __str__(self):
-        return 'eliminate let binder'
-
-class LetSubstitution:
-    """Substitutes a variable bound by a let binder into the nested term."""
-    def filter(self, node):
-        return is_let(node)
-    def mutations(self, node):
-        res = []
-        for var in node[1]:
-            if contains(node[2], var[0]):
-                subs = substitute(node[2], {var[0]: var[1]})
-                res.append([node[0], node[1], subs])
-        return res
-    def __str__(self):
-        return 'substitute variable into let body'
 
 class MergeWithChildren:
     """Merges a node with one of its children. This is possible for n-ary operators like :code:`and` or :code:`+`."""
@@ -122,50 +81,24 @@ class SubstituteChildren:
     def __str__(self):
         return 'substitute with child'
 
-class VariableNames:
-    """Simplify variable names."""
-    def filter(self, node):
-        return has_name(node) and get_name(node) == 'declare-fun'
-    def global_mutations(self, linput, ginput):
-        half = len(linput[1]) // 2
-        return [
-            substitute(ginput, {linput[1]: linput[1][:half]}),
-            substitute(ginput, {linput[1]: linput[1][:-1]})
-        ]
-    def __str__(self):
-        return 'simplify variable name'
-
 def collect_mutator_options(argparser):
     options.add_mutator_argument(argparser, NAME, True, 'core mutators')
     options.add_mutator_argument(argparser, 'constants', True, 'replace by theory constants')
-    options.add_mutator_argument(argparser, 'eliminate-distinct', True, 'eliminate distinct by negated equalities')
     options.add_mutator_argument(argparser, 'erase-children', True, 'erase individual children of nodes')
-    options.add_mutator_argument(argparser, 'inline-functions', True, 'inline defined functions')
-    options.add_mutator_argument(argparser, 'let-elimination', True, 'eliminate let bindings')
-    options.add_mutator_argument(argparser, 'let-substitution', True, 'substitute bound variables in let bindings')
     options.add_mutator_argument(argparser, 'merge-children', True, 'merge children into nodes')
     options.add_mutator_argument(argparser, 'replace-by-variable', True, 'replace with existing variable')
     argparser.add_argument('--replace-by-variable-mode',
                            choices = ['inc', 'dec'], default = 'inc', help = 'replace with existing variables that are larger or smaller')
     options.add_mutator_argument(argparser, 'sort-children', True, 'sort children of nodes')
     options.add_mutator_argument(argparser, 'substitute-children', True, 'substitute nodes with their children')
-    options.add_mutator_argument(argparser, 'variable-names', False, 'simplify variable names')
 
 def collect_mutators(args):
     res = []
     if args.mutator_core:
         if args.mutator_constants:
             res.append(Constants())
-        if args.mutator_eliminate_distinct:
-            res.append(EliminateDistinct())
         if args.mutator_erase_children:
             res.append(EraseChildren())
-        if args.mutator_inline_functions:
-            res.append(InlineDefinedFuns())
-        if args.mutator_let_elimination:
-            res.append(LetElimination())
-        if args.mutator_let_substitution:
-            res.append(LetSubstitution())
         if args.mutator_merge_children:
             res.append(MergeWithChildren())
         if args.mutator_replace_by_variable:
@@ -174,6 +107,4 @@ def collect_mutators(args):
             res.append(SortChildren())
         if args.mutator_substitute_children:
             res.append(SubstituteChildren())
-        if args.mutator_variable_names:
-            res.append(VariableNames())
     return res
