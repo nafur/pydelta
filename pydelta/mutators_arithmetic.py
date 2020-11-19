@@ -36,6 +36,16 @@ class PassArithmeticNegateRelations:
     def __str__(self):
         return 'push negations into relations'
 
+class PassArithmeticSplitNaryRelations:
+    """Split n-ary relations."""
+    def filter(self, node):
+        return is_arithmetic_relation(node) and len(node) > 3
+    def mutations(self, node):
+        split = [[get_name(node), node[i], node[i + 1]] for i in range(1, len(node) - 1)]
+        return [['and', *split]]
+    def __str__(self):
+        return 'split n-ary relation'
+
 class PassArithmeticStrengthenRelations:
     """Replace a relation by a stronger relation."""
     def filter(self, node):
@@ -52,6 +62,7 @@ def collect_mutator_options(argparser):
     options.add_mutator_argument(argparser, NAME, True, 'arithmetic mutators')
     options.add_mutator_argument(argparser, 'arith-constants', True, 'replaces constants by simpler ones')
     options.add_mutator_argument(argparser, 'arith-negate-relations', True, 'push negations inside of relations')
+    options.add_mutator_argument(argparser, 'arith-split-nary-relations', True, 'split n-ary relations')
     options.add_mutator_argument(argparser, 'arith-strengthen-relations', True, 'strengthen relations')
 
 def collect_mutators(args):
@@ -61,6 +72,8 @@ def collect_mutators(args):
             res.append(PassArithmeticSimplifyConstant())
         if args.mutator_arith_negate_relations:
             res.append(PassArithmeticNegateRelations())
+        if args.mutator_arith_split_nary_relations:
+            res.append(PassArithmeticSplitNaryRelations())
         if args.mutator_arith_strengthen_relations:
             res.append(PassArithmeticStrengthenRelations())
     return res
