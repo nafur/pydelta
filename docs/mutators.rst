@@ -18,9 +18,14 @@ A mutator class should at least look like this:
         def mutations(self, node):
             """Create a list of mutations of the given node."""
             return []
+        def global_mutations(self, linput, ginput):
+            """Create a list of mutations of the whole input."""
+            return []
         def __str__(self):
             """Returns a description of this mutator."""
             return "dummy"
+
+Note that a mutator can work in two ways: :code:`mutations` constructs **local** replacements for a given node. :code:`global_mutations` on the other hand constructs **global** replacements for the whole input, given both a specific node and the current input. The idea for the latter is that some node (:code:`linput`) triggers a simplification that needs to be applied to the whole input (:code:`ginput`) at once, for example variable renaming or simplification of constants that occur multiple times.
 
 Generic mutators
 ----------------
