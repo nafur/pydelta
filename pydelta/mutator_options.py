@@ -52,7 +52,7 @@ class BeautifyAction(argparse.Action):
     """Mode that enables mutations merely beautify the output."""
     def __call__(self, parser, namespace, values, option_string = None):
         setattr(namespace, 'mutator_variable_names', True)
-        setattr(namespace, 'pretty_print', True)
+        setattr(namespace, 'wrap_lines', True)
 
 def collect_mutator_modes(argparser):
     argparser.add_argument('--mode-let-elimination', default = False, nargs = 0, action = LetEliminationAction, help = 'only eliminate let binders')
