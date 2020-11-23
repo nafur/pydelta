@@ -84,6 +84,8 @@ class BVSimplifyConstant:
     def mutations(self, node):
         val, width = get_bitvector_constant_value(node)
         return ['#b{{:0>{}b}}'.format(width).format(v) for v in [val // 2, val // 10]]
+    def global_mutations(self, linput, ginput):
+        return [ substitute_repr(ginput, {repr(linput): rep}) for rep in self.mutations(linput) ]
     def __str__(self):
         return 'simplify bitvector constant'
 

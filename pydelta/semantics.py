@@ -90,10 +90,21 @@ def contains(node, sub):
 
 def substitute(node, repl):
     """Performs substitution recursively within :code:`node`.
-    :code:`repl` specifies the substitutions as a dictionary."""
+    :code:`repl` specifies the substitutions as a dictionary where keys can only be leaf nodes."""
     if is_leaf(node):
         return repl.get(node, node)
     return list(map(lambda n: substitute(n, repl), node))
+
+def substitute_repr(node, repl):
+    """Performs substitution recursively within :code:`node`.
+    :code:`repl` specifies the substitutions as a dictionary.
+    To support substitution of nodes that are not leaf nodes, keys should be :code:`repr(node)`."""
+    r = repl.get(repr(node), None)
+    if r is not None:
+        return r
+    if is_leaf(node):
+        return node
+    return list(map(lambda n: substitute_repr(n, repl), node))
 
 def is_not(node):
     """Checks whether :code:`node` is a negation."""
