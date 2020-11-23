@@ -23,7 +23,7 @@ def __mutate_node(linput, ginput):
         if hasattr(m, 'mutations'):
             res = res + list(map(lambda x: (str(m), x, None), m.mutations(linput)))
         if hasattr(m, 'global_mutations'):
-            res = res + list(map(lambda x: (str(m), None, x), m.global_mutations(linput, ginput)))
+            res = res + list(map(lambda x: ("(global) " + str(m), None, x), m.global_mutations(linput, ginput)))
     return res
 
 def __generate_mutations(linput, ginput, prg):
