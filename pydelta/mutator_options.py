@@ -54,6 +54,17 @@ class ReductionOnlyAction(argparse.Action):
         setattr(namespace, 'mode_reduction_only', True)
         setattr(namespace, 'mutator_sort_children', False)
 
+class TopLevelOnlyAction(argparse.Action):
+    """Mode that only uses top level binary reduction."""
+    def __call__(self, parser, namespace, values, option_string = None):
+        disable(namespace, mutators_arithmetic.NAME)
+        disable(namespace, mutators_bitvectors.NAME)
+        disable(namespace, mutators_boolean.NAME)
+        disable_all(namespace, mutators_core.MUTATORS)
+        disable(namespace, mutators_smtlib.NAME)
+        disable(namespace, mutators_strings.NAME)
+        setattr(namespace, 'mutator_top_level_binary_reduction', True)
+
 def collect_mutator_modes(argparser):
     argparser.add_argument('--mode-aggressive', default = False, nargs = 0, action = AgressiveAction, help = 'agressively minimize')
     argparser.add_argument('--aggressiveness', metavar = 'perc', type = float, default = 0.01,
@@ -61,6 +72,7 @@ def collect_mutator_modes(argparser):
     argparser.add_argument('--mode-beautify', default = False, nargs = 0, action = BeautifyAction, help = 'enables beautification mutators')
     argparser.add_argument('--mode-let-elimination', default = False, nargs = 0, action = LetEliminationAction, help = 'only eliminate let binders')
     argparser.add_argument('--mode-reduction-only', default = False, nargs = 0, action = ReductionOnlyAction, help = 'only allow reducing mutations')
+    argparser.add_argument('--mode-top-level-only', default = False, nargs = 0, action = TopLevelOnlyAction, help = 'use top level binary reduction')
 
 def collect_mutator_options(argparser):
     """Adds all options related to mutators to the given argument parser."""
