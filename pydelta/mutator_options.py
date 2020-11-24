@@ -14,25 +14,6 @@ def disable_all(namespace, options):
     for opt in options:
         disable(namespace, opt)
 
-class LetEliminationAction(argparse.Action):
-    """Mode that only checks for let eliminations."""
-    def __call__(self, parser, namespace, values, option_string = None):
-        setattr(namespace, 'mode_let_elimination', True)
-        disable(namespace, mutators_arithmetic.NAME)
-        disable(namespace, mutators_bitvectors.NAME)
-        disable(namespace, mutators_boolean.NAME)
-        disable_all(namespace, mutators_core.MUTATORS)
-        disable(namespace, mutators_smtlib.NAME)
-        disable(namespace, mutators_strings.NAME)
-        setattr(namespace, 'mutator_let_elimination', True)
-        setattr(namespace, 'mutator_let_substitution', True)
-
-class ReductionOnlyAction(argparse.Action):
-    """Mode that only checks mutations that reduce the number of nodes."""
-    def __call__(self, parser, namespace, values, option_string = None):
-        setattr(namespace, 'mode_reduction_only', True)
-        setattr(namespace, 'mutator_sort_children', False)
-
 class AgressiveAction(argparse.Action):
     """Mode that only checks aggressive mutations."""
     def __call__(self, parser, namespace, values, option_string = None):
@@ -54,13 +35,32 @@ class BeautifyAction(argparse.Action):
         setattr(namespace, 'mutator_variable_names', True)
         setattr(namespace, 'wrap_lines', True)
 
+class LetEliminationAction(argparse.Action):
+    """Mode that only checks for let eliminations."""
+    def __call__(self, parser, namespace, values, option_string = None):
+        setattr(namespace, 'mode_let_elimination', True)
+        disable(namespace, mutators_arithmetic.NAME)
+        disable(namespace, mutators_bitvectors.NAME)
+        disable(namespace, mutators_boolean.NAME)
+        disable_all(namespace, mutators_core.MUTATORS)
+        disable(namespace, mutators_smtlib.NAME)
+        disable(namespace, mutators_strings.NAME)
+        setattr(namespace, 'mutator_let_elimination', True)
+        setattr(namespace, 'mutator_let_substitution', True)
+
+class ReductionOnlyAction(argparse.Action):
+    """Mode that only checks mutations that reduce the number of nodes."""
+    def __call__(self, parser, namespace, values, option_string = None):
+        setattr(namespace, 'mode_reduction_only', True)
+        setattr(namespace, 'mutator_sort_children', False)
+
 def collect_mutator_modes(argparser):
-    argparser.add_argument('--mode-let-elimination', default = False, nargs = 0, action = LetEliminationAction, help = 'only eliminate let binders')
     argparser.add_argument('--mode-aggressive', default = False, nargs = 0, action = AgressiveAction, help = 'agressively minimize')
     argparser.add_argument('--aggressiveness', metavar = 'perc', type = float, default = 0.01,
                            help = 'percentage of the input a mutators needs to remove')
-    argparser.add_argument('--mode-reduction-only', default = False, nargs = 0, action = ReductionOnlyAction, help = 'only allow reducing mutations')
     argparser.add_argument('--mode-beautify', default = False, nargs = 0, action = BeautifyAction, help = 'enables beautification mutators')
+    argparser.add_argument('--mode-let-elimination', default = False, nargs = 0, action = LetEliminationAction, help = 'only eliminate let binders')
+    argparser.add_argument('--mode-reduction-only', default = False, nargs = 0, action = ReductionOnlyAction, help = 'only allow reducing mutations')
 
 def collect_mutator_options(argparser):
     """Adds all options related to mutators to the given argument parser."""
