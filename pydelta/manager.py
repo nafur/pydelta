@@ -45,7 +45,7 @@ class Manager:
             pass
 
 
-    def producer(self, original, skip = 0):
+    def producer(self, original, skip):
         """Produces new mutated variants of the given input."""
         original_size = semantics.node_count(original)
         gen = mutator.MutationGenerator(skip)

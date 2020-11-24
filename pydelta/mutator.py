@@ -15,9 +15,9 @@ def collect_mutators(args):
     enabled_mutators = mutator_options.collect_mutators(args)
 
 class MutationGenerator:
-    def __init__(self, skip = 0):
+    def __init__(self, skip):
         self.__node_count = 0
-        self.__node_skip = 0
+        self.__node_skip = skip
 
     def __mutate_node(self, linput, ginput):
         """Apply all active mutators to the given node.
