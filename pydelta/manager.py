@@ -47,20 +47,16 @@ class Manager:
 
     def producer(self, original, skip = 0):
         """Produces new mutated variants of the given input."""
-        counter = 0
         original_size = semantics.node_count(original)
-        for candidate in mutator.generate_mutations(original):
-            counter += 1
-            if skip > 0:
-                skip -= 1
-                continue
+        gen = mutator.MutationGenerator(skip)
+        for candidate in gen.generate_mutations(original):
             if options.args().mode_aggressive:
-                if semantics.node_count(candidate[1]) > original_size * (1 - options.args().aggressiveness):
+                if semantics.node_count(candidate[2]) > original_size * (1 - options.args().aggressiveness):
                     continue
             if options.args().mode_reduction_only:
-                if semantics.node_count(candidate[1]) >= original_size:
+                if semantics.node_count(candidate[2]) >= original_size:
                     continue
-            self.q.put(Candidate(counter, candidate[0], copy.deepcopy(candidate[1])))
+            self.q.put(Candidate(candidate[0], candidate[1], copy.deepcopy(candidate[2])))
             if self.stop_operation:
                 break
         self.finished_generation = True
