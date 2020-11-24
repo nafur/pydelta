@@ -64,6 +64,8 @@ class NegatedQuantifiers:
 
 def collect_mutator_options(argparser):
     options.add_mutator_argument(argparser, NAME, True, 'boolean mutators')
+    options.add_mutator_argument(argparser, 'de-morgan', True, 'apply de Morgan to push negations inside')
+    options.add_mutator_argument(argparser, 'double-negations', True, 'eliminate double negations')
     options.add_mutator_argument(argparser, 'eliminate-false-eq', True, 'eliminate equalities with false')
     options.add_mutator_argument(argparser, 'eliminate-implications', True, 'eliminate equalities with false')
     options.add_mutator_argument(argparser, 'negated-quant', True, 'push negations inside quantifiers')
@@ -71,8 +73,10 @@ def collect_mutator_options(argparser):
 def collect_mutators(args):
     res = []
     if args.mutator_boolean:
-        res.append(DeMorgan())
-        res.append(DoubleNegation())
+        if args.mutator_de_mogan:
+            res.append(DeMorgan())
+        if args.mutator_double_negations:
+            res.append(DoubleNegation())
         if args.mutator_eliminate_false_eq:
             res.append(EliminateFalseEquality())
         if args.mutator_eliminate_implications:
