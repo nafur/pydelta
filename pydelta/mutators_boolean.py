@@ -73,7 +73,7 @@ def collect_mutator_options(argparser):
 def collect_mutators(args):
     res = []
     if args.mutator_boolean:
-        if args.mutator_de_mogan:
+        if args.mutator_de_morgan:
             res.append(DeMorgan())
         if args.mutator_double_negations:
             res.append(DoubleNegation())
