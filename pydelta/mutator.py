@@ -49,7 +49,7 @@ class MutationGenerator:
                 for mutated in self.__generate_mutations(o, ginput, prg):
                     if mutated.localm is not None:
                         cand[i] = mutated.localm
-                        yield (mutated.nodeid, mutated.name, cand, mutated.globalm)
+                        yield Mutation(mutated.nodeid, mutated.name, cand, mutated.globalm)
                     if mutated.globalm is not None:
                         yield mutated
 
