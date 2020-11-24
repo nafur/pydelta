@@ -111,15 +111,17 @@ def collect_mutator_options(argparser):
                            choices = ['inc', 'dec'], default = 'inc', help = 'replace with existing variables that are larger or smaller')
     options.add_mutator_argument(argparser, 'sort-children', True, 'sort children of nodes')
     options.add_mutator_argument(argparser, 'substitute-children', True, 'substitute nodes with their children')
-    options.add_mutator_argument(argparser, 'top-level-binary-reduction', False, 'use top level binary reduction')
+    options.add_mutator_argument(argparser, 'top-level-binary-reduction', True, 'use top level binary reduction')
 
 def collect_mutators(args):
     res = []
     if args.mutator_core:
-        if args.mutator_constants:
-            res.append(Constants())
+        if args.mutator_top_level_binary_reduction:
+            res.append(TopLevelBinaryReduction())
         if args.mutator_erase_children:
             res.append(EraseChildren())
+        if args.mutator_constants:
+            res.append(Constants())
         if args.mutator_merge_children:
             res.append(MergeWithChildren())
         if args.mutator_replace_by_variable:
@@ -128,6 +130,4 @@ def collect_mutators(args):
             res.append(SortChildren())
         if args.mutator_substitute_children:
             res.append(SubstituteChildren())
-        if args.mutator_top_level_binary_reduction:
-            res.append(TopLevelBinaryReduction())
     return res
