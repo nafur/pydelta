@@ -29,7 +29,7 @@ class InlineDefinedFuns:
     def mutations(self, node):
         return [ get_defined_function(node) ]
     def __str__(self):
-        return 'inline defined functions'
+        return 'inline defined function'
 
 class LetElimination:
     """Substitutes a let expression with its body."""
@@ -97,7 +97,7 @@ class PushPopRemoval:
             res.append(r)
         return res
     def __str__(self):
-        return 'remove push-pop pairs'
+        return 'remove push-pop pair'
 
 class VariableNames:
     """Simplify variable names."""
