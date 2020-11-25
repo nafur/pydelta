@@ -14,7 +14,7 @@ pyDelta is based on a few fundamental ideas:
 - parse generic S-expressions. This is very robust against changes to SMT-LIB or solver specific extensions. It also allows for a small parser and simple node structure. Most semantic information that is required for simplification can be recovered cheaply.
 - parallel execution. Running multiple checks in parallel allows for significant speedups when minimizing faulty inputs.
 - easy to extend. It should be fairly easy to add new simplifications by implementing new mutators.
-- fixed-point iteration. Simplifications are applied until no simplificationss are possible anywhere. Rerunning pyDelta on a minimized input should not yield further improvements.
+- fixed-point iteration. Simplifications are applied until no simplifications are possible anywhere. Rerunning pyDelta on a minimized input should not yield further improvements.
 - flexible to use. The options should cover most use cases, including checking for the exit code or checking for specific patterns in the (regular or error) output.
 
 Please visit https://pydelta.readthedocs.io for more documentation.

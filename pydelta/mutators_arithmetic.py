@@ -25,7 +25,7 @@ class ArithmeticSimplifyConstant:
         return 'simplify arithmetic constant'
 
 class ArithmeticNegateRelations:
-    """Replace a constant by a simpler version (smaller or fewer decimal places)."""
+    """Replace a negation around a relation by the inverse relation."""
     def filter(self, node):
         return is_not(node) and is_arithmetic_relation(node[1])
     def mutations(self, node):
@@ -34,10 +34,10 @@ class ArithmeticNegateRelations:
             return [[negator[node[1][0]]] + node[1][1:]]
         return []
     def __str__(self):
-        return 'push negations into relations'
+        return 'push negation into relation'
 
 class ArithmeticSplitNaryRelations:
-    """Split n-ary relations."""
+    """Split n-ary relations using transitivity."""
     def filter(self, node):
         return is_arithmetic_relation(node) and len(node) > 3
     def mutations(self, node):

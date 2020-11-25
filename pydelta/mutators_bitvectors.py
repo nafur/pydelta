@@ -32,7 +32,7 @@ def possible_bitvector_widths(node):
     return list(widths)
 
 class BVConcatToZeroExtend:
-    """Replace a concat with zero by zero_extend."""
+    """Replace a :code:`concat` with zero by :code:`zero_extend`."""
     def filter(self, node):
         if not has_name(node) or get_name(node) != 'concat':
             return False
@@ -61,7 +61,7 @@ class BVExtractConstants:
         return 'evaluate bitvector extract on constant'
 
 class BVOneZeroITE:
-    """Replace an ite with bv1/bv0 cases by bvcomp."""
+    """Replace an :code:`ite` with :code:`bv1`/:code:`bv0` cases by :code:`bvcomp`."""
     def filter(self, node):
         if not is_ite(node):
             return False
@@ -78,7 +78,7 @@ class BVOneZeroITE:
         return 'eliminate ite with bv1 / bv0 cases'
 
 class BVSimplifyConstant:
-    """Replace a constant by a simpler version (smaller fewer bits)."""
+    """Replace a constant by a simpler version (smaller value)."""
     def filter(self, node):
         return is_bitvector_constant(node) and get_bitvector_constant_value(node)[0] not in [0, 1]
     def mutations(self, node):

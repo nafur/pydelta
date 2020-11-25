@@ -32,7 +32,7 @@ class InlineDefinedFuns:
         return 'inline defined function'
 
 class LetElimination:
-    """Substitutes a let expression with its body."""
+    """Substitutes a :code:`let` expression with its body."""
     def filter(self, node):
         return is_let(node)
     def mutations(self, node):
@@ -41,7 +41,7 @@ class LetElimination:
         return 'eliminate let binder'
 
 class LetSubstitution:
-    """Substitutes a variable bound by a let binder into the nested term."""
+    """Substitutes a variable bound by a :code:`let` binder into the nested term."""
     def filter(self, node):
         return is_let(node)
     def mutations(self, node):
@@ -55,7 +55,7 @@ class LetSubstitution:
         return 'substitute variable into let body'
 
 class SimplifyLogic:
-    """Replaces the logic specified in :code`(check-logic ...)` by a simpler one."""
+    """Replaces the logic specified in :code:`(check-logic ...)` by a simpler one."""
     def filter(self, node):
         return has_name(node) and get_name(node) == 'set-logic'
     def mutations(self, node):

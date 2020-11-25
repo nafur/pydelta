@@ -41,6 +41,7 @@ Generic mutators
 .. autoclass:: pydelta.mutators_core.ReplaceByVariable
 .. autoclass:: pydelta.mutators_core.SortChildren
 .. autoclass:: pydelta.mutators_core.SubstituteChildren
+.. autoclass:: pydelta.mutators_core.TopLevelBinaryReduction
 
 Arithmetic mutators
 -------------------

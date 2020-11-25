@@ -25,4 +25,4 @@ With ``--mode-reduction-only`` only mutations are checked that reduce the size o
 
 Top-level binary reduction
 --------------------------
-With ``--mode-top-level-only`` only ``--top-level-binary-reduction`` is enabled. This mode only considers the top-level node, i.e. the commands, and performs a binary reduction technique that aims to remove multiple commands at once.
+With ``--mode-top-level-only`` only :class:`pydelta.mutators_core.TopLevelBinaryReduction` is enabled. This mode only considers the top-level node, i.e. the commands, and performs a binary reduction technique that aims to remove multiple commands at once.
