@@ -74,6 +74,7 @@ SMT-LIB mutators
 .. autoclass:: pydelta.mutators_smtlib.LetSubstitution
 .. autoclass:: pydelta.mutators_smtlib.PushPopRemoval
 .. autoclass:: pydelta.mutators_smtlib.SimplifyLogic
+.. autoclass:: pydelta.mutators_smtlib.SimplifyQuotedSymbol
 .. autoclass:: pydelta.mutators_smtlib.VariableNames
 
 String mutators

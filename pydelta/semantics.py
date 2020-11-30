@@ -22,6 +22,16 @@ def get_name(node):
     assert has_name(node)
     return node[0]
 
+def is_quoted_symbol(node):
+    """Checks whether the :code:`node` is a quoted symbol."""
+    return is_leaf(node) and node[0] == '|' and node[-1] == '|'
+
+def get_quoted_symbol(node):
+    """Returns the actual symbol name from a quoted symbol :code:`node`."""
+    assert is_quoted_symbol(node)
+    return node[1:-1]
+
+
 def is_smaller(n, m):
     if isinstance(n, str):
         if isinstance(m, str):

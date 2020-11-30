@@ -1,3 +1,5 @@
+import re
+
 from . import options
 from .semantics import *
 
@@ -54,21 +56,6 @@ class LetSubstitution:
     def __str__(self):
         return 'substitute variable into let body'
 
-class SimplifyLogic:
-    """Replaces the logic specified in :code:`(check-logic ...)` by a simpler one."""
-    def filter(self, node):
-        return has_name(node) and get_name(node) == 'set-logic'
-    def mutations(self, node):
-        logic = node[1]
-        cands = []
-        repls = { 'BV': '', 'FP': '', 'UF': '', 'S': '', 'T': '', 'NRA': 'LRA' }
-        for r in repls:
-            if r in logic:
-                cands.append(logic.replace(r, repls[r]))
-        return [['set-logic', c] for c in cands]
-    def __str__(self):
-        return 'simplify logic'
-
 class PushPopRemoval:
     """Removes matching :code:`(push)(pop)` pairs. First tries successive pairs, distant ones later."""
     def filter(self, node):
@@ -98,17 +85,49 @@ class PushPopRemoval:
         return res
     def __str__(self):
         return 'remove push-pop pair'
+class SimplifyLogic:
+    """Replaces the logic specified in :code:`(check-logic ...)` by a simpler one."""
+    def filter(self, node):
+        return has_name(node) and get_name(node) == 'set-logic'
+    def mutations(self, node):
+        logic = node[1]
+        cands = []
+        repls = { 'BV': '', 'FP': '', 'UF': '', 'S': '', 'T': '', 'NRA': 'LRA' }
+        for r in repls:
+            if r in logic:
+                cands.append(logic.replace(r, repls[r]))
+        return [['set-logic', c] for c in cands]
+    def __str__(self):
+        return 'simplify logic'
+
+class SimplifyQuotedSymbol:
+    """Turns a quoted symbol into a simple symbol."""
+    def filter(self, node):
+        return is_quoted_symbol(node) and re.match('|[a-zA-Z0-9~!@$%^&*_+=<>.?/-]+|', node) is not None
+    def global_mutations(self, linput, ginput):
+        return [ substitute(ginput, { linput: get_quoted_symbol(linput) }) ]
+    def __str__(self):
+        return 'simplify quoted symbol'
 
 class VariableNames:
     """Simplify variable names."""
     def filter(self, node):
         return has_name(node) and get_name(node) == 'declare-fun'
     def global_mutations(self, linput, ginput):
-        half = len(linput[1]) // 2
+        name = linput[1]
+        print(name)
+        repl = lambda s: {linput[1]: s}
+        if is_quoted_symbol(name):
+            name = get_quoted_symbol(linput[1])
+            repl = lambda s: {linput[1]: '|' + s + '|'}
         return [
-            substitute(ginput, {linput[1]: linput[1][:half]}),
-            substitute(ginput, {linput[1]: linput[1][:-1]})
+            substitute(ginput, repl(s)) for s in self.__simpler(name)
         ]
+    def __simpler(self, name):
+        if len(name) < 2:
+            return []
+        half = len(name) // 2
+        return [name[:half], name[:-1]]
     def __str__(self):
         return 'simplify variable name'
 
