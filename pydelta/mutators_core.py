@@ -48,15 +48,17 @@ class MergeWithChildren:
 class ReplaceByVariable:
     """Replaces a node by a variable."""
     def filter(self, node):
-        return not is_constant(node) and has_type(node)
+        return not is_constant(node)
     def mutations(self, node):
+        ret_type = get_return_type(node)
+        if ret_type is None:
+            return []
+        variables = get_variables_with_type(ret_type)
         if is_leaf(node):
-            variables = get_variables_with_type(get_type(node))
-            variables = get_variable_info().keys()
             if options.args().replace_by_variable_mode == 'inc':
                 return [v for v in variables if v > node]
             return [v for v in variables if v < node]
-        return [v for v in get_variable_info().keys() if node_count(v) < node_count(node)]
+        return [v for v in variables if node_count(v) < node_count(node)]
     def __str__(self):
         return 'substitute by existing variable'
 
