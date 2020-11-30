@@ -2,7 +2,7 @@ from . import options
 from .semantics import *
 
 NAME = 'boolean'
-MUTATORS = ['eliminate-false-eq', 'negate-quant']
+MUTATORS = ['de-morgan', 'double-negations', 'eliminate-false-eq', 'eliminate-implications', 'negate-quant']
 
 def is_quantifier(node):
     return has_name(node) and get_name(node) in ['exists', 'forall']

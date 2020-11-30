@@ -4,7 +4,10 @@ from . import options
 from .semantics import *
 
 NAME = 'smtlib'
-MUTATORS = ['check-sat-assuming', 'push-pop-removal']
+MUTATORS = [
+    'check-sat-assuming', 'eliminate-distinct', 'inline-functions', 'let-elimination',
+    'let-substitution', 'push-pop-removal', 'simplify-logic', 'simplify-quoted-symbol', 'variable-names'
+]
 
 class CheckSatAssuming:
     """Replaces a :code:`check-sat-assuming` by a regular :code:`check-sat`."""
@@ -140,6 +143,7 @@ def collect_mutator_options(argparser):
     options.add_mutator_argument(argparser, 'let-substitution', True, 'substitute bound variables in let bindings')
     options.add_mutator_argument(argparser, 'push-pop-removal', True, 'remove push-pop pairs')
     options.add_mutator_argument(argparser, 'simplify-logic', True, 'simplify declared logic')
+    options.add_mutator_argument(argparser, 'simplify-quoted-symbol', False, 'simplify quoted symbols')
     options.add_mutator_argument(argparser, 'variable-names', False, 'simplify variable names')
 
 def collect_mutators(args):
@@ -159,6 +163,8 @@ def collect_mutators(args):
             res.append(PushPopRemoval())
         if args.mutator_simplify_logic:
             res.append(SimplifyLogic())
+        if args.mutators_simplify_quoted_symbol:
+            res.append(SimplifyQuotedSymbol())
         if args.mutator_variable_names:
             res.append(VariableNames())
     return res

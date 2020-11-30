@@ -3,8 +3,7 @@ from .semantics import *
 
 NAME = 'core'
 MUTATORS = [
-    'constants', 'erase-children', 'inline-functions', 'let-elimination', 'let-substitution',
-    'merge-children', 'replace-by-variable', 'sort-children', 'substitute-children'
+    'constants', 'erase-children', 'merge-children', 'replace-by-variable', 'sort-children', 'substitute-children', 'top-level-binary-reduction'
 ]
 
 class Constants:
