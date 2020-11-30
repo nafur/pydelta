@@ -118,7 +118,6 @@ class VariableNames:
         return has_name(node) and get_name(node) == 'declare-fun'
     def global_mutations(self, linput, ginput):
         name = linput[1]
-        print(name)
         repl = lambda s: {linput[1]: s}
         if is_quoted_symbol(name):
             name = get_quoted_symbol(linput[1])
