@@ -163,7 +163,7 @@ def collect_mutators(args):
             res.append(PushPopRemoval())
         if args.mutator_simplify_logic:
             res.append(SimplifyLogic())
-        if args.mutators_simplify_quoted_symbol:
+        if args.mutator_simplify_quoted_symbol:
             res.append(SimplifyQuotedSymbol())
         if args.mutator_variable_names:
             res.append(VariableNames())
