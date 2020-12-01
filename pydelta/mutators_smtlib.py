@@ -115,7 +115,7 @@ class SimplifyQuotedSymbol:
 class VariableNames:
     """Simplify variable names."""
     def filter(self, node):
-        return has_name(node) and get_name(node) == 'declare-fun'
+        return has_name(node) and get_name(node) in ['declare-const', 'declare-fun']
     def global_mutations(self, linput, ginput):
         name = linput[1]
         repl = lambda s: {linput[1]: s}
