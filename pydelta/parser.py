@@ -24,10 +24,11 @@ def lexer(text):
             continue
         if kind == 'MISMATCH':
             logging.warning('Unexpected  {}'.format(m.group()))
-        yield m[0]
+        yield m.group()
     raise StopIteration
 
 def parse_expression(tokens):
+    """Parses a single S-sxpression from a token stream. Uses a simple iterative variant of a recursive descent parser with only a single parsing rule."""
     stack = []
     for tok in tokens:
         if tok == '(':
