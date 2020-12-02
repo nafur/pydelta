@@ -22,11 +22,12 @@ def lexer(text):
 
     for m in __token_re.finditer(text):
         kind = m.lastgroup
-        if kind in ['COMMENT', 'SPACE']:
+        if kind in ['SPACE', 'COMMENT']:
             continue
         if kind == 'MISMATCH':
             logging.warning('Unexpected  {}'.format(m.group()))
-        yield m.group()
+        yield m[0]
+    raise StopIteration
 
 class Peekable:
     def __init__(self, generator):
@@ -55,7 +56,6 @@ class Peekable:
     def peek(self):
         return self.__peek
 
-
 def parse_expression_recursive(tokens):
     tok = next(tokens)
     if tok == '(':
@@ -74,7 +74,7 @@ def parse_expression_iterative(tokens):
             stack.append([])
         elif tok == ')':
             cur = stack.pop()
-            if len(stack) == 0:
+            if not stack:
                 return cur
             stack[-1].append(cur)
         else:
@@ -83,10 +83,15 @@ def parse_expression_iterative(tokens):
 
 def parse_smtlib(text):
     """Parses an SMT-LIB input to a sequence of nodes."""
-    token_stream = Peekable(lexer(text))
+    token_stream = lexer(text)
     exprs = []
-    while not token_stream.empty():
-        exprs.append(parse_expression_iterative(token_stream))
+    while True:
+        try:
+            exprs.append(parse_expression_iterative(token_stream))
+        except RuntimeError as err:
+            if isinstance(err.__cause__, StopIteration):
+                break
+            raise
     return exprs
 
 def render_expression(expr):
