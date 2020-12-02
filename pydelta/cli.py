@@ -34,7 +34,7 @@ def check_options():
     if options.args().parse_only:
         # only parse and print
         exprs = parser.parse_smtlib(open(options.args().inputfile).read())
-        pprint.pprint(exprs)
+        print(parser.render_smtlib(exprs))
         sys.exit(0)
 
     # check executable
