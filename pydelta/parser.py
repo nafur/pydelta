@@ -49,6 +49,8 @@ def parse_smtlib(text):
     while True:
         try:
             exprs.append(parse_expression(token_stream))
+        except StopIteration:
+            break
         except RuntimeError as err:
             if isinstance(err.__cause__, StopIteration):
                 break
