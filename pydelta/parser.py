@@ -5,8 +5,6 @@ import textwrap
 
 from . import options
 
-sys.setrecursionlimit(100000)
-
 def lexer(text):
     __tokens = [
         ('COMMENT', ';[^\n]*'),
@@ -29,45 +27,7 @@ def lexer(text):
         yield m[0]
     raise StopIteration
 
-class Peekable:
-    def __init__(self, generator):
-        self.__gen = generator
-        self.__peek = None
-        self.__empty = False
-        try:
-            self.__peek = next(self.__gen)
-        except StopIteration:
-            self.__empty = True
-
-    def __iter__(self):
-        return self
-    def __next__(self):
-        if self.__empty:
-            raise StopIteration
-        res = self.__peek
-        try:
-            self.__peek = next(self.__gen)
-        except StopIteration:
-            self.__peek = None
-            self.__empty = True
-        return res
-    def empty(self):
-        return self.__empty
-    def peek(self):
-        return self.__peek
-
-def parse_expression_recursive(tokens):
-    tok = next(tokens)
-    if tok == '(':
-        args = []
-        while tokens.peek() != ')':
-            args.append(parse_expression_recursive(tokens))
-        assert tokens.peek() == ')'
-        next(tokens)
-        return args
-    return tok
-
-def parse_expression_iterative(tokens):
+def parse_expression(tokens):
     stack = []
     for tok in tokens:
         if tok == '(':
@@ -87,7 +47,7 @@ def parse_smtlib(text):
     exprs = []
     while True:
         try:
-            exprs.append(parse_expression_iterative(token_stream))
+            exprs.append(parse_expression(token_stream))
         except RuntimeError as err:
             if isinstance(err.__cause__, StopIteration):
                 break
