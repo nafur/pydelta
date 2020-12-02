@@ -1,4 +1,3 @@
-import collections
 import logging
 import re
 import sys
@@ -6,7 +5,6 @@ import textwrap
 
 from . import options
 
-Token = collections.namedtuple('Token', ['kind', 'value'])
 sys.setrecursionlimit(100000)
 
 def lexer(text):
@@ -24,12 +22,11 @@ def lexer(text):
 
     for m in __token_re.finditer(text):
         kind = m.lastgroup
-        value = m.group()
         if kind in ['COMMENT', 'SPACE']:
             continue
         if kind == 'MISMATCH':
-            logging.warning('Unexpected  {}'.format(value))
-        yield Token(kind, value)
+            logging.warning('Unexpected  {}'.format(m.group()))
+        yield m.group()
 
 class Peekable:
     def __init__(self, generator):
@@ -61,27 +58,27 @@ class Peekable:
 
 def parse_expression_recursive(tokens):
     tok = next(tokens)
-    if tok.kind == 'LPAREN':
+    if tok == '(':
         args = []
-        while tokens.peek().kind != 'RPAREN':
+        while tokens.peek() != ')':
             args.append(parse_expression_recursive(tokens))
-        assert tokens.peek().kind == 'RPAREN'
+        assert tokens.peek() == ')'
         next(tokens)
         return args
-    return tok.value
+    return tok
 
 def parse_expression_iterative(tokens):
     stack = []
     for tok in tokens:
-        if tok.kind == 'LPAREN':
+        if tok == '(':
             stack.append([])
-        elif tok.kind == 'RPAREN':
+        elif tok == ')':
             cur = stack.pop()
             if len(stack) == 0:
                 return cur
             stack[-1].append(cur)
         else:
-            stack[-1].append(tok.value)
+            stack[-1].append(tok)
     return None
 
 def parse_smtlib(text):
