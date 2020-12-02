@@ -59,23 +59,37 @@ class Peekable:
         return self.__peek
 
 
-def parse_expression(tokens):
+def parse_expression_recursive(tokens):
     tok = next(tokens)
     if tok.kind == 'LPAREN':
         args = []
         while tokens.peek().kind != 'RPAREN':
-            args.append(parse_expression(tokens))
+            args.append(parse_expression_recursive(tokens))
         assert tokens.peek().kind == 'RPAREN'
         next(tokens)
         return args
     return tok.value
+
+def parse_expression_iterative(tokens):
+    stack = []
+    for tok in tokens:
+        if tok.kind == 'LPAREN':
+            stack.append([])
+        elif tok.kind == 'RPAREN':
+            cur = stack.pop()
+            if len(stack) == 0:
+                return cur
+            stack[-1].append(cur)
+        else:
+            stack[-1].append(tok.value)
+    return None
 
 def parse_smtlib(text):
     """Parses an SMT-LIB input to a sequence of nodes."""
     token_stream = Peekable(lexer(text))
     exprs = []
     while not token_stream.empty():
-        exprs.append(parse_expression(token_stream))
+        exprs.append(parse_expression_iterative(token_stream))
     return exprs
 
 def render_expression(expr):
