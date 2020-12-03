@@ -46,6 +46,17 @@ class BVConcatToZeroExtend:
     def __str__(self):
         return 'replace concat by zero_extend'
 
+class BVElimBVComp:
+    """Replace bvcomp by a regular equality."""
+    def filter(self, node):
+        return has_name(node) and get_name(node) == '=' and is_bitvector_constant(node[1]) and has_name(node[2]) and get_name(node[2]) == 'bvcomp'
+    def mutations(self, node):
+        return [
+            ['='] + node[2][1:],
+            ['not', ['='] + node[2][1:]],
+        ]
+    def __str__(self):
+        return 'eliminate bvcomp by equality'
 class BVExtractConstants:
     """Evaluates a bitvector :code:`extract` if it is applied to a constant."""
     def filter(self, node):
@@ -89,11 +100,29 @@ class BVSimplifyConstant:
     def __str__(self):
         return 'simplify bitvector constant'
 
+class BVTransformToBool:
+    """Turn BV constructs into Boolean constructs."""
+    def filter(self, node):
+        return has_name(node) and get_name(node) == '=' and is_bitvector_constant(node[1])
+    def mutations(self, node):
+        repl = {
+            'bvand': 'and', 'bvor': 'or'
+        }
+        if has_name(node[2]) and get_name(node[2]) in repl:
+            return [ [repl[get_name(node[2])]] + [
+                ['=', node[1], c] for c in node[2][1:]
+            ]]
+        return []
+    def __str__(self):
+        return 'transform bitvector to boolean'
+
 def collect_mutator_options(argparser):
     options.add_mutator_argument(argparser, NAME, True, 'bitvector mutators')
     options.add_mutator_argument(argparser, 'bv-constants', True, 'replaces constants by simpler ones')
+    options.add_mutator_argument(argparser, 'bv-elim-bvcomp', True, 'replace bvcomp by a regular equality')
     options.add_mutator_argument(argparser, 'bv-eval-extract', True, 'evaluate bitvector extract on constants')
     options.add_mutator_argument(argparser, 'bv-ite-to-bvcomp', True, 'replaces bv1/bv0 ites by bvcomp')
+    options.add_mutator_argument(argparser, 'bv-to-bool', True, 'replace bvor/bvand by regular Boolean operators')
     options.add_mutator_argument(argparser, 'bv-zero-concat', True, 'replaces concat with zero by zero_extend')
 
 def collect_mutators(args):
@@ -101,10 +130,14 @@ def collect_mutators(args):
     if args.mutator_bitvector:
         if args.mutator_bv_constants:
             res.append(BVSimplifyConstant())
+        if args.mutator_bv_elim_bvcomp:
+            res.append(BVElimBVComp())
         if args.mutator_bv_eval_extract:
             res.append(BVExtractConstants())
         if args.mutator_bv_ite_to_bvcomp:
             res.append(BVOneZeroITE())
+        if args.mutator_bv_to_bool:
+            res.append(BVTransformToBool())
         if args.mutator_bv_zero_concat:
             res.append(BVConcatToZeroExtend())
     return res
