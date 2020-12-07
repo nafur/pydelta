@@ -11,6 +11,8 @@ class StringSimplifyConstant:
     def mutations(self, node):
         content = node[1:-1]
         return ['"{}"'.format(c) for c in ['', content[1:], content[:-1]]]
+    def global_mutations(self, linput, ginput):
+        return [ substitute(ginput, {linput: rep}) for rep in self.mutations(linput) ]
     def __str__(self):
         return 'simplify string constant'
 
