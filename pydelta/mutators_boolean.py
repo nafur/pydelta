@@ -62,13 +62,39 @@ class NegatedQuantifiers:
     def __str__(self):
         return 'push negation inside of quantifier'
 
+class XORRemoveConstants:
+    """Eliminates constant children from xor"""
+    def filter(self, node):
+        return has_name(node) and get_name(node) == 'xor'
+    def mutations(self, node):
+        res = []
+        if 'false' in node:
+            res.append([c for c in node if c != 'false'])
+        if 'true' in node:
+            res.append([c for c in node if c != 'true'])
+            res.append(['not', [c for c in node if c != 'true']])
+        return res
+    def __str__(self):
+        return 'remove constants from xor'
+
+class XOREliminateBinary:
+    """Eliminates binary xor"""
+    def filter(self, node):
+        return has_name(node) and get_name(node) == 'xor' and len(node) == 3
+    def mutations(self, node):
+        return [['distinct', node[1], node[2]]]
+    def __str__(self):
+        return 'eliminate binary xor'
+
 def collect_mutator_options(argparser):
     options.add_mutator_argument(argparser, NAME, True, 'boolean mutators')
     options.add_mutator_argument(argparser, 'de-morgan', True, 'apply de Morgan to push negations inside')
     options.add_mutator_argument(argparser, 'double-negations', True, 'eliminate double negations')
+    options.add_mutator_argument(argparser, 'eliminate-binary-xor', True, 'eliminate binary xor')
     options.add_mutator_argument(argparser, 'eliminate-false-eq', True, 'eliminate equalities with false')
-    options.add_mutator_argument(argparser, 'eliminate-implications', True, 'eliminate equalities with false')
+    options.add_mutator_argument(argparser, 'eliminate-implications', True, 'eliminate implications')
     options.add_mutator_argument(argparser, 'negated-quant', True, 'push negations inside quantifiers')
+    options.add_mutator_argument(argparser, 'remove-xor-constants', True, 'remove constants from xor')
 
 def collect_mutators(args):
     res = []
@@ -77,10 +103,14 @@ def collect_mutators(args):
             res.append(DeMorgan())
         if args.mutator_double_negations:
             res.append(DoubleNegation())
+        if args.mutator_eliminate_binary_xor:
+            res.append(XOREliminateBinary())
         if args.mutator_eliminate_false_eq:
             res.append(EliminateFalseEquality())
         if args.mutator_eliminate_implications:
             res.append(EliminateImplications())
         if args.mutator_negated_quant:
             res.append(NegatedQuantifiers())
+        if args.mutator_remove_xor_constants:
+            res.append(XORRemoveConstants())
     return res
