@@ -129,7 +129,7 @@ class VariableNames:
         if len(name) < 2:
             return []
         half = len(name) // 2
-        return [name[:half], name[:-1]]
+        return [name[:half], name[1:], name[:-1]]
     def __str__(self):
         return 'simplify variable name'
 
