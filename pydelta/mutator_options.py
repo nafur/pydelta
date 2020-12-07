@@ -66,13 +66,13 @@ class TopLevelOnlyAction(argparse.Action):
         setattr(namespace, 'mutator_top_level_binary_reduction', True)
 
 def collect_mutator_modes(argparser):
-    argparser.add_argument('--mode-aggressive', default = False, nargs = 0, action = AgressiveAction, help = 'agressively minimize')
+    argparser.add_argument('--mode-aggressive', default = argparse.SUPPRESS, nargs = 0, action = AgressiveAction, help = 'agressively minimize')
     argparser.add_argument('--aggressiveness', metavar = 'perc', type = float, default = 0.01,
                            help = 'percentage of the input a mutators needs to remove')
-    argparser.add_argument('--mode-beautify', default = False, nargs = 0, action = BeautifyAction, help = 'enables beautification mutators')
-    argparser.add_argument('--mode-let-elimination', default = False, nargs = 0, action = LetEliminationAction, help = 'only eliminate let binders')
-    argparser.add_argument('--mode-reduction-only', default = False, nargs = 0, action = ReductionOnlyAction, help = 'only allow reducing mutations')
-    argparser.add_argument('--mode-top-level-only', default = False, nargs = 0, action = TopLevelOnlyAction, help = 'use top level binary reduction')
+    argparser.add_argument('--mode-beautify', default = argparse.SUPPRESS, nargs = 0, action = BeautifyAction, help = 'enables beautification mutators')
+    argparser.add_argument('--mode-let-elimination', default = argparse.SUPPRESS, nargs = 0, action = LetEliminationAction, help = 'only eliminate let binders')
+    argparser.add_argument('--mode-reduction-only', default = argparse.SUPPRESS, nargs = 0, action = ReductionOnlyAction, help = 'only allow reducing mutations')
+    argparser.add_argument('--mode-top-level-only', default = argparse.SUPPRESS, nargs = 0, action = TopLevelOnlyAction, help = 'use top level binary reduction')
 
 def add_mutator_group(argparser, name):
     """Add a new argument group for a mutator group"""

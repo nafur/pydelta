@@ -36,7 +36,8 @@ class ModularArgumentParser(argparse.ArgumentParser):
             parser = self
             if help_group is not None:
                 parser = self._modular_help_groups[help_group]
-            parser.add_argument('--help-{}'.format(help_name), action=_ModularHelpEnabler, nargs=0, default=False, const=grp, help = help_text.format(help_name))
+            parser.add_argument('--help-{}'.format(help_name), action=_ModularHelpEnabler, nargs=0,
+                                default=argparse.SUPPRESS, const=grp, help = help_text.format(help_name))
         return grp
     def enable_modular_help(self, grp):
         """Remove grp from self._modular_action_groups and thereby enable printing it."""
