@@ -12,6 +12,7 @@ class ModularArgumentParser(argparse.ArgumentParser):
     def __init__(self, *args, **kwargs):
         """As argparse.ArgumentParser.__init__(), additionally modular_action_groups = [] can be used to specify the names of argument groups used for the custom help options."""
         self._modular_action_groups = {}
+        self._modular_active = False
         modular_help_groups = kwargs.pop('modular_help_groups', [])
         help_all = kwargs.pop('help_all', True)
         super().__init__(*args, **kwargs)
@@ -41,10 +42,19 @@ class ModularArgumentParser(argparse.ArgumentParser):
         return grp
     def enable_modular_help(self, grp):
         """Remove grp from self._modular_action_groups and thereby enable printing it."""
+        self._modular_active = True
         if grp is None:
             self._modular_action_groups = {}
         else:
             del self._modular_action_groups[grp]
+    def parse_args(self, *args, **kwargs):
+        res = super().parse_args(*args, **kwargs)
+        if self._modular_active:
+            self.parse_args(['--help'])
+        return res
+    def error(self, message):
+        if not self._modular_active:
+            super().error(message)
     def format_help(self):
         """Removes all items from self._action_groups that are still in self._modular_action_groups."""
         self._action_groups = [
