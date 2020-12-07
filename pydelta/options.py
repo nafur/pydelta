@@ -1,8 +1,9 @@
 import argparse
 import sys
 
-from . import version
+from . import argparsemod
 from . import mutator_options
+from . import version
 
 class CustomFormatter(argparse.ArgumentDefaultsHelpFormatter, argparse.HelpFormatter):
     """A custom formatter for printing the commandline help.
@@ -15,7 +16,7 @@ def parse_options():
     """Configures the commandline parse and then parse the commandline options."""
     usage = "{} [<options>] <inputfile> <cmd> [<cmd options>]".format(sys.argv[0])
 
-    argp = argparse.ArgumentParser(usage = usage, formatter_class = CustomFormatter)
+    argp = argparsemod.ModularArgumentParser(usage = usage, formatter_class = CustomFormatter, modular_help_groups = ['mutator help'])
     argp.add_argument('inputfile', help = 'input file (in SMT-LIB v2 format)')
     argp.add_argument('cmd', nargs = argparse.REMAINDER, help = 'the command (with optional arguments)')
 

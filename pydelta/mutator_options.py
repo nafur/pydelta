@@ -74,14 +74,18 @@ def collect_mutator_modes(argparser):
     argparser.add_argument('--mode-reduction-only', default = False, nargs = 0, action = ReductionOnlyAction, help = 'only allow reducing mutations')
     argparser.add_argument('--mode-top-level-only', default = False, nargs = 0, action = TopLevelOnlyAction, help = 'use top level binary reduction')
 
+def add_mutator_group(argparser, name):
+    """Add a new argument group for a mutator group"""
+    return argparser.add_argument_group('{} mutator arguments'.format(name), help_name = name, help_group = 'mutator help', help_text = 'show help for {} mutators')
+
 def collect_mutator_options(argparser):
     """Adds all options related to mutators to the given argument parser."""
-    mutators_core.collect_mutator_options(argparser.add_argument_group('core mutator arguments'))
-    mutators_boolean.collect_mutator_options(argparser.add_argument_group('boolean mutator arguments'))
-    mutators_arithmetic.collect_mutator_options(argparser.add_argument_group('arithmetic mutator arguments'))
-    mutators_bitvectors.collect_mutator_options(argparser.add_argument_group('bitvector mutator arguments'))
-    mutators_smtlib.collect_mutator_options(argparser.add_argument_group('smtlib mutator arguments'))
-    mutators_strings.collect_mutator_options(argparser.add_argument_group('strings mutator arguments'))
+    mutators_core.collect_mutator_options(add_mutator_group(argparser, 'core'))
+    mutators_boolean.collect_mutator_options(add_mutator_group(argparser, 'boolean'))
+    mutators_arithmetic.collect_mutator_options(add_mutator_group(argparser, 'arithmetic'))
+    mutators_bitvectors.collect_mutator_options(add_mutator_group(argparser, 'bitvector'))
+    mutators_smtlib.collect_mutator_options(add_mutator_group(argparser, 'smtlib'))
+    mutators_strings.collect_mutator_options(add_mutator_group(argparser, 'string'))
 
 def collect_mutators(args):
     """Initializes the list of all active mutators."""
