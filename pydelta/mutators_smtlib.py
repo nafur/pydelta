@@ -103,16 +103,16 @@ class SimplifyLogic:
     def __str__(self):
         return 'simplify logic'
 
-class SimplifyQuotedSymbol:
+class SimplifyQuotedSymbols:
     """Turns a quoted symbol into a simple symbol."""
     def filter(self, node):
-        return is_quoted_symbol(node) and re.match('|[a-zA-Z0-9~!@$%^&*_+=<>.?/-]+|', node) is not None
+        return is_quoted_symbol(node) and re.match('\\|[a-zA-Z0-9~!@$%^&*_+=<>.?/-]+\\|', node) is not None
     def global_mutations(self, linput, ginput):
         return [ substitute(ginput, { linput: get_quoted_symbol(linput) }) ]
     def __str__(self):
         return 'simplify quoted symbol'
 
-class VariableNames:
+class SimplifySymbolNames:
     """Simplify variable names."""
     def filter(self, node):
         return has_name(node) and get_name(node) in ['declare-const', 'declare-fun']
@@ -142,8 +142,8 @@ def collect_mutator_options(argparser):
     options.add_mutator_argument(argparser, 'let-substitution', True, 'substitute bound variables in let bindings')
     options.add_mutator_argument(argparser, 'push-pop-removal', True, 'remove push-pop pairs')
     options.add_mutator_argument(argparser, 'simplify-logic', True, 'simplify declared logic')
-    options.add_mutator_argument(argparser, 'simplify-quoted-symbol', False, 'simplify quoted symbols')
-    options.add_mutator_argument(argparser, 'variable-names', False, 'simplify variable names')
+    options.add_mutator_argument(argparser, 'simplify-quoted-symbols', False, 'simplify quoted symbols')
+    options.add_mutator_argument(argparser, 'simplify-symbol-names', False, 'simplify symbol names')
 
 def collect_mutators(args):
     res = []
@@ -162,8 +162,8 @@ def collect_mutators(args):
             res.append(PushPopRemoval())
         if args.mutator_simplify_logic:
             res.append(SimplifyLogic())
-        if args.mutator_simplify_quoted_symbol:
-            res.append(SimplifyQuotedSymbol())
-        if args.mutator_variable_names:
-            res.append(VariableNames())
+        if args.mutator_simplify_quoted_symbols:
+            res.append(SimplifyQuotedSymbols())
+        if args.mutator_simplify_symbol_names:
+            res.append(SimplifySymbolNames())
     return res

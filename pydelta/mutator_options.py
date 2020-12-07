@@ -32,7 +32,8 @@ class AgressiveAction(argparse.Action):
 class BeautifyAction(argparse.Action):
     """Mode that enables mutations merely beautify the output."""
     def __call__(self, parser, namespace, values, option_string = None):
-        setattr(namespace, 'mutator_variable_names', True)
+        setattr(namespace, 'mutator_simplify_quoted_symbols', True)
+        setattr(namespace, 'mutator_simplify_symbol_names', True)
         setattr(namespace, 'wrap_lines', True)
 
 class LetEliminationAction(argparse.Action):
