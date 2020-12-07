@@ -53,6 +53,7 @@ Arithmetic mutators
 Bitvector mutators
 ------------------
 .. autoclass:: pydelta.mutators_bitvectors.BVConcatToZeroExtend
+.. autoclass:: pydelta.mutators_bitvectors.BVEvalExtend
 .. autoclass:: pydelta.mutators_bitvectors.BVExtractConstants
 .. autoclass:: pydelta.mutators_bitvectors.BVOneZeroITE
 .. autoclass:: pydelta.mutators_bitvectors.BVSimplifyConstant
