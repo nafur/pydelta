@@ -20,16 +20,16 @@ def parse_options():
     argp.add_argument('inputfile', help = 'input file (in SMT-LIB v2 format)')
     argp.add_argument('cmd', nargs = argparse.REMAINDER, help = 'the command (with optional arguments)')
 
-    argp.add_argument('-v', '--verbose', action='store_true', default = argparse.SUPPRESS, help = 'be more verbose')
+    argp.add_argument('-v', '--verbose', action='store_true', default = False, help = 'be more verbose')
     argp.add_argument('--version', action = 'version', version = version.VERSION)
-    argp.add_argument('--dump-config', action='store_true', default = argparse.SUPPRESS, help = 'dump configuration')
+    argp.add_argument('--dump-config', action='store_true', default = False, help = 'dump configuration')
 
     argp_modes = argp.add_argument_group('special modes')
     mutator_options.collect_mutator_modes(argp_modes)
 
     argp_checking = argp.add_argument_group('checking arguments')
-    argp_checking.add_argument('--parse-only', action = 'store_true', default = argparse.SUPPRESS, help = 'only parse the input file')
-    argp_checking.add_argument('--run-unchecked', action = 'store_true', default = argparse.SUPPRESS, help = 'apply mutations without checking them')
+    argp_checking.add_argument('--parse-only', action = 'store_true', default = False, help = 'only parse the input file')
+    argp_checking.add_argument('--run-unchecked', action = 'store_true', default = False, help = 'apply mutations without checking them')
     argp_checking.add_argument('--max-threads', type = int, metavar = 'n', default = '-2',
                                help = 'number of threads to use; #processors+n if n<=0')
     argp_checking.add_argument('--timeout', type = int, metavar = 'seconds', default = 0, help = 'timeout for individual checks')
@@ -38,14 +38,14 @@ def parse_options():
 
     argp_output = argp.add_argument_group('output arguments')
     argp_output.add_argument('--outputfile', metavar = 'filename', default = 'delta.out.smt2', help = 'filename for the output file')
-    argp_output.add_argument('--pretty-print', action = 'store_true', default = argparse.SUPPRESS, help = 'pretty-print to output file')
-    argp_output.add_argument('--wrap-lines', action = 'store_true', default = argparse.SUPPRESS, help = 'wrap lines in output file')
+    argp_output.add_argument('--pretty-print', action = 'store_true', default = False, help = 'pretty-print to output file')
+    argp_output.add_argument('--wrap-lines', action = 'store_true', default = False, help = 'wrap lines in output file')
 
     argp_comparator = argp.add_argument_group('comparator arguments')
-    argp_comparator.add_argument('--ignore-exitcode', action = 'store_true', default = argparse.SUPPRESS, help = 'ignore exitcode when comparing results')
-    argp_comparator.add_argument('--ignore-output', action = 'store_true', default = argparse.SUPPRESS, help = 'ignore stdout and stderr when comparing results')
-    argp_comparator.add_argument('--match-out', metavar = 'regex', default = argparse.SUPPRESS, help = 'regex that should match stdout')
-    argp_comparator.add_argument('--match-err', metavar = 'regex', default = argparse.SUPPRESS, help = 'regex that should match stderr')
+    argp_comparator.add_argument('--ignore-exitcode', action = 'store_true', default = False, help = 'ignore exitcode when comparing results')
+    argp_comparator.add_argument('--ignore-output', action = 'store_true', default = False, help = 'ignore stdout and stderr when comparing results')
+    argp_comparator.add_argument('--match-out', metavar = 'regex', help = 'regex that should match stdout')
+    argp_comparator.add_argument('--match-err', metavar = 'regex', help = 'regex that should match stderr')
 
     mutator_options.collect_mutator_options(argp)
 
@@ -63,7 +63,7 @@ def args():
 def add_mutator_argument(argparser, name, default, help_msg):
     dest = 'mutator_{}'.format(name.replace('-', '_'))
     grp = argparser.add_mutually_exclusive_group()
-    grp.add_argument('--{}'.format(name), action = 'store_true', default = argparse.SUPPRESS,
+    grp.add_argument('--{}'.format(name), action = 'store_true', default = default,
                      dest = dest, help = help_msg if not default else argparse.SUPPRESS)
-    grp.add_argument('--no-{}'.format(name), action = 'store_false', default = argparse.SUPPRESS,
+    grp.add_argument('--no-{}'.format(name), action = 'store_false', default = default,
                      dest = dest, help = help_msg if default else argparse.SUPPRESS)
