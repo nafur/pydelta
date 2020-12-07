@@ -64,6 +64,8 @@ Boolean mutators
 .. autoclass:: pydelta.mutators_boolean.EliminateFalseEquality
 .. autoclass:: pydelta.mutators_boolean.EliminateImplications
 .. autoclass:: pydelta.mutators_boolean.NegatedQuantifiers
+.. autoclass:: pydelta.mutators_boolean.XORRemoveConstants
+.. autoclass:: pydelta.mutators_boolean.XOREliminateBinary
 
 SMT-LIB mutators
 ----------------

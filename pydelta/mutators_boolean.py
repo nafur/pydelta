@@ -63,7 +63,7 @@ class NegatedQuantifiers:
         return 'push negation inside of quantifier'
 
 class XORRemoveConstants:
-    """Eliminates constant children from xor"""
+    """Eliminates constant children from :code:`xor`."""
     def filter(self, node):
         return has_name(node) and get_name(node) == 'xor'
     def mutations(self, node):
@@ -78,7 +78,7 @@ class XORRemoveConstants:
         return 'remove constants from xor'
 
 class XOREliminateBinary:
-    """Eliminates binary xor"""
+    """Eliminates binary :code:`xor` by :code:`distinct`."""
     def filter(self, node):
         return has_name(node) and get_name(node) == 'xor' and len(node) == 3
     def mutations(self, node):
