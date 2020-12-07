@@ -88,6 +88,7 @@ class PushPopRemoval:
         return res
     def __str__(self):
         return 'remove push-pop pair'
+
 class SimplifyLogic:
     """Replaces the logic specified in :code:`(check-logic ...)` by a simpler one."""
     def filter(self, node):
@@ -115,23 +116,38 @@ class SimplifyQuotedSymbols:
 class SimplifySymbolNames:
     """Simplify variable names."""
     def filter(self, node):
-        return has_name(node) and get_name(node) in ['declare-const', 'declare-fun']
+        return has_name(node) and get_name(node) in ['declare-const', 'declare-datatypes', 'declare-fun', 'declare-sort', 'exists', 'forall']
     def global_mutations(self, linput, ginput):
-        name = linput[1]
-        repl = lambda s: {linput[1]: s}
-        if is_quoted_symbol(name):
-            name = get_quoted_symbol(linput[1])
-            repl = lambda s: {linput[1]: '|' + s + '|'}
-        return [
-            substitute(ginput, repl(s)) for s in self.__simpler(name)
-        ]
-    def __simpler(self, name):
-        if len(name) < 2:
+        if get_name(linput) == 'declare-datatypes':
+            res = []
+            for c in self.__flatten(linput[1:]):
+                res = res + self.__mutate_symbol(c, ginput)
+            return res
+        if get_name(linput) in ['exists', 'forall']:
+            res = []
+            for v in linput[1]:
+                res = res + self.__mutate_symbol(v[0], ginput)
+            return res
+        return self.__mutate_symbol(linput[1], ginput)
+    def __flatten(self, n):
+        """Yield given node as flattened sequence"""
+        if isinstance(n, list):
+            for e in n:
+                yield from self.__flatten(e)
+        else:
+            yield n
+    def __mutate_symbol(self, symbol, ginput):
+        """Return a list of mutations of ginput based on simpler versions of symbol."""
+        if is_quoted_symbol(symbol):
+            return [ substitute(ginput, {symbol: '|' + s + '|'}) for s in self.__simpler(get_quoted_symbol(symbol)) ]
+        return [ substitute(ginput, {symbol: s}) for s in self.__simpler(symbol) ]
+    def __simpler(self, symbol):
+        """Return a list of simpler versions of the given symbol."""
+        if len(symbol) < 2:
             return []
-        half = len(name) // 2
-        return [name[:half], name[1:], name[:-1]]
+        return [symbol[:len(symbol) // 2], symbol[1:], symbol[:-1]]
     def __str__(self):
-        return 'simplify variable name'
+        return 'simplify symbol name'
 
 def collect_mutator_options(argparser):
     options.add_mutator_argument(argparser, NAME, True, 'smtlib mutators')
