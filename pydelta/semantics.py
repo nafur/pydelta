@@ -74,7 +74,7 @@ def is_nary(node):
         '=>', 'and', 'or', 'xor', '=', 'distinct',
         '+', '-', '*', 'div', '/',
         '<=', '<', '>=', '>',
-        'bvand', 'bvor', 'bvadd', 'bvmul'
+        'bvand', 'bvor', 'bvadd', 'bvmul', 'concat'
     ]
 
 def node_count(exprs):
