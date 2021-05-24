@@ -1,3 +1,9 @@
+!!! pyDelta is no longer maintained !!!
+=======================================
+
+pyDelta was implemented as a proof of concept. Please use [ddSMT](https://github.com/ddsmt/ddsmt) instead, it can do pretty much everything pyDelta can do, and much more!
+
+
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/nafur/pydelta/main)](https://github.com/nafur/pydelta/actions)
 [![Read the Docs](https://img.shields.io/readthedocs/pydelta)](https://pydelta.readthedocs.io/)
 [![PyPI](https://img.shields.io/pypi/v/pydelta-smt)](https://pypi.org/project/pydelta-smt/)
